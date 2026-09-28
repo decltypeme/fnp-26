@@ -1,0 +1,15 @@
+\begin{lemma}[The multi-qubit pinching lemma]\label{lemma:extra-extra-cheese}
+    Let $H = \sum_{Q} h_{Q}$ be a $k$-local Hamiltonian and for each $i \in [n]$, let $\mathcal{P}_i$ be either the identity superoperator or the pinching superoperator for some one-local operator $R_i$ acting on qubit $i$. Suppose that for each $i$ where $\mathcal{P}_i$ is not identity, $\Delta(R_i) \geq \eta$ and for all $Q \ni i$, 
+    \[ \|[R_i, h_{Q} ] \| \leq \kappa.\]
+    Then the $k$-local Hamiltonian
+    \begin{equation}\label{eqn:definition-of-H-prime}
+        H' = \sum_{Q = (q_1, q_2, \dots, q_k) \in E} (\cP_{q_1} \otimes \cP_{q_2} \otimes \dots \otimes \cP_{q_k} \mathrm{id}_{[n]\setminus \{q_1, \dots, q_k\}})( h_{Q})
+    \end{equation}
+    satisfies the following properties:
+    \begin{enumerate}
+    \item \AnandNote{My version of the below} For all $Q_1, Q_2$ with nonempty intersection, if $\cP_i$ is not identity for all $i \in Q_1 \cap Q_2$, then $h'_{Q_1}$ commutes with $h'_{Q_2}$.
+        \item For all $i$ such that $\cP_i$ is not identity, all the terms $h'_{Q \ni i}$ touching qubit $i$ commute with each other, and with $R_i$.
+        \item For all $Q \ni i$,
+        \begin{equation} \| h'_{Q} - h_{Q} \| \leq \text{ some function of }\kappa/\eta. \label{eq:extra-extra-cheese-rounding-error} \end{equation}
+    \end{enumerate}
+\end{lemma}

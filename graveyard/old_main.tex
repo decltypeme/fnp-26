@@ -1,0 +1,1583 @@
+\documentclass[12pt]{article}
+\usepackage[dvipsnames,svgnames,x11names,hyperref]{xcolor}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage[T1]{fontenc}
+\usepackage{comment}
+\usepackage{fullpage}
+\usepackage{thmtools}
+\usepackage[colorlinks]{hyperref}
+\hypersetup{colorlinks={true},linkcolor={blue},citecolor=magenta}
+
+\usepackage{amssymb,amsfonts,amsmath,amsthm,amscd,dsfont,mathrsfs}
+\usepackage{complexity}
+\usepackage{tikz}
+\usetikzlibrary{decorations.pathreplacing,backgrounds}
+\usepackage{tikz-cd}
+\usepackage{multirow}
+\usepackage{mathpazo}
+\usepackage{braket}
+\usepackage{cleveref} 
+
+\usepackage{booktabs, multirow}
+
+
+\usepackage[style=alphabetic,minalphanames=3,maxalphanames=4,maxnames=99,backref=true]{biblatex}
+  \renewcommand*{\labelalphaothers}{\textsuperscript{+}}
+  \renewcommand*{\multicitedelim}{\addcomma\space}
+  \addbibresource{crypto.bib}
+
+\setcounter{biburlnumpenalty}{100}
+\setcounter{biburlucpenalty}{100}
+\setcounter{biburllcpenalty}{100}
+\usepackage{url}
+\usepackage{bbm}
+\Urlmuskip=0mu plus 1mu
+\usepackage{hyperref} 
+\hypersetup{breaklinks=true}
+
+
+
+%%% Theorem env
+
+  \theoremstyle{plain}
+  \newtheorem{theorem}{Theorem}[section]
+  \newtheorem{lemma}[theorem]{Lemma}
+  %\newtheorem{claim}{Claim}
+  %\Crefname{claim}{Claim}{Claims}
+  %\newtheorem*{lemma*}{Lemma}
+  \newtheorem{corollary}[theorem]{Corollary}
+  %\newtheorem{proposition}{Proposition}
+  % \newtheorem{observation}[theorem]{Observation}
+  \newtheorem{definition}[theorem]{Definition}
+  \newtheorem{remark}[theorem]{Remark}
+  \newtheorem{claim}[theorem]{Claim}
+    \newtheorem{fact}[theorem]{Fact}
+\newtheorem{example}{Example}[section]
+  \newtheorem{importedtheorem}[theorem]{Imported Theorem}
+ \newtheorem{construction}{Construction}
+ \newtheorem*{theorem*}{Theorem}
+
+\newcommand*\samethanks[1][\value{footnote}]{\footnotemark[#1]}
+
+\newcommand{\Tr}[1]{\mathrm{Tr}\left\{#1 \right\}}  
+\renewcommand{\set}[1]{\left\{ #1 \right\}}
+\newcommand{\abs}[1]{\left| #1 \right|}
+\newcommand{\proj}[1]{\ket{#1}\!\bra{#1}}
+
+\newcommand{\npower}[1]{{#1}^{\otimes n}}
+\newcommand{\norm}[1]{\left\Vert {#1} \right\Vert}
+\renewcommand{\C}{\mathbb{C}}
+\renewcommand{\E}{\mathbb{E}}
+\newcommand{\F}{\mathbb{F}}
+
+\newcommand{\ind}{\mathds{1}}
+
+
+\newcommand{\THR}{\mathsf{THR}}
+\newcommand{\THRpn}{\THR_{pn}}
+\newcommand{\Maj}{\mathsf{Maj}}
+\newcommand{\diam}{\mathsf{diam}}
+
+\newcommand{\eps}{\varepsilon}
+
+
+\newcommand{\Wheels}[1]{\textcolor{blue}{#1}}
+
+\newif\ifnotes\notestrue
+%\newif\ifnotes\notesfalse
+\ifnotes
+\newcommand{\AlexNote}[1]{\textcolor{red}{(Alex: #1)}}
+\newcommand{\AnandNote}[1]{\textcolor{red}{(Anand: #1)}}
+\newcommand{\IslamNote}[1]{\textcolor{red}{(Islam: #1)}}
+\else
+\newcommand{\AlexNote}[1]{}
+\newcommand{\AnandNote}[1]{}
+\newcommand{\IslamNote}[1]{}
+\fi
+
+
+
+\title{Notes: Almost Commuting Hamiltonians}
+
+
+
+
+
+\author{ }
+
+\date{}
+
+\begin{document}
+
+
+\maketitle
+
+%\abstract{
+%To Do
+%}
+
+
+\section{Introduction}
+
+Suppose we have a $k$-local Hamiltonian of the form $H = \sum_{i=1}^m H_i$
+for some Hermitian matrices $H_i$ such that $\| H_i \| \leq 1$. The
+commuting local Hamiltonians
+(CLHs) where $[H_i,H_j]=0$ is a popular constraint satisfaction problem because it "sits at the halfway point" between classical and quantum complexity. It is well known\footnote{\url{https://quantumcomputing.stackexchange.com/questions/35085/if-all-terms-of-a-local-hamiltonian-commute-how-hard-is-it-to-learn-the-ground}} that the ground states of commuting Hamiltonians can still exhibit high
+entanglement and can be non-trivial (see Toric code and the proof of NLTS theorem).
+
+Bravyi and Vyalyi~\cite{bravyi2004commutativeversionklocalhamiltonian} showed that the $2$-local CLH problem is in $\mathsf{NP}$, and thus the ground
+energy is classically verifiable. What about the "next best thing"? Are \emph{almost commuting} Hamiltonians still entirely classical, or is there a sharp complexity transition and the problem is $\mathsf{QMA}$-hard? There are two natural ways of extending the commuting Hamiltonians towards "almost commuting" Hamiltonians:
+\begin{itemize}
+    \item (Small commutators:) For any pair $(i,j)$, it holds that $\|[H_i,H_j]\| \leq \epsilon$.
+
+    \item (Anti-commuting Paulis:) If $H$ is a $k$-local Pauli Hamiltonian $H=\sum_i v_i P_i$ for some coefficients $v_i$ and $n$-qubit Pauli operators $P_i \in \{I,X,Y,Z\}^{\otimes n}$, then we require that at most an $\epsilon$-fraction of the Paulis $\{P_i\}_{i=1}^m$ anti-commute. In other words, their anti-commutation graph has density $\epsilon$ and includes at most $\epsilon \cdot \binom{m}{2}$ many edges.
+\end{itemize}
+
+The first definition seems more intuitive. We can formalize the problem as follows:
+
+\begin{definition}[Almost-Commuting Local Hamiltonian Problem] 
+The almost-commuting $k$-local Hamiltonian $(k,a,b,\epsilon)$-ACLH problem is the following decision problem:
+\begin{description}
+    \item[Input:] A description of a $k$-local Hamiltonian $H = \sum_{i=1}^m H_i$ on $n$ qubits, where each $H_i$ acts on at most $k$-qubits with $\|H_i \| \leq 1$, and where $\|[H_i,H_j]\| \leq \epsilon$ for some $\epsilon > 0$.
+
+    \item[Promise:] The ground state energy $\lambda_{\mathrm{min}}(H)$ is either less than $a$, or larger than $b$.
+
+    \item[Task:] Decide which is the case.
+\end{description}    
+\end{definition}
+In the definition above, we should think of $m=\mathrm{poly}(n)$ and $\epsilon(n)= 1/\mathrm{poly}(n)$.
+
+\section{Warm-Up: Rounding Almost-Commuting Hamiltonians}
+
+Let's say we have a certain $(k,a,b,\epsilon)$-ACLH instance where the Hamiltonian $H$ consists of almost-commuting terms for which one of those "rounding technique" applies.
+
+One such example is the overlapping qubits paper~\cite[Theorem 3.2]{https://doi.org/10.4230/lipics.itcs.2017.48}, which says that $\epsilon$-almost commuting projectors $P_1,\dots,P_m$ with $\|[P_i,P_j]\| \leq \epsilon$ can be rounded towards nearby projectors $Q_1,\dots,Q_m$ with the property that they
+\begin{itemize}
+    \item all mutually commute with $[Q_i,Q_j]=0$, and
+    \item they are close such that $\|P_i - Q_i\| \leq 8 m \epsilon$.
+\end{itemize}
+How hard is the corresponding $(k,a,b,\epsilon)$-ACLH problem with respect to $H= \sum_{i=1}^m P_i$?
+
+Recent work by Bostanci and Hwang~\cite{bostanci2025commutinglocalhamiltonians2d} shows that the CLH problem for $2D$ Hamiltonians is in $\mathsf{NP}$ provided that the underlying Hamiltonians are of the form $H'=\sum_i Q_i$, where $Q_i$ are commuting rank-$1$ projectors\footnote{They also use the word "rounding" a lot, but they mean something else I think. Maybe we should call our technique "lifting" instead?}. 
+
+
+\paragraph{Can we show $\mathsf{NP}$ containment?}
+Does the following reduction work? Given an instance of the $(k,a,b,\epsilon)$-ACLH problem with respect to $H= \sum_{i=1}^m P_i$, we apply the rounding technique~\cite[Theorem 3.2]{https://doi.org/10.4230/lipics.itcs.2017.48} and construct $H'=\sum_i Q_i$, where $Q_i$ are commuting rank-$1$, which is in $\mathsf{NP}$. Because the rounding technique is constructive, we actually know what each of the commuting projectors $Q_i$ look like. Then we need to figure out:
+\begin{itemize}
+    \item If the original $H$ had low energy $\lambda_{\mathrm{min}}(H) < a$ and the distance by which we moved $H$ is much smaller than $1$, then $H'=\sum_i Q_i$ must have a zero energy state (since the eigenvalues must be integers).
+
+    \item Claim: If $\|H - H'\| \leq \delta$, then $|\lambda_{\mathrm{min}}(H) -\lambda_{\mathrm{min}}(H')| \leq \delta$. This can be seen as follows: Because $\|H - H'\| \leq \delta$, we can use the property of the operator norm and write:
+$$
+\sup_{\| \ket{\psi}\|=1} \left|\bra{\psi} (H - H') \ket{\psi}\right| \leq \delta.
+$$
+But this implies that (Cauchy-Schwarz?)
+\begin{align*}
+|\lambda_{\mathrm{min}}(H) -\lambda_{\mathrm{min}}(H')| 
+&\leq \|H - H'\| \leq \delta
+\end{align*}
+(Check this... I think it also follows more generally from Weyl's inequality: \url{https://en.wikipedia.org/wiki/Weyl%27s_inequality#:~:text=In%20linear%20algebra%2C%20Weyl's%20inequality,of%20a%20perturbed%20Hermitian%20matrix.})
+\end{itemize}
+
+
+\newpage
+
+\section{Background: Finite-dimensional $C^*$-algebras}
+
+For our purposes, finite-dimensional $C^*$-algebras $\mathcal{A}$ are \emph{algebras} of linear operators (i.e., matrices) over complex vector spaces with the restriction that if $a \in \mathcal{A}$, then its corresponding conjugate adjoint $a^\dag$ is also in $\mathcal{A}$. Let's review all of this in detail below. 
+
+\paragraph{Complex algebras.}
+
+\begin{definition}[Complex algebra]
+A complex algebra $\mathcal{A}$ is a vector space over $\mathbb{C}$, i.e.,
+ \[
+    a,b \in \mathcal{A}, \ \lambda \in \mathbb{C} \;\; \implies \;\; a+b \in \mathcal{A}, \ \lambda a \in \mathcal{A},
+    \]
+together with a bilinear map $\mathcal{A} \times \mathcal{A} \rightarrow \mathcal{A}$ with $(a,b) \mapsto a \cdot b$ such that $(a\cdot b)\cdot c = a \cdot (b \cdot c)$.
+\begin{itemize}
+    \item If $\mathcal{A}$ contains an element $1_{\mathcal{A}} \in \mathcal{A}$ such that $1_{\mathcal{A}} \cdot a = a$, $\forall a \in \mathcal{A}$, then it is a unital algebra.
+\item If $\mathcal{A}$ is closed under the conjugate adjoint operation; meaning that
+$$
+a \in \mathcal{A} \quad \implies a^\dag \in \mathcal{A} \, ,
+$$
+then we call it a $^*$-algebra.
+\end{itemize}
+\end{definition}
+
+\begin{definition}[Sub-algebra]
+A sub-algebra $\mathcal{B} \subseteq \mathcal{A}$ is a subset of $\mathcal{A}$ such that
+\begin{itemize}
+    \item \(\mathcal{B}\) is a vector subspace of \(\mathcal{A}\), i.e.
+    \[
+    b_1,b_2 \in \mathcal{B}, \ \lambda \in \mathbb{C} \;\; \implies \;\; b_1+b_2 \in \mathcal{B}, \ \lambda b_1 \in \mathcal{B}.
+    \]
+
+    \item \(\mathcal{B}\) is closed under multiplication, i.e.
+    \[
+    b_1,b_2  \in \mathcal{B} \;\; \implies \;\; b_1 \cdot b_2  \in \mathcal{B}.
+    \]
+\end{itemize}
+    
+\end{definition}
+
+\paragraph{Representations of algebras.}
+
+\begin{definition}[Representation of an algebra]
+A representation of a complex algebra $\mathcal{A}$ (also called a left $\mathcal{A}$-module) is a vector space $V$ together with a homomorphism $\rho: \mathcal{A} \rightarrow \mathrm{End}(V)$ s.t.
+$$
+\rho(a \cdot b) = \rho(a) \cdot \rho(b), \quad \forall a,b \in \mathcal{A}.
+$$
+Note that, for $a \in \mathcal{A}$, the induced map $\rho(a) : V \rightarrow V$ is linear operator acting on $V$. For brevity, we sometimes write ``$av$'' to denote $\rho(a) \cdot v$, for $a \in \mathcal{A}$ and $v \in V$, to suggest that $\mathcal{A}$ ``acts on $V$''.
+\end{definition}
+
+
+\begin{definition}[Sub-representation]
+A sub-representation of a representation $V$ of an algebra $\mathcal{A}$ is a subspace $W \subset V$ which is invariant under all of the operators $\rho(a): V \rightarrow V$, for $a \in \mathcal{A}$; in other words, a sub-representation $W$ is ``$\mathcal{A}$-invariant'' in the sense that
+$$
+a \in \mathcal{A}, \, w \in W \quad \implies \quad \rho(a) \cdot w \,\,\in W.
+$$
+The vector space $W \subset V$ together with the restriction $\rho_{|W}: \mathcal{A} \rightarrow \mathrm{End}(W)$ therefore naturally defines another representation of  the algebra $\mathcal{A}$.
+\end{definition}
+
+Note that $\{0\}$ and $V$ always give rise to \emph{trivial} sub-representations.
+
+\begin{definition}[Irreducible representation]
+A representation $V \neq 0$ of $\mathcal{A}$ is \emph{irreducible} if the only sub-representations (or ``$\mathcal{A}$-invariant'' subspaces) of $V$ are $\{0\}$ and $V$ itself.
+\end{definition}
+
+\begin{definition}[Intertwiner]\label{def:intertwiner}
+Let $V_1,V_2$ be two sub-representations of an algebra $\mathcal{A}$. An \emph{intertwiner} (or intertwining operator) is a homomorphism $\phi: V_1 \rightarrow V_2$ (and thus a linear map) which commutes with the action of $\mathcal{A}$, i.e., it has the property that
+$$
+\phi(a v) = a\phi(v), \quad \forall a \in \mathcal{A}, \, v \in V_1.
+$$
+Letting $\rho_1: \mathcal{A} \rightarrow \mathrm{End}(V_1)$ and $\rho_2: \mathcal{A} \rightarrow \mathrm{End}(V_2)$ denote the respective homomorphism carried by the representations $V_1$ and $V_2$, this is equivalent to saying that
+$$
+\phi(\rho_1(a)\cdot v) = \rho_2(a) \cdot \phi(v), \quad \forall a \in \mathcal{A}, \, v \in V_1.
+$$The set of all homomorphisms of representations $V_1 \rightarrow V_2$ is denoted by $\mathrm{Hom}_{\mathcal{A}}(V_1, V_2)$.
+
+A homomorphism $\phi$ is an isomorphism of representations if it is an isomorphism between vector spaces. We say that two sub-representations $V_1,V_2$ of an algebra $\mathcal{A}$ are equivalent, if there exists an isomorphism $\phi: V_1 \rightarrow V_2$ such that the following diagram commutes for all $a \in \mathcal{A}$:
+\[
+\begin{tikzcd}
+V_1 \arrow[r, "\phi"] \arrow[d, "a"'] & V_2 \arrow[d, "a"] \\
+V_1 \arrow[r, "\phi"'] & V_2
+\end{tikzcd}
+\]
+\end{definition}
+
+
+\begin{definition}[Direct sum of representations]\label{def:direct-sum-repr}
+Let $V_1,V_2$ be two sub-representations of a complex algebra $\mathcal{A}$. Then, the direct sum of the two representations is given by $V_1 \oplus V_2$ such that
+$$
+a (v_1 \oplus v_2) = a \, v_1 \oplus a \, v_2, \quad \forall a \in \mathcal{A}, \,\forall v_1 \in V_1, \, \forall v_2 \in V_2.
+$$
+Letting $\rho_1: \mathcal{A} \rightarrow \mathrm{End}(V_1)$ and $\rho_2: \mathcal{A} \rightarrow \mathrm{End}(V_2)$ denote the respective homomorphism carried by the representations $V_1$ and $V_2$, this means that $(\rho_1 \oplus \rho_2): \mathcal{A} \rightarrow \mathrm{End}(V_1 \oplus V_2)$ obeys
+$$
+\big((\rho_1 \oplus \rho_2)(a)\big) (v_1 \oplus v_2) = \rho_1(a) \, v_1 \oplus \rho_2(a) \, v_2, \quad \forall a \in \mathcal{A}, \,\forall v_1 \in V_1, \, \forall v_2 \in V_2.
+$$
+Once we choose a basis of $V_1 \oplus V_2$ by taking the union of the basis vectors of $V_1$ and $V_2$, we can write the direct sum representation in matrix form as
+$$
+(\rho_1 \oplus \rho_2)(a) =
+\begin{pmatrix}
+\rho_1(a) & 0\\
+0 & \rho_2(a)
+\end{pmatrix} = \sum_{i=1}^2 \proj{i} \otimes \rho_i(a).
+$$ 
+\end{definition}
+
+\paragraph{Schur's lemma.}
+
+\begin{lemma}[Schur's lemma]\label{lem:schur}
+Let $V,W$ be a (finite-dimensional) irreducible representations of a complex algebra $\mathcal{A}$ and let $\phi: V \rightarrow W$ be an intertwiner. Then, 
+\begin{itemize}
+    \item the map $\phi: V \rightarrow W$ is either an isomorphism or $\phi \equiv 0$;
+    \item moreover, if $V=W$, then $\phi = \lambda \cdot 1_V$, for some $\lambda \in \mathbb{C}.
+$
+\end{itemize}
+\end{lemma}
+
+
+\paragraph{Commutative algebras.}
+
+\begin{definition}[Commutative algebra]
+A complex algebra $\mathcal{A}$ is called commutative, if
+$$
+a \cdot b = b \cdot a, \quad \forall a,b \in \mathcal{A}.
+$$
+\end{definition}
+
+\begin{lemma}[Irreducible representations of commutative algebras]
+Let $\mathcal{A}$ be a commutative algebra. Then, every irreducible (finite-dimensional) representation $V$ of $\mathcal{A}$ is $1$-dimensional.
+\end{lemma}
+\begin{proof}
+Suppose that $V$ is an irreducible algebra; meaning, that the only sub-representations (or ``$\mathcal{A}$-invariant'' subspaces) of $V$ are $\{0\}$ and $V$ itself. Then, for every element $a \in \mathcal{A}$, the map $\rho(a): V \rightarrow V$ is an intertwiner since
+$$
+\rho(a)(\rho(b) v) =  \rho(ab) v = \rho(ba) v = \rho(b)(\rho(a) v) \, ,
+$$
+where the second equality follows from the fact that $\mathcal{A}$ is commutative. Therefore, by Schur's Lemma (\Cref{lem:schur}), the map $\rho(a)$ must necessarily be a multiple of the identity for any $a \in \mathcal{A}$; in particular, any subspace of $V$ is an ``$\mathcal{A}$-invariant'' subspace.  However, because $V$ is irreducible, the only ``$\mathcal{A}$-invariant'' subspaces of $V$ are $\{0\}$ and $V$ itself. Since $V \neq 0$, the only possible choice is that $\mathrm{dim}(V)=1$.
+\end{proof}
+
+\paragraph{Center of an algebra.}
+
+\begin{definition}[Center of an algebra]
+Let $\mathcal{A}$ be a complex algebra. 
+Then, the center of the algebra $\mathcal{A}$, denoted by $Z(\mathcal{A})$, is the set of elements $z \in \mathcal{A}$ which commute with all elements in $\mathcal{A}$.   
+\end{definition}
+
+\begin{lemma}
+Let $\mathcal{A}$ be a complex algebra and let $V$ be a (finite-dimensional) irreducible representation of $\mathcal{A}$. Then, any element $z \in Z(\mathcal{A})$, acts in $V$ by multiplication by a scalar $\chi_V(z)$.
+\end{lemma}
+
+\paragraph{Algebra of linear operators.}
+
+\begin{definition}[Algebra of linear operators]
+Let $V$ be a finite dimensional complex vector space. Then, $\mathcal{A} = \mathcal{L}(V)$ is the algebra of linear operators mapping $V$ onto itself. Here, the multiplication rule
+$\mathcal{A} \times \mathcal{A} \rightarrow \mathcal{A}$ with $(a,b) \mapsto a \cdot b$
+is the composition of linear operators as matrices. If $\mathcal{B}$ is a sub-algebra of linear operators, we write $\mathcal{B} \subseteq \mathcal{L}(V)$. 
+\end{definition}
+
+To prove the next lemma, we make use of the following simple lemma.
+
+\begin{lemma}\label{lem:direct-sum-orth}
+Let $V$ be a complex inner product space and let $W \leq V$ be a subspace. Then, there exists a direct sum decomposition $V = W \oplus W^\perp$, where $W^\perp$ is the orthogonal complement
+$$
+W^\perp = \{ v \in V \,\, | \,\, \langle v,w\rangle = 0\,, \,\, \forall w \in W\}. 
+$$
+\end{lemma}
+
+
+\begin{lemma}[Decomposition of unital $^*$sub-algebras of linear operators]
+    Let $\mathcal{A} \subseteq \mathcal{L}(V)$ be a unital $^*$sub-algebra of linear operators over a complex inner product space $V$. Then, there exists a direct sum decomposition of $V$ into orthogonal subspaces $V_\alpha$, where each $V_\alpha$ is a tensor product of two vector spaces, denoted by $V_\alpha = V^1_\alpha \otimes V^2_\alpha$, such that
+    \[ \mathcal{A} \cong \bigoplus_{\alpha} \mathcal{L}(V^1_\alpha) \otimes \mathbb{1}_{V^2_\alpha} \, . \]
+\end{lemma}
+\begin{proof} We break down the proof into five steps.\ \\
+\ \\
+\textbf{Step 1: Decomposition into irreducibles.} The first step in the proof is to observe that the complex inner product space $V$ admits an orthogonal decomposition into irreducible subspaces.
+Let $W \subseteq V$ be an $\mathcal{A}$-invariant subspace. Because $\mathcal{A}$ is a $^*$sub-algebra, it is closed under adjoints, hence $W^\perp$ is also $\mathcal{A}$-invariant; namely, for $a \in \mathcal{A},w' \in W^\perp, w \in W$, we have
+$$
+\langle a w', w\rangle = \langle w',a^\dag w\rangle = 0 \, ,
+$$
+since $a^\dag w \in W$. Therefore, every invariant subspace has an invariant orthogonal complement, and the representation of $\mathcal{A}$ on $V$ is \emph{completely reducible:} due to \Cref{lem:direct-sum-orth}, there is an orthogonal direct-sum decomposition of $V$ into irreducible $\mathcal{A}$-modules such that
+$$
+V = \bigoplus_i V_i \, ,
+$$
+where each $V_i$ corresponds to an irreducible representation of $\mathcal{A}$.
+
+\textbf{Step 2: Group together subspaces by isomorphism class.} The second step in the proof is to group together all the subspaces $V_i$ which are themselves isomorphic as $\mathcal{A}$-modules according to \Cref{def:intertwiner}; in other words, we can group these together in terms of different isotypical components $V_\alpha$ consisting of a carrier space $V_\alpha^1$ together with the corresponding multiplicity space $V_\alpha^2 := \mathbb{C}^{m_\alpha}$ with $\dim(V_\alpha^2)=m_\alpha$ such that
+\begin{align}
+V & \cong \bigoplus_\alpha V_\alpha\\
+&\cong\bigoplus_\alpha (\underbrace{V_\alpha^1 \oplus \dots \oplus V_\alpha^1}_{m_\alpha \text{ times}})\\
+&\cong \bigoplus_\alpha \, (V_\alpha^1 \otimes \mathbb{C}^{m_\alpha})\\
+&= \bigoplus_\alpha \, (V^1_\alpha \otimes V^2_\alpha).
+\end{align}
+Choosing the bases $\{v_{\alpha,i}^1\}_{i=1}^{\dim(V_\alpha^1)}$ of $V_\alpha^1$ and $\{v_{\alpha,j}^2\}_{j=1}^{m_\alpha}$ of $V_\alpha^2$, we can write
+$$
+V = \mathrm{span}_{\mathbb{C}}\Big\{\ket{\alpha} \otimes \ket{v_{\alpha,i}^1} \otimes \ket{v_{\alpha,j}^2} \, : \,  1 \leq i \leq \dim(V_\alpha^1), \, 1 \leq j \leq m_\alpha\Big\}.
+$$
+Following \Cref{def:direct-sum-repr} and using the basis above, we know there exists a change of basis $W \in \mathcal{L}(V)$ that maps $\rho: \mathcal{A} \rightarrow \mathrm{End}(V)$ into diagonal form such that for $a \in \mathcal{A}$:
+\begin{align}
+W\rho(a)W^\dag &=\bigoplus_\alpha (\underbrace{\rho_{\alpha}(a) \oplus \dots \oplus \rho_{\alpha}(a)}_{m_\alpha \text{ times}})\\
+&=\bigoplus_{\alpha} \, \rho_{\alpha}(a) \otimes \mathbb{1}_{V_\alpha^2}\\
+&=\sum_{\alpha} \,\proj{\alpha} \otimes (\rho_{\alpha}(a) \otimes \mathbb{1}_{V_\alpha^2}) \, ,
+\end{align}
+where we can write the resolution of the identity given by $\mathbb{1}_{V_\alpha^2} = \sum_{j=1}^{m_\alpha} \proj{v_{\alpha,j}^2}$. 
+
+
+\textbf{Step 3: Structure of the commutant of $\mathcal{A}$.} Next, we investigate the structure of all operators that commute with the algebra $\mathcal{A}$, i.e., $\mathcal{B} = \mathcal{A}'$ with
+\begin{align}
+\mathcal{B} = \{B \in \mathcal{L}(V) \, : \, aB=Ba, \, \forall a \in \mathcal{A}\}.    
+\end{align}
+Let $B \in \mathcal{B} \subseteq \mathcal{L}(V)$. Since $B$ commutes with all of $\mathcal{A}$, we have
+\begin{align}
+(W \rho(a) W^\dag)\cdot(W B W^\dag) &= 
+W \, \rho(a) B  \, W^\dag\\
+&= 
+W \, B \,\rho(a) \, W^\dag\\
+&=(W B W^\dag) \cdot (W \rho(a) W^\dag), \quad \forall a \in \mathcal{A}.  
+\end{align}
+Let $\widetilde{B} = W B W^\dag$. Expanding $\widetilde{B}$ in the basis corresponding to the isotypical blocks of $V$ which are indexed by $\alpha$, we obtain
+$$
+\widetilde{B} = \sum_{\alpha,\alpha'} \ket{\alpha}\hspace{-1mm}\bra{\alpha'} \otimes \widetilde{B}_{\alpha,\alpha'}
+$$
+where $\widetilde{B}_{\alpha,\alpha'}$ acts on the carrier and multiplicity spaces. Let us now investigate the commutation identity above restricted to the sector indexed by $\alpha,\alpha'$ (formally, we apply the row vector $\bra{\alpha}$ from the left and the column vector $\ket{\alpha'}$ from the right); we find that
+\begin{align}\label{eq:comm-id}
+(\rho_{\alpha}(a) \otimes \mathbb{1}_{V_\alpha^2}) \cdot \widetilde{B}_{\alpha,\alpha'} = \widetilde{B}_{\alpha,\alpha'} \cdot (\rho_{\alpha}(a) \otimes \mathbb{1}_{V_\alpha^2}), \quad \forall a \in \mathcal{A}.
+\end{align}
+Next, we introduce the basis $\{v_{\alpha,j}^2\}_{j=1}^{m_\alpha}$ of the multiplicity space $V_\alpha^2$; this yields
+\begin{align}
+\widetilde{B}_{\alpha,\alpha'} = \sum_{j=1}^{m_\alpha} \sum_{k=1}^{m_{\alpha'}}   {\widetilde{B}_{\alpha,\alpha'}}^{(j,k)} \otimes \ket{v_{\alpha,j}^2} \hspace{-1mm}\bra{v_{\alpha',k}^2}.
+\end{align}
+where ${\widetilde{B}_{\alpha,\alpha'}}^{(j,k)}:V_\alpha^1 \rightarrow V_{\alpha'}^1$ is a linear operator. Plugging this into the commutation identity in \Cref{eq:comm-id}, we get the following two equations:
+\begin{align*}
+\text{(left-hand side:) }  \quad (\rho_{\alpha}(a) \otimes \mathbb{1}_{V_\alpha^2}) \cdot \widetilde{B}_{\alpha,\alpha'} &= \sum_{j=1}^{m_\alpha} \sum_{k=1}^{m_{\alpha'}} \,  \rho_\alpha(a) {\widetilde{B}_{\alpha,\alpha'}}^{(j,k)} \otimes \ket{v_{\alpha,j}^2} \hspace{-1mm}\bra{v_{\alpha',k}^2}   \\
+\text{(right-hand side:) }  \quad \widetilde{B}_{\alpha,\alpha'} \cdot (\rho_{\alpha}(a) \otimes \mathbb{1}_{V_\alpha^2})&= \sum_{j=1}^{m_\alpha} \sum_{k=1}^{m_{\alpha'}} \,  {\widetilde{B}_{\alpha,\alpha'}}^{(j,k)} \rho_\alpha(a) \otimes \ket{v_{\alpha,j}^2} \hspace{-1mm}\bra{v_{\alpha',k}^2};
+\end{align*}
+in particular, when restricting to the $j,k$ coefficients, ${\widetilde{B}_{\alpha,\alpha'}}^{(j,k)}$ is an intertwiner with
+\begin{align}\label{eq:intertwiner-B}
+\rho_\alpha(a) {\widetilde{B}_{\alpha,\alpha'}}^{(j,k)}  = {\widetilde{B}_{\alpha,\alpha'}}^{(j,k)} \rho_\alpha(a), \quad \forall a \in \mathcal{A}, \, B \in \mathcal{B}.    
+\end{align}
+We now distinguish between the following two cases:
+\begin{itemize}
+    \item (Case: $\alpha \neq \alpha'$) In this case, we know that $\rho_{\alpha}$ and $\rho_{\alpha'}$ correspond to distinct (and inequivalent) irreducible representations of $\mathcal{A}$. According to Schur's Lemma (\Cref{lem:schur}), we know that the intertwiner in Eq.~\eqref{eq:intertwiner-B} can only be identical to $0$, and thus
+    $$
+    {\widetilde{B}_{\alpha,\alpha'}}^{(j,k)} \equiv 0, \quad \forall \alpha \neq \alpha'.
+    $$
+
+    \item (Case: $\alpha = \alpha'$) In this case, the intertwiner in Eq.~\eqref{eq:intertwiner-B} is of the form ${\widetilde{B}_{\alpha,\alpha}}^{(j,k)}:V_\alpha^1 \rightarrow V_{\alpha}^1$ in Eq.~\eqref{eq:intertwiner-B}. Then, due to Schur's Lemma (\Cref{lem:schur}), it must be equal to a multiple of the identity; concretely, there exists some matrix $\Lambda_\alpha^B \in \mathcal{L}(V_\alpha^1)$ such that
+    $$
+    {\widetilde{B}_{\alpha,\alpha}}^{(j,k)} = (\Lambda_\alpha^B)_{jk} \cdot \mathbb{1}_{V_\alpha^1}, \quad \text{ for } \, 1 \leq j,k \leq m_\alpha.
+    $$
+\noindent This implies that
+    \begin{align}
+\widetilde{B}_{\alpha,\alpha} &= \sum_{j=1}^{m_\alpha} \sum_{k=1}^{m_{\alpha}}   {\widetilde{B}_{\alpha,\alpha}}^{(j,k)} \otimes \ket{v_{\alpha,j}^2} \hspace{-1mm}\bra{v_{\alpha,k}^2}\\
+&=\sum_{j=1}^{m_\alpha} \sum_{k=1}^{m_{\alpha}}   (\Lambda_\alpha^B)_{jk} \cdot \mathbb{1}_{V_\alpha^1} \otimes \ket{v_{\alpha,j}^2} \hspace{-1mm}\bra{v_{\alpha,k}^2}\\
+&=\sum_{j=1}^{m_\alpha} \sum_{k=1}^{m_{\alpha}}  \mathbb{1}_{V_\alpha^1} \otimes (\Lambda_\alpha^B)_{jk} \ket{v_{\alpha,j}^2} \hspace{-1mm}\bra{v_{\alpha,k}^2}\\
+&= \mathbb{1}_{V_\alpha^1} \otimes \Lambda_\alpha^B.
+\end{align}
+\end{itemize}
+Combining all blocks $\alpha$, we now know that
+\begin{align}
+\widetilde{B} = \sum_\alpha  \,\proj{\alpha} \otimes (\mathbb{1}_{V_\alpha^1} \otimes \Lambda_\alpha^B).   
+\end{align}
+and therefore
+\begin{align}
+B = W^\dag \, \sum_\alpha  \,\proj{\alpha} \otimes (\mathbb{1}_{V_\alpha^1} \otimes \Lambda_\alpha^B) \, W, \quad \forall B \in \mathcal{B}.   
+\end{align}
+In other words, there exists a change of basis $W \in \mathcal{L}(V)$ which puts $B \in \mathcal{B} \subseteq \mathcal{L}(V)$ into the block diagonal form above. Therefore, by Burnside's Theorem, we know that the only irreducible sub-algebra of $\mathcal{L}(V_\alpha^2)$ is $\mathcal{L}(V_\alpha^2)$ itself \AlexNote{Check this}, and thus
+\begin{align}
+\mathcal{B} \cong \bigoplus_{\alpha} \mathbb{1}_{V^1_\alpha} \otimes \mathcal{L}(V^2_\alpha).    
+\end{align}
+\end{proof}
+
+\newpage
+
+\section{Double Commutant Theorem}
+
+\begin{table}[h!]
+\centering
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{@{}p{3cm}ccp{3.2cm}cc@{}}
+\toprule
+\textbf{Algebra} 
+& \multicolumn{2}{c}{\textbf{Notation}} 
+& \textbf{Member Type} 
+& \multicolumn{2}{c}{\textbf{Form}} \\
+
+\cmidrule(lr){2-3}\cmidrule(lr){5-6}
+& on $\mathcal{H}$ & on $\mathcal{H} \otimes \mathcal{H}$ 
+& & on $\mathcal{H}$ & on $\mathcal{H} \otimes \mathcal{H}$ \\
+\midrule
+
+Subalgebra of linear operators 
+& $\mathcal{M}$ 
+& $\widehat{\mathcal{M}}$ 
+& Linear operator (matrix) 
+& $A$ ($d\times d$) 
+& $\widehat{A} := I \otimes A = \text{diag}(A)$ ($d^2\times d^2$) \\
+
+Commutant of a subalgebra 
+& $\mathcal{M}'$ 
+& $(\widehat{\mathcal{M}})'$ 
+& Matrix of same dimension as the subalgebra 
+& $B$ 
+& $\widehat{B} = (B_{j,k})_{j,k\le d}$, $B_{j,k}\in \mathcal{M}'$ \\
+
+Double (Second) commutant 
+& $\mathcal{M}''$ 
+& $(\widehat{\mathcal{M}})''$ 
+& \textit{(same as above)} 
+& $C$ 
+& $\widehat{C} = I \otimes C = \mathrm{diag}(C)$, $C\in\mathcal{M}''$ \\
+\bottomrule
+\end{tabular}
+\caption{Notation used in the proof of the Double Commutant Theorem.}
+\label{tab:notation-commutator-proof}
+\end{table}
+
+\IslamNote{I suspect there is a typo in the Jones' notes. The extension should act as identity on the first tensor factor, no?}
+
+% Old table below -- asked ChatGPT to make it "prettier" and it gave me the one above.
+% \begin{table}
+%     \centering
+%     \begin{tabular}{|p{2cm}|c|c|p{2cm}|c|c|}
+%     \hline
+%         Set & \multicolumn{2}{|c|}{Notation} & Member Type & \multicolumn{2}{|c|}{Notation}\\
+        
+%         & on $\mathcal{H}$ & on $\mathcal{H} \otimes \mathcal{H}$ & & on $\mathcal{H}$ & on $\mathcal{H} \otimes \mathcal{H}$\\
+%         \hline
+%          Subalgebra of linear operators & $\mathcal{M}$ & $\widehat{\mathcal{M}}$ &  Linear Operator (Matrix) & $A$ ($d \times d$ Matrix) & $\widehat{A} := A \otimes I$ ($d^2 \times d^2$ Matrix)\\
+%          \hline
+%          Commutant of a subalgebra & ($\mathcal{M}$)' & $(\widehat{\mathcal{M}})'$ & Matrix of same dimension as the subalgebra & $B$ & $\widehat{B} = \left(B_{j,k}\right)_{j,k \leq d}$ where $B_{j,k} \in \mathcal{M}'$\\
+%          \hline
+%          Second (a.k.a. Double) Commutant of subalgebra & ($\mathcal{M}$)'' & $(\widehat{\mathcal{M}})''$ & ... & C & $\widehat{C} = \text{diag}(C)$ where $C \in \mathcal{M}''$\\
+%          \hline
+%     \end{tabular}
+%     \caption{Notation used in the proof of the Double Commutant Theorem.}
+%     \label{tab:notation-commutator-proof}
+% \end{table}
+
+Here, we will prove a finite dimensional version of von Neumann's double commutant theorem. The proof is basically that in~\cite{jones15} with more details filled in. Let's first define the commutant for a subalgebra of the linear operators on a Hilbert Space.
+\begin{definition}
+\label{defn:commutant}
+    For any algebra $\mathcal{M} \subseteq \mathcal{L}(\mathcal{H})$ of linear operators over a (finite dimensional) vector space, we denote by $\mathcal{M}'$ the \emph{commutant} algebra 
+    \[ \mathcal{M}' := \{ b \in \mathcal{L}(\mathcal{H}) : bx = xb \: \forall x \in \mathcal{M}\}.\]
+\end{definition}
+
+We will prove that $\mathcal{M}'' = \mathcal{M}$. First, we will go through some helpful lemmas that we will use in the proof. The first is an isomorphism between the tensor product of a Vector space of dimension $d$ with itself and its $d$-fold Cartesian product.
+
+\IslamNote{btw, this is not Schmidt decomposition, or so i guess?}
+
+\begin{lemma}[External Direct Sum Decomposition of Tensor Product]\label{lemma:external-direct-sum-tensor-product}
+    Let $V$ be a Vector Space of dimension $d$, then:
+    \[V \otimes V \simeq \bigoplus_{k = 1}^d V.\]
+    Furthermore, if $B = \{\ket{b_1}, \dots, \ket{b_n}\}$ is any\IslamNote{Does not need to be orthornomal, right?} basis for $V$, then any vector $\ket{w} \in V \otimes V$ can be written as  $\ket{w} = \sum\limits_{k \in \{1, 2, \dots, d\}} \ket{v_{k}} \ket{b_k}$ and there exists an isomorphism\IslamNote{Should I just say bijective linear map?} map $T_B: V \otimes V \to \bigoplus_{k = 1}^d V$ defined as follows:
+    \begin{equation}
+        T_B: \ket{w} = \sum\limits_{k \in \{1, 2, \dots, d\}}  \ket{v_{k}} \ket{b_k} \mapsto \left(\ket{v_1}, \ket{v_2}, \dots, \ket{v_d}\right).
+    \end{equation}
+\end{lemma}
+
+\begin{proof}
+Since $B = \{\ket{b_j}: j \in [d]\}$ is a basis for $V$, $B\otimes B := \{\ket{b_j}\ket{b_k}: j,k \in [d] \}$ is a basis for $V \otimes V$. Therefore, any vector $\ket{w} \in V \otimes V$ can be written as:
+\begin{align*}
+    \ket{w} &= \sum\limits_{j, k \in [d]} \alpha_{j,k} \ket{b_j} \ket{b_k} \\
+    &= \sum\limits_{k \in [d]} \left(\sum\limits_{j \in [d]} \alpha_{j,k} \ket{b_j}\right) \ket{b_k}\\
+    &= \sum\limits_{k \in [d]} \ket{v_k} \ket{b_k} & \ket{v_k} := \sum\limits_{j \in [d]} \alpha_{j,k} \ket{b_j}
+\end{align*}
+
+One can verify that $T_B$ is a bijective linear map. One can verify that the map is bijective from how it is constructed. Below, we verify it is linear.
+
+\begin{align*}
+    T(\alpha \ket{v} + \beta \ket{w}) &= T \left( \alpha \sum\limits_{k \in [d]} \ket{v_k} \ket{b_k} + \beta \sum\limits_{k \in [d]} \ket{w_k} \ket{b_k} \right)\\
+    &= T \sum\limits_{k \in [d]} \left(\alpha \ket{v_k} + \beta \ket{w_k}\right) \ket{b_k}\\
+    &= \left(\alpha \ket{v_1} + \beta\ket{w_1}, \dots, \alpha \ket{v_k} + \beta \ket{w_k}\right)\\
+    &= \alpha \left( \ket{v_1}, \dots, \ket{v_k} \right) + \beta \left(\ket{w_1}, \dots, \ket{w_k} \right)\\
+    %&= T(\alpha \ket{v}) + T(\beta\ket{w})\\
+    &= \alpha T(\ket{v}) + \beta T(\ket{w}).
+\end{align*}
+
+% Consider the standard basis $\{\ket{1}, \dots, \ket{d}\}$ for the Hilbert Space $\mathbb{C}^d$. We know that~\footnote{what is this theorem called in Linear Algebra? Is it Schmidt or ``Direct Sum Decomposition''? Can I call it a special case of Schmidt?} the space $\mathbb{C}^d \otimes \mathbb{C}^d$ can be characterized as follows:
+
+% \begin{equation}
+%     \mathbb{C}^d \otimes \mathbb{C}^d \simeq \bigoplus_{i = 1}^d \mathbb{C}^d
+% \end{equation}
+
+% \noindent and $\left\{\ket{j_1}\ket{j_2}: j_1, j_2 \in \left\{1, \dots, d\right\}\right\}$ is an orthonormal basis for the space $\mathbb{C}^d \otimes \mathbb{C}^d \simeq \bigoplus_{i = 1}^d \mathbb{C}^d$.
+\end{proof}
+
+% \begin{lemma}[Exercise 2.1.14 in Jones' Notes]
+%     If $\mathcal{K}$ is a closed subspace and $a = a^*$, then:
+%     \[a \mathcal{K} \subseteq \mathcal{K} \iff [a, P_{\mathcal{K}}] = 0.\]
+% In general:
+% \[\left( \: a \mathcal{K} \text{ and } a^*\mathcal{K} \subseteq \mathcal{K} \: \right) \iff [a, P_{\mathcal{K}}] = 0.\]
+% \end{lemma}
+
+\begin{lemma}[A projector onto $\mathcal{M}$-invariant subspaces commutes with any operator $\in \mathcal{M}$; Exercise 2.1.14 in Jones' Notes]
+\label{ex-2-1-14}
+    Let $\mathcal{M} \subseteq \mathcal{L}(\mathcal{H})$ be a $*$-algebra and let $V \subseteq \mathcal{H}$ be a subspace, and let $P_V$ be the projector onto $V$. If $\mathcal{M}V \subseteq V$, then then $P_V \in \mathcal{M}'$.
+\end{lemma}
+\begin{proof}
+    From the fact that $\mathcal{M}V \subseteq V$, it follows that
+    \[ \forall x \in \mathcal{M}, x P_V = P_V x P_V.\]
+    Because $\mathcal{M}$ is a $*$-algebra, this also implies that \Wheels{$x^\dagger \in \mathcal{M}$} and thus:
+    \[ \forall x \in \mathcal{M}, x^\dagger P_V = P_V x^\dagger P_V.\]
+    Now let $\ket{u}, \ket{v}$ be any two vectors in $\mathcal{H}$ and let $x \in \mathcal{M}$.
+    \begin{align}
+        \bra{u} x P_V \ket{v} &= \bra{u} P_V x P_V \ket{v} \\
+        &= (P_V x^\dagger P_V \ket{u} )^\dagger \ket{v} \\
+        &= (x^\dagger P_V \ket{u})^\dagger \ket{v} \\
+        &= \bra{u} P_V x \ket{v}.
+    \end{align}
+    Since this holds for all $\ket{u}, \ket{v}$, it follows that $P_V x = xP_V$.
+\end{proof}
+
+Now, let's restrict ourselves to subalgebras $\mathcal{M} \subseteq \mathcal{L}(\mathbb{C}^d)$. We will define a useful extension/amplification.
+
+Consider any matrix $A \in \mathcal{M}$. Note that $A$ is a $d \times d$ matrix that acts on the $\mathbb{C}^d$ Hilbert Space. We will define an extension~\footnote{In fact, we define it for any $d \times d$ matrix.} $\widehat{A}$ that acts on the $\mathbb{C}^d \otimes \mathbb{C}^d$ Hilbert Space. That extension will act equivalently to the $A$ transformation on the second space, and will act as the identity transformation on the first space. Formally, this is characterized as follows:
+    \begin{equation}
+        \widehat{A}: \quad\quad\ket{\Psi_1} \otimes \ket{\Psi_2} \quad\quad \mapsto  \quad\quad \ket{\Psi_1} \otimes \left(A \ \ket{\Psi_2}\right)
+    \end{equation}
+where $\widehat{A}$ is a $d^2 \times d^2$ matrix, $\ket{\Psi_1} \in \mathbb{C}^d$ and $\ket{\Psi_2} \in \mathbb{C}^d$.
+
+We will denote by $\widehat{\mathcal{M}} := \{\widehat{A}: A \in \mathcal{M}\}$ the algebra that is the image of the algebra $\mathcal{M}$ under the extension $\widehat{\: }$ . Then, the commutant of the extension will be $(\widehat{\mathcal{M}})'$ and the double commutant will be $(\widehat{\mathcal{M}})''$.
+
+\begin{fact}
+\label{fact-A-diag}
+    For $A \in \mathcal{L}(\mathcal{H})$, define $\widehat{A} := I \otimes A \in \mathcal{L}(\mathcal{H} \otimes \mathcal{H})$. Then,
+    \begin{equation}
+        \widehat{A} = \text{diag}(A) = 
+    \begin{bmatrix}
+    A & \\
+    & A \\
+    & & \ddots\\
+    & & & A\\
+    \end{bmatrix}.
+    \end{equation}
+\end{fact}
+\begin{proof}
+    By definition of $\widehat{A}$ and the tensor product of matrices:
+    \begin{align*}
+        \widehat{A} &= I \otimes A\\
+        &= \text{diag}(1) \otimes A \\
+        &= \text{diag}(A).
+    \end{align*}
+\end{proof}
+\noindent As a corollary, we can characterize matrices in $\widehat{\mathcal{M}}$ as follows.
+
+\begin{claim}[Characterization of $\widehat{\mathcal{M}}$]\label{claim-m-hat}
+    Matrix $\widehat{A} \in \widehat{\mathcal{M}}$ if and only if $A \in \mathcal{M}$ and:
+    \begin{equation}
+        \widehat{A} = \text{diag}(A) = 
+    \begin{bmatrix}
+    A & \\
+    & A \\
+    & & \ddots\\
+    & & & A\\
+    \end{bmatrix}.
+    \end{equation}
+\end{claim}
+
+\begin{claim}[Characterization of $(\widehat{\mathcal{M}})'$]\label{claim-m-hat-prime}
+    Matrix $\widehat{B} \in (\widehat{\mathcal{M}})'$ if and only if:
+        \begin{equation}
+        \widehat{B} = (B_{j,k})_{j,k} = 
+    \begin{bmatrix}
+    B_{1,1} & B_{1,2} & \dots &B_{1,d} \\
+    B_{2,1} & B_{2,2} & \dots & B_{2,d}\\
+    \vdots & \vdots & \vdots & \vdots \\
+    B_{d, 1}& B_{d, 2}& \dots & B_{d,d} &\\
+    \end{bmatrix}
+    \end{equation}
+and $B_{j,k} \in \mathcal{M}'$ for all $j,k \in \{1, \dots, d\}$.
+\end{claim}
+\begin{remark}
+    Each $B_{j,k}$ is a $(d \times d)$ matrix. $\widehat{B}$ is a $(d^2 \times d^2)$ matrix because it is a big $(d \times d)$ matrix of blocks where each block is $(d \times d)$.
+\end{remark}
+\begin{proof}
+    $\widehat{B}$ is of dimension $d^2 \times d^2$. Thus, without loss of generality, like any $d^2 \times d^2$ matrix, $\widehat{B}$ can be written as $d \times d$ blocks $\widehat{B} = (B_{j,k})_{j,k}$ where each block is of size $d \times d$. Now, let $\widehat{A}$ be arbitrary in $\widehat{\mathcal{M}}$. We know, by Claim~\ref{claim-m-hat}, that $\widehat{A}$ is exactly of the form $\text{diag}(A)$ where $A \in \mathcal{M}$. Now, let's compute the commutator $[\widehat{A}, \widehat{B}]$ and see when it is exactly zero. We will use the following remark.
+
+    \begin{remark}\label{remark:compute-product-DB}
+        Let $\widehat{D} = \text{diag}(D_1, \dots, D_n) = \text{diag}(D_j)_{j \leq n}$ be a block diagonal matrix, and let $B = \left(B_{j,k}\right)_{j,k \leq n}$ be a block matrix. Then:
+        \begin{equation}
+            \widehat{D}B = \left(D_j B_{j,k}\right)_{j,k \leq n} \quad\quad \text{ and } \quad\quad B\widehat{D} = \left(B_{j,k}D_k \right)_{j,k \leq n}.
+        \end{equation}
+         Furthermore, if  $\widehat{D} = \text{diag}(D) = \text{diag}(D, \dots, D)$
+         \begin{equation}
+             [\widehat{D}, B] = \left([D, B_{j,k}]\right)_{j,k}.
+         \end{equation}
+    \end{remark}
+\noindent Using the remark, we now compute the commutator.
+    \begin{align*}
+        [\widehat{A}, \widehat{B}] &= \widehat{A} \ \widehat{B} - \widehat{B} \ \widehat{A}\\
+        &= (A B_{j,k})_{j,k} - (B_{j,k} A)_{j,k} & \text{via Remark~\ref{remark:compute-product-DB}}\\
+        &= (A B_{j,k} - B_{j,k} A)_{j,k}\\
+        &= ([A, B_{j,k}])_{j,k}
+    \end{align*}
+
+\noindent The commutator $[\widehat{A}, \widehat{B}]$ is zero $\iff$ $[A, B_{j,k}] = 0$ for all $j, k \leq d$. This means that $\widehat{B}$ commutes with all $\widehat{A} \in \widehat{\mathcal{M}}$ iff each block $B_{j,k}$ commutes with all $A \in \mathcal{M}$ i.e. $B_{j,k} \in \mathcal{M}'$.
+    
+    % Assume towards a contradiction that one of these blocks $B_{j,k} \notin \mathcal{M}'$. Thus, there is a matrix $A \in \mathcal{M}$ that does not commute with $B_{j,k}$ i.e. $[A, B_{j,k}] \neq 0$. Then, as computed below, $\widehat{A}$ does not commute with $\widehat{B}$ contradicting the fact that $\widehat{B} \in (\widehat{M})'$.
+    % \begin{align*}
+    %     \widehat{A} \ \widehat{B}  &= (A B_{j,k})_{j,k}\\
+    %     \widehat{B} \ \widehat{A} &= (B_{j,k} A)_{j,k}
+    % \end{align*}
+
+\end{proof}
+
+\begin{claim}[Characterization of $(\widehat{\mathcal{M}})''$]\label{claim-m-hat-double-prime}
+    Matrix $\widehat{C} \in (\widehat{\mathcal{M}})''$ $\iff$ $C \in \mathcal{M}''$ and:
+    \begin{equation}
+        \widehat{C} = \text{diag}(C) = 
+    \begin{bmatrix}
+    C & \\
+    & C \\
+    & & \ddots\\
+    & & & C\\
+    \end{bmatrix}.
+    \end{equation}
+\end{claim}
+\begin{proof}
+We will prove both directions.
+
+\paragraph{Direction 1 ($\impliedby$):}
+Let $C \in \mathcal{M}''$ and $\widehat{C} := \text{diag}(C)$. We need to prove that for any $\widehat{B} \in (\widehat{\mathcal{M}})'$, the commutator $[\widehat{C}, \widehat{B}]$ is zero. Let $\widehat{B} \in (\widehat{\mathcal{M}})'$ be arbitrary, and thus (by Claim~\ref{claim-m-hat-prime}) exactly of the form $\widehat{B} = \left(B_{j,k}\right)_{j,k}$ where $B_{j,k} \in \mathcal{M}'$. Since $C \in \mathcal{M}''$ and $B_{j,k} \in \mathcal{M}'$, then $C$ commutes with $B_{j,k}$.
+
+\begin{align*}
+    [\widehat{C}, \widehat{B}] &= \left([C, B_{j,k}]\right)_{j,k} & \text{via Remark~\ref{remark:compute-product-DB}}\\ 
+    &= (0)_{j,k} & [C, B_{j,k}] = 0.
+\end{align*}
+
+\paragraph{Direction 2 ($\implies$):}
+
+    Let's write $\widehat{C} = \left(C_{j,k}\right)_{j,k \leq d}$ in the general~\footnote{It is so tempting here to say that $\widehat{C} = \text{diag(C)}$ and cite Fact~\ref{fact-A-diag}. Although it is true (because eventually, we know that we will prove the double commutant theorem), by strictly applying the definition of the commutant algebra, $\widehat{C}$ can be any linear operator not necessarily in the algebra of extended operators.} form of a $d^2 \times d^2$ matrix as we did in the proof of Claim~\ref{claim-m-hat-prime}. Let $\widehat{B} \in (\widehat{\mathcal{M}})'$ be arbitrary, and thus (by Claim~\ref{claim-m-hat-prime}) is exactly of the form $\widehat{B} = \left(B_{j,k}\right)_{j,k}$ where $B_{j,k} \in \mathcal{M}'$. Let's now compute the commutator $[\widehat{B}, \widehat{C}]$ and see what conditions are sufficient for it to be zero.
+
+    \begin{align}
+        \begin{split}
+        \label{eqn:Bhat-Chat}
+            [\widehat{B}, \widehat{C}] &= \quad\quad\quad\widehat{B} \widehat{C} \quad\quad\quad -  \quad\quad\quad\widehat{C} \widehat{B} \quad\quad\quad \\
+        &= \left(\sum\limits_{t = 1}^d B_{r, t} C_{t,c}\right)_{r,c}  \ - \quad \left(\sum\limits_{t = 1}^d C_{r, t} B_{t,c} \right)_{r,c}\\
+        &= \left(\sum\limits_{t = 1}^d B_{r, t} C_{t,c} - C_{r, t} B_{t,c}\right)_{r,c}\\
+        \end{split}
+    \end{align}
+
+Any linear operator of the form $E \otimes I$ commutes with any operator in $\widehat{\mathcal{M}}$ (because they act on different tensor factors). In other words, $(E \otimes I) \in (\widehat{\mathcal{M}})'$ for any linear operator $E$. Equation~\ref{eqn:Bhat-Chat} should work for any $\widehat{B} \in (\widehat{\mathcal{M}})'$. We will consider special cases of the equation when $\widehat{B}$ is of the form:
+\begin{equation}
+    \widehat{B_{r,c}} = \left(E_{r,c} \otimes I\right) = \left(\delta_{(j,k) = (r,c)} \cdot I\right)_{j,k} = \left(\delta_{j,r} \cdot \delta_{k, c} \cdot I_{d\times d}\right)_{j,k}
+\end{equation}
+where $\{E_{r,c}\}$ are the matrix units.
+
+
+Let $r^* \neq c^*$ be arbitrary from $[d]$ and consider $[\widehat{B_{r^*,c^*}}, \widehat{C}]$:
+
+\begin{align*}
+    [\widehat{B_{r^*,c^*}}, \widehat{C}] &= \left(\sum\limits_{t = 1}^d B_{r, t} C_{t,c} - C_{r, t} B_{t,c}\right)_{r,c}\\
+    &= \left(\delta_{c,c^*}C_{c,c} - \delta_{r,r^*}C_{r,r}\right)_{r,c}.
+\end{align*}
+
+The commutator $[\widehat{B_{r^*,c^*}}, \widehat{C}]$ is zero if and only if all the blocks are zero including the $(r^*, c^*)$th block. That happens iff $C_{c^*, c^*} = C_{r^*, r^*}$. Since $r^*, c^*$ were arbitrary, this means that all the diagonal blocks are equal and equal to some matrix, say~\footnote{We cannot allege $\widetilde{C} \in \mathcal{M}''$ yet.} $\widetilde{C}$.
+
+Now, for arbitrary $q \in [d]$, consider $[\widehat{B_{q,q}}, \widehat{C}]$:
+\begin{align*}
+    [\widehat{B_{q,q}}, \widehat{C}] &= \left(\sum\limits_{t = 1}^d B_{r, t} C_{t,c} - C_{r, t} B_{t,c}\right)_{r,c}\\
+    &= \left(\delta_{r,q} C_{q,c} - \delta_{c,q} C_{r,q} \right)_{r,c}.
+\end{align*}
+
+Again, the commutator is zero if and only if all blocks are zero. For any $q' \neq q$, Consider the $(q, q')$th block. That block is zero if and only if $C_{q,q'} = 0$. Since $q \neq q'$ were arbitrary with the only restriction being different from each other, we can conclude that all of the off-diagonal blocks are $0$.
+
+Putting the pieces together, we have restricted $\widehat{C}$ to the form $\text{diag}(\widetilde{C}) = \text{diag}(\widetilde{C}, \widetilde{C}, \dots, \widetilde{C})$. It remains to show that $\widetilde{C} \in \mathcal{M}''$.
+
+Now, let $B \in \mathcal{M}'$ be arbitrary, the matrix $\text{diag}(B)$ is in $(\widehat{M})'$ because it is of the form in Claim~\ref{claim-m-hat-prime} and both of the matrices $B$ and $0_{d\times d}$ are in $\mathcal{M}'$.
+
+\begin{align*}
+    [\text{diag}(B), \text{diag}(\widetilde{C})] &= \text{diag}(B) \ \text{diag}(\widetilde{C}) \ - \ \text{diag}(\widetilde{C}) \ \text{diag}(B) \\
+    &= \text{diag}(B\ \widetilde{C}) \ -  \ \text{diag}( \widetilde{C} \ B)\\
+    &= \text{diag}(B\ \widetilde{C}\ -  \ \widetilde{C} \ B)\\
+    &= \text{diag}([B, \widetilde{C}])
+\end{align*}
+
+By the above computation, the commutator $[\text{diag}(B), \text{diag}(\widetilde{C})]$ is zero if and only if $[B, \widetilde{C}]$ is zero. Since $B \in \mathcal{M}'$ was arbitrary, this condition is equivalent to $\widetilde{C}$ commuting with all operators in $\mathcal{M}'$  i.e. $\widetilde{C} \in \mathcal{M}''$.
+
+
+\end{proof}
+Using these nice characterizations of matrices in $\widehat{M}$, $(\widehat{M})'$, $(\widehat{M})''$, we can move forward with the proof.
+
+\begin{lemma}(Double Commutant Theorem for Finite-Dimensional Unital~\footnote{Is any finite-dimensiopnal $C^*$-algebra unital?} $C^*$-Algebras~\footnote{The theorem holds more generally, but the proof is more involved.})
+    Let $\mathcal{M} \subseteq \mathcal{L}(\mathbb{C}^d)$ be a matrix algebra that is a unital $*$-algebra (that is, it contains the identity and is closed under conjugate transpose). Then $\mathcal{M}'' = \mathcal{M}$.
+\end{lemma}
+\begin{proof}
+
+    \AnandNote{The direction $\mathcal{M} \subseteq \mathcal{M}''$ is trivial (OR IS IT?????). }
+    \AnandNote{    We will do this using purification. 
+    \[ A^\top\]}
+
+
+    \paragraph{Direction 1 ($\mathcal{M} \subseteq \mathcal{M}''$):} 
+    Let $A \in \mathcal{M}$ be an arbitrary matrix. We need to show that $A \in \mathcal{M}''$ i.e. $A$ commutes with every matrix $A' \in \mathcal{M}'$. This is true by the definition of the commutant (Definition~\ref{defn:commutant}): $A'$ commutes with every matrix in $\mathcal{M}$ including $A$.
+    
+    %We focus on proving the other direction. 
+
+    \paragraph{Direction 2 ($\mathcal{M}'' \subseteq \mathcal{M}$):} Let $C \in \mathcal{M}''$ be arbitrary. We need to show that $C \in \mathcal{M}$. 
+    
+Let $\ket{\Phi^+}$ be~\footnote{called $v$ in Jones' notes.} the maximally entangled state as follows:
+\begin{equation}
+    \ket{\Phi^+} = \frac{1}{\sqrt{d}} \left(\ket{1}\ket{1} + \ket{2}\ket{2} + \dots + \ket{d}\ket{d}\right).
+\end{equation}
+
+Consider the subspace~\footnote{need to prove it is actually a subspace or clear?} $V$ 
+\begin{equation}
+ V := \widehat{\mathcal{M}}(\ket{\Phi^+}) := \text{span} \{ \widehat{A}\ket{\Phi^+}: \widehat{A} = I \otimes A, \ A \in \mathcal{M}  \}   
+\end{equation}
+resulting from applying each linear transformation $\widehat{A} = I \otimes A \in \widehat{\mathcal{M}}$ to the maximally entangled state $\ket{\Phi^+}$. We can prove that:
+\begin{claim}
+    \[\widehat{\mathcal{M}}(V)  = \widehat{\mathcal{M}}(\widehat{\mathcal{M}}(\ket{\Phi^+}))\subseteq V = \widehat{\mathcal{M}}(\ket{\Phi^+}).\]
+\end{claim}
+\begin{proof}
+To see that, consider
+\begin{align*}
+    \ket{\Psi} &= \widehat{A_2} \widehat{A_1} \ket{\Phi^+} & \text{ arbitrary } \ket{\Psi} \in \widehat{\mathcal{M}}(\widehat{\mathcal{M}}(\ket{\Phi^+}))\\
+    &= (I \otimes A_2)(I \otimes A_1) \ket{\Phi^+}\\
+    &= (I \otimes A_2 A_1) \ket{\Phi^+}\\
+    &= (I \otimes A) \ket{\Phi^+} & \text{ where } A := A_2 A_1 \in \mathcal{M} \text{ because } \mathcal{M} \text{ is an algebra}\\
+    &= \widehat{A} \ket{\Phi^+} & \in \widehat{\mathcal{M}}(\ket{\Phi^+})
+\end{align*}
+\end{proof}
+
+Since $\mathcal{M}$ is self-adjoint, then~\footnote{actually prove it} $\widehat{\mathcal{M}}$ is also self-adjoint i.e. $(\widehat{\mathcal{M}})^* = \widehat{\mathcal{M}}$. Paired with the fact that $\widehat{\mathcal{M}}(V) \subseteq V$, we can conclude by Lemma~\ref{ex-2-1-14} that $P_V \in (\widehat{\mathcal{M}})'$. Therefore, for any $\widehat{C} \in (\widehat{\mathcal{M}})''$, $P_V$ commutes~\footnote{Can we slip in the term ``central projection'' somewhere here?} with $\widehat{C}$. Furthermore, $\widehat{C}(V) \subseteq V$ because (for arbitrary vector $\ket{v} \in V$):
+
+%P_V^2\ \widehat{C}\ \ket{v} & P_V^2 = I \text{ for a projector } P_V\\&= P_V\
+\begin{align*}
+    \widehat{C}\ \ket{v} & =   \widehat{C} \ P_V\ \ket{v} &\forall v \in V:\ P_V \ket{v} = \ket{v} \\
+    &= P_V \ \widehat{C} \ \ket{v} &  P_V \text{ commutes with } \widehat{C} \\
+    &= P_V \ket{w} & \ket{w} := \widehat{C} \ \ket{v}\\
+    &= \ket{v_2} \in V & \ket{v_2} \text{ is the projection of } \ket{w} \text{ onto } V\\
+\end{align*}
+
+Since $\mathcal{M}$ is unital (with unit $1 = I$), so is $\widehat{\mathcal{M}}$ with unit $\widehat{1} = 1 \otimes I = I \otimes I = I$. Since $\widehat{C}(V) \subseteq V$ where $V = \widehat{\mathcal{M}}(\ket{\Phi^+})$, we can conclude that:
+
+\[
+    \widehat{C}\ (I \ket{\Phi^+}) = \widehat{A} \left(\ket{\Phi^+}\right) \text{ for some } \widehat{A} \in \widehat{\mathcal{M}}.
+\]
+
+\noindent By the characterization (Claim~\ref{claim-m-hat-double-prime}) of $\widehat{C} = \text{diag}(C) = I \otimes C$ with $C \in \mathcal{M}''$, we can conclude (remember that $\widehat{A} = I \otimes A$):
+
+\begin{equation}
+    \ket{1} \otimes (C\ket{1}) + \dots + \ket{d} \otimes (C\ket{d}) = \ket{1} \otimes (A\ket{1}) + \dots + \ket{d} \otimes (A\ket{d})
+\end{equation}
+
+\noindent Using the isomorphism (Lemma~\ref{lemma:external-direct-sum-tensor-product}) $\mathbb{C}^d \otimes \mathbb{C}^d \simeq \bigoplus_{i = 1}^d \mathbb{C}^d$, we can re-write the previous equation as:
+\begin{equation}
+    \left(C\ket{1}, C\ket{2}, \dots, C\ket{d}\right) = \left(A\ket{1}, A\ket{2}, \dots, A\ket{d}\right)
+\end{equation}
+
+Thus, for each basis element in the standard basis $\ket{j}$, the action of $C$ on that basis element $\ket{j}$ must agree with the action of $A$ on that same basis element $\ket{j}$. Therefore, $C = A \in \mathcal{M}$, and thus $C \in \mathcal{M}$.
+
+\end{proof}
+
+
+\newpage
+\section{Rounding by pinching}
+
+\IslamNote{Need to give proper credit to stackexchange and Overlapping qubits paper.}
+
+\begin{fact}[Projector Icebreakers]\label{I-minus-P}
+    If $P$ and $Q$ are (Hermitian) projectors, then:
+    \begin{enumerate}
+        \item $P^\bot = (I - P)$ is a (hermitian) projector;
+        \item $\left(2P - I\right)$ is involutive (i.e. $\left(2P - I\right)^2 = I$);
+        \item $P P^\bot = 0$;
+        \item $[P, P^\bot] = 0$;
+        \item $QPQ$ and $Q^\bot P Q^\bot$ are (hermitian) projectors; and
+        \item $P' := QPQ + Q^\bot P Q^\bot$ are (hermitian) projectors.
+    \end{enumerate}
+Moreover, if $Q$ is a Hermitian projector, then:
+\begin{enumerate}
+\setcounter{enumi}{6}
+    \item $U := (2Q - I)$ is Hermitian and unitary;
+    \item $Q\ U = Q$.
+    \item $Q^\bot\ U = -Q^\bot$.
+    \item $\| Q\| = 1$.
+\end{enumerate}
+Furthermore, if $S$ and $T$ are two Hermitian Projectors orthogonal to each other (i.e. $\{S, T\}$ are orthonormal projectors), then:
+\begin{enumerate}
+\setcounter{enumi}{8}
+    \item $S^\bot T = T S^\bot = T$; and
+    \item $S^\bot T^\bot = T^\bot S^\bot = I - (S + T)$.
+\end{enumerate}
+Inductively, we also have for any $\{T_1, \dots, T_r\}$ set of orthonormal projectors, and any permutation $\pi: [r] \to [r]$
+\begin{enumerate}
+\setcounter{enumi}{10}
+    \item $T_{\pi(1)}^\bot T_{\pi(2)}^\bot\dots T_{\pi(r)}^\bot = I - (\sum\limits_{k = 1}^r T_k)$.
+\end{enumerate}
+
+
+\end{fact}
+\begin{proof}
+    I will prove \# 6.
+    \begin{align*}
+        P'^2 &= \left(QPQ + Q^\bot P Q^\bot\right)^2\\
+        &= (QPQ)^2 + QPQ Q^\bot P Q^\bot + Q^\bot P Q^\bot QPQ + \left(Q^\bot P Q^\bot\right)^2\\
+        &= (QPQ)^2 + 0 + 0 + \left(Q^\bot P Q^\bot\right)^2 & QQ^\bot = Q^\bot Q = 0\\
+        &= QPQ + Q^\bot P Q^\bot & QPQ \text{ and } Q^\bot P Q^\bot \text{ are projectors}\\
+        &= P'.
+    \end{align*}
+\end{proof}
+
+\begin{fact}[Spectral Theorem with a Cute Fact]
+    Let $B$ be a Hermitian Operator $(B^\dagger = B)$ on a $d$-dimensional space. Then, there exist:
+\begin{enumerate}
+    \item a positive integer $0 < r \leq d$;
+    \item a list of orthonormal projectors $\left(B_1, \dots, B_j, \dots, B_{r}\right)$; and 
+    \item a list of non-zero real numbers (eigenvalues) in strictly increasing order of their absolute value $|b_1| < |b_2| <\dots < |b_r|$.
+\end{enumerate}
+ such that:
+\begin{equation}
+    B = \sum\limits_{j = 1}^{r} b_j B_j.
+\end{equation}
+Furthermore, define the ``support projection'' of $B$ to be $\Pi_B := \sum\limits_{j = 1}^r B_j$ and $\Pi_B^\bot := I - \Pi_B$. Then:
+\begin{enumerate}
+    \item $\Pi_B$ and $\Pi_B^\bot$ are hermitian projectors;
+    \item $\Pi_B\ B = B\ \Pi_B = B$; and
+    \item $\Pi_B^\bot\ B = B \ \Pi_B^\bot = 0$.
+    \item $\|\Pi_B - B \| \leq \max_{j} | b_j - 1|\leq 1 + \| B \|$.
+    \item If $b_1 > 0$, then $\|\Pi_B - B \| \leq \max_{j} |b_j - 1|\leq \| B \|$.
+\end{enumerate}
+\end{fact}
+\begin{proof}
+    \begin{align*}
+        \|\Pi_B - B \| &= \|\Pi_B - \Pi_B\ B \| \\
+        &= \|\Pi_B \left(I - B\right)\|\\
+        &\leq \|\Pi_B\| \cdot \|I - B\|\\
+        &= \|I - B\| & \|\Pi_B\| = 1\\
+        &= \max_{j} |b_j - 1|\\
+        &\leq 1 + \|B\|
+    \end{align*}
+\end{proof}
+
+
+
+% \begin{proof}
+%     \begin{align*}
+%         (I - P)^2 &= I^2 - 2P + P^2\\
+%         &= I - 2P + P & (P^2 = P)\\
+%         &= (I - P).
+%     \end{align*}
+% \end{proof}
+
+\begin{lemma}[A projector sandwich commutes with the bread.]
+    Let $P, Q$ be projectors. Then,
+    \[[QPQ, Q] = [QPQ, Q^\bot] = [Q^\bot P Q^\bot, Q^\bot] = [Q^\bot P Q^\bot, Q] = 0.\]
+\end{lemma}
+\begin{proof}
+    \begin{align*}
+        [QPQ, Q] &= QPQ^2 - Q^2PQ\\
+        &= QPQ - QPQ\\
+        &= 0.
+    \end{align*}
+
+\noindent To see why the second commutator is zero, observe:
+\[
+    [QPQ, Q^\bot] = QPQQ^\bot - Q^\bot QPQ = 0 - 0 = 0.
+\]
+
+\noindent The third and fourth commutators can be proven to be zero as a corollary by applying the above with the projector $Q^\bot$ in place of $Q$.
+\end{proof}
+
+\begin{fact}
+    Let $A$ and $Q$ be $n \times n$ matrices where $Q$ is a projector (i.e. $Q^2 = Q$). Define:
+    \begin{equation}
+        X := QAQ + Q^\bot AQ^\bot
+    \end{equation}
+    
+    \noindent Then, $[X, Q] = 0$.
+    
+    \noindent If $Q$ is a hermitian projector, then $\|X - A\| = \|[A,Q]\|$.
+\end{fact}
+\begin{proof}
+    \begin{align*}
+    \| X - A \| &= \| QAQ + Q^\bot A Q^\bot - A\|\\
+    &= \| QAQ + (I-Q)A(I-Q) - A \|\\
+    &= \| QAQ + A - AQ - QA + QAQ - A \|\\
+    &= \| QAQ - AQ - QA + QAQ \|\\
+    &= \|(Q - I)AQ - QA(I - Q) \|\\
+    &= \|(I - Q)AQU + QA(I - Q) U \| & \cdot \times \|-U\| = 1\\
+    &= \|(I - Q)AQ + QA(Q - I) \|\\
+    &= \| AQ - QAQ + QAQ - QA\|\\
+    &= \| AQ - QA\|\\
+    &= \|[A, Q] \|.
+\end{align*}
+\end{proof}
+
+\begin{theorem}[Pinching a Projector]
+    Let $P$ and $Q$ be (hermitian) projectors and let 
+    \[P' := QPQ + Q^\bot P Q^\bot.\]
+    Then, $P'$ is a (hermitian) projector such that $[P', Q] = 0$. 
+    
+    \noindent Furthermore, if $P$ is any projector and $Q$ is a hermitian projector, then $\| P' - P \| = \|[P,Q] \| $.
+\end{theorem}
+\begin{proof}
+$P'$ is a (hermitian) projector by Fact~\ref{I-minus-P}. We now prove it commutes with $Q$.
+
+\begin{align*}
+    [P', Q] &= [QPQ + Q^\bot P Q^\bot, Q]\\
+    &= [QPQ, Q] + [Q^\bot P Q^\bot, Q]\\
+    &= 0 + 0.
+\end{align*}
+When $Q$ is a hermitian projector, $U := (2Q - I)$ is unitary with $\|U\| = \|-U\| = 1$. %Further, note that $Q = \frac{I + U}{2}$ and $Q^\bot = \frac{I - U}{2}$.
+
+\end{proof}
+
+%\noindent Let's now look at what happens when you try to ``pinch'' using an oblique projector (bread).
+
+
+
+\begin{lemma}[Pinching any matrix by a hermitian projector]
+Let $A$ be an operator on a $d$-dimensional space. For a hermitian projector $Q$ on the same space, define:
+\begin{equation}
+    [A \overset{\text{pinch}}{\gets} Q] :=  Q A Q + (I-Q) A (I - Q).
+\end{equation}
+
+% \noindent According to the spectral theorem, there exist:
+% \begin{enumerate}
+%     \item a positive integer $0 <r \leq d$;
+%     \item a list of orthonormal projectors $\left(A_1, \dots, A_j, \dots, A_{r}\right)$; and 
+%     \item a list of real numbers (eigenvalues) in non-decreasing order of their absolute value $\left(a_1, \dots, a_j, \dots, a_{r}\right)$
+% \end{enumerate}
+%  such that:
+% \begin{equation}
+%     A = \sum\limits_{j = 1}^{r} a_j A_j
+% \end{equation}
+
+\noindent Then,
+\begin{enumerate}
+    \item $[A \overset{\text{pinch}}{\gets} Q]$ commutes with $Q$ i.e. $[[A \overset{\text{pinch}}{\gets} Q], Q] = 0$; and
+    \item $\| [A \overset{\text{pinch}}{\gets} Q] - A\| = \|[A,Q]\|$.
+\end{enumerate}
+
+\noindent If $A$ is hermitian, then $[A \overset{\text{pinch}}{\gets} Q]$ is Hermitian.
+
+\end{lemma}
+
+\begin{proof}
+To prove that $[A \overset{\text{pinch}}{\gets} Q]$ is Hermitian.
+
+\begin{align*}
+    [A \overset{\text{pinch}}{\gets} Q]^\dagger &=  \left(Q A Q + (I-Q) A (I - Q)\right)^\dagger \\
+    &= Q^\dagger A^\dagger Q^\dagger + (I - Q)^\dagger A^\dagger (I-Q)^\dagger\\
+    &= Q A Q + (I-Q) A (I - Q)\\
+    &= [A \overset{\text{pinch}}{\gets} Q]
+\end{align*}
+
+\noindent The others follow from the previous results.
+
+% \noindent Now, let's prove that $[A \overset{\text{pinch}}{\gets} Q]$ commutes with $Q$.
+
+% \begin{align*}
+%     \left[[A \overset{\text{pinch}}{\gets} Q], Q\right] &= \left[Q A Q + (I-Q) A (I - Q), Q\right]\\
+%     &= \left[Q \left(\sum\limits_{j = 1}^{r} a_j A_j\right) Q + (I-Q) \left(\sum\limits_{j = 1}^{r} a_j A_j\right) (I - Q), Q\right]\\
+%     &= \left[\sum\limits_{j = 1}^r a_j Q A_jQ + a_j(I - Q)A_j(I-Q), Q\right]\\
+%     &= \sum\limits_{j = 1}^r a_j \left[Q A_jQ + (I - Q)A_j(I-Q), Q\right]\\
+%     &= \sum\limits_{j = 1}^r a_j \left[[A_j \overset{\text{pinch}}{\gets} Q], Q\right]\\
+%     &= \sum\limits_{j = 1}^r a_j \cdot 0 = 0.
+% \end{align*}
+
+% \noindent Now, we bound the distance.
+
+% \begin{align*}
+%     \| [A \overset{\text{pinch}}{\gets} Q] - A \| &=  \| Q A Q + (I-Q) A (I - Q) - A \|\\
+%     &= \| Q \left(\sum\limits_{j = 1}^{r} a_j A_j\right) Q + (I-Q) \left(\sum\limits_{j = 1}^{r} a_j A_j\right) (I - Q) - \left(\sum\limits_{j = 1}^{r} a_j A_j\right) \|\\
+%     &= \| \sum\limits_{j = 1}^{r} a_j \left(Q A_j Q + (I-Q) A_j (I - Q) - A_j\right) \|\\
+%     &\leq \sum\limits_{j = 1}^{r} |a_j| \cdot \| \left(Q A_j Q + (I-Q) A_j (I - Q) - A_j\right) \|\\
+%     &= \sum\limits_{j = 1}^{r} |a_j| \cdot  \| [A_j \overset{\text{pinch}}{\gets} Q] - A_j \|\\
+%     &= \sum\limits_{j = 1}^{r} |a_j| \cdot  \| [A_j , Q] \|\\
+%     &\leq r \cdot |a_r| \max_j{\| [A_j , Q] \|}\\
+%     &\leq d \cdot \|A\|\|[A, Q]\| & \text{is that legal?}
+% \end{align*}
+    
+\end{proof}
+
+\newpage
+
+\section{Age of enlightenment}
+\begin{fact}
+    Let $A$ and $Q$ be $n \times n$ matrices where $Q$ is a projector (i.e. $Q^2 = Q$). Define:
+    \begin{equation}
+        X := QAQ + Q^\bot AQ^\bot
+    \end{equation}
+    
+    \noindent Then, $[X, Q] = 0$.
+    
+    \noindent If $Q$ is a hermitian projector, then $\|X - A\| = \|[A,Q]\|$.
+\end{fact}
+\begin{proof}
+    \begin{align*}
+    \| X - A \| &= \| QAQ + Q^\bot A Q^\bot - A\|\\
+    &= \| QAQ + (I-Q)A(I-Q) - A \|\\
+    &= \| QAQ + A - AQ - QA + QAQ - A \|\\
+    &= \| QAQ - AQ - QA + QAQ \|\\
+    &= \|(Q - I)AQ - QA(I - Q) \|\\
+    &= \|(I - Q)AQU + QA(I - Q) U \| & \cdot \times \|-U\| = 1\\
+    &= \|(I - Q)AQ + QA(Q - I) \|\\
+    &= \| AQ - QAQ + QAQ - QA\|\\
+    &= \| AQ - QA\|\\
+    &= \|[A, Q] \|.
+\end{align*}
+\end{proof}
+\begin{theorem}[Pinching any matrix by a Hermitian Projector]
+Let $A$ be any matrix and let $Q$ be a hermitian projector, define $X$, the pinching of $A$ by $Q$ as follows:
+\begin{equation}
+	X = [Q \to A \gets Q] := Q A Q + (I - Q) A (I - Q)
+\end{equation}
+Then, $[X, Q] = 0$ and $\|X - A\| = \|[A, Q]\|$.
+\end{theorem}
+\begin{lemma}[Warmup: pinching by a reflection]
+    Let $M = \begin{pmatrix}
+        M_{1,1} & M_{1,2}\\
+        M_{2,1} & M_{2,2}
+    \end{pmatrix}$ be any $2d \times 2d$ matrix and let $P = \begin{pmatrix}
+        I_{d \times d} & 0\\ 0 & 0
+    \end{pmatrix}$ be a hermitian projector and $R = 2P - I$ be a reflection. Define:
+    \begin{equation}
+        M' := P\ M\ P + (I - P)\ M\ (I - P)
+    \end{equation}
+    Then, $[M', R] = 0$ and $\|M' - M \| = \frac{1}{2} \|[M, R]\|$.
+\end{lemma}
+
+\begin{proof}
+    \begin{align*}
+        [M, R] &= M\ R\ - R\ M\\
+        &= 2 \begin{pmatrix}
+            0 & -M_{1,2}\\
+            M_{21} & 0
+        \end{pmatrix}
+    \end{align*}
+    \begin{align*}
+        M - M' &= \begin{pmatrix}
+            0 & M_{1,2}\\
+            M_{2,1} & 0
+        \end{pmatrix}
+    \end{align*}
+Because $R = \left(2P - I\right)$ adds minus sign to 2nd column
+    \begin{align*}
+        \left(M - M'\right)\ R &=\begin{pmatrix}
+            0 & -M_{1,2}\\
+            M_{2,1} & 0
+        \end{pmatrix}
+    \end{align*}
+Therefore:
+\begin{align*}
+\|M - M' \| &= \|(M - M') R \| & \|R\| = 1\\
+&= \| \frac{1}{2} [M, R] \| = \frac{\|[M, R]\|}{2}
+\end{align*}
+\end{proof}
+
+\begin{theorem}[Pinching any matrix by a Hermitian Matrix with 2 eigenvalues i.e. linear combination of a projector and its complement \IslamNote{i can just say binary observable, right?}]
+    Let $M = \begin{pmatrix}
+        M_{1,1} & M_{1,2}\\
+        M_{2,1} & M_{2,2}
+    \end{pmatrix}$ be any $2d \times 2d$ matrix and let $N = \lambda_1 P + \lambda_2 (I - P) = \begin{pmatrix}
+        \lambda_1\: I_{d \times d} & 0\\ 0 & \lambda_2\: I_{d \times d}
+    \end{pmatrix}$ be a hermitian projector of that form where $\lambda_1 > \lambda_2$. Define:
+    \begin{equation}
+        M' := P\ M\ P + (I - P)\ M\ (I - P)
+    \end{equation}
+    Then, $[M', N] = 0$ and $\|M' - M \| = \frac{1}{\lambda_1 - \lambda_2} \|[M, N]\|$.
+\end{theorem}
+
+\begin{proof}
+\begin{align*}
+[M, N] &= M\ N - N\ M\\
+&= \begin{pmatrix} \lambda_1 M_{1,1} - \lambda_1 M_{1,1} & \lambda_2 M_{1,2} - \lambda_1 M_{1,2} \\ \lambda_1 M_{2,1} - \lambda_2 M_{2,1} & \lambda_2 M_{2,2} - \lambda_2 M_{2,2}
+\end{pmatrix}\\
+&= \begin{pmatrix} 0 & - \left(\lambda_1 - \lambda_2\right) M_{1,2} \\ \left(\lambda_1 - \lambda_2\right) M_{2,1} & 0
+\end{pmatrix}\\
+&= \left(\lambda_1 - \lambda_2\right)\begin{pmatrix} 0 & - M_{1,2} \\  M_{2,1} & 0
+\end{pmatrix}\\
+\end{align*}
+
+\begin{align*}
+\|M - M' \| &= \| (M - M')(2P - I)\|\\
+&= \|\begin{pmatrix}
+            0 & -M_{1,2}\\
+            M_{2,1} & 0
+        \end{pmatrix} \|\\
+&= \frac{\lambda_1 - \lambda_2}{\lambda_1 - \lambda_2}\|\begin{pmatrix}
+            0 & -M_{1,2}\\
+            M_{2,1} & 0
+        \end{pmatrix} \|\\  
+&= \frac{1}{\lambda_1 - \lambda_2}\|(\lambda_1 - \lambda_2)\begin{pmatrix}
+            0 & -M_{1,2}\\
+            M_{2,1} & 0
+        \end{pmatrix} \|\\
+&= \frac{\|[M, N]\|}{\lambda_1 - \lambda_2}
+\end{align*}
+
+\end{proof}
+
+
+\begin{theorem}[Snapping a hermitian matrix with 2 eigenvalues into identity]
+Let $A$ be any $(2d \times 2d)$ matrix and let $B$ be a hermitian matrix of the form $B = \lambda_1 P + \lambda_2 (I - P) = \begin{pmatrix}
+        \lambda_1\: I_{d \times d} & 0\\ 0 & \lambda_2\: I_{d \times d}
+    \end{pmatrix}$. Define:
+    \begin{equation}
+    B' = \lambda_1\: I_{2d \times 2d}
+    \end{equation}
+Then, $[B', A] = 0$ and $\|B' - B \| = |\lambda_1 - \lambda_2|$.
+\end{theorem}
+
+\begin{proof}
+\begin{align*}
+\|B' - B \| &= \|\begin{pmatrix}
+        0 & 0\\ 0 & \left(\lambda_1 - \lambda_2\right)\: I_{d \times d}
+    \end{pmatrix}\| = |\lambda_1 - \lambda_2|
+\end{align*}
+\end{proof}
+
+\begin{corollary}[Unified Rounding Theorem]
+    Let $A$ and $B$ be ($2d \times 2d$) Hermitian matrices where $B = \lambda_1 P + \lambda_2 (I - P) = \begin{pmatrix}
+        \lambda_1\: I_{d \times d} & 0\\ 0 & \lambda_2\: I_{d \times d}
+    \end{pmatrix}$. Then, there exist two hermitian matrices $A'$ and $B'$ such that: $[A', B'] = 0$ and one of $\|A' - A\|$ and $\|B' - B \|$ is zero while the other is bounded above by $\sqrt{\|[A, B]\|}$.
+\end{corollary}
+\begin{proof}
+    Let $\epsilon_1 := |\lambda_1 - \lambda_2|$ be the distance between $B'$ and $B$ if we were to ``snap'' $B$ into $B'$. Let $\epsilon_2 := \frac{\|[A, B]\|}{|\lambda_1 - \lambda_2|}$ which is the distance between $A'$ and $A$ if $A'$ is the pinching of $A$ by $B$.
+    There are two cases:
+    \begin{enumerate}
+        \item If $\epsilon_1 \leq \epsilon_2$, let $A' = A$ and $B'$ be the result of snapping $B$.
+        \item Otherwise ($\epsilon_2 > \epsilon_1$), let $A'$ be the pinching of $A$ by $B$ and let $B' = B$.
+    \end{enumerate}
+    The corollary then follows because $\min\{|\lambda_1 - \lambda_2|, \frac{\|[A, B]\|}{|\lambda_1 - \lambda_2|}\} \leq \sqrt{\|[A, B]\|}$.
+\end{proof}
+
+\subsection{Working with 2 hamiltonian terms that are $2$-local and overlapping on a shared qubit}
+
+\begin{fact}[Structure Theorem]
+    Let $H_{r,s}$ be a Hamiltonian term on the qubits $r$ and $s$. Then, $H_{r,s}$ can be decomposed as follows:
+    \begin{equation}
+        H_{r,s} = \sum\limits_{\alpha = 0}^{3} A_r^{(\alpha)} \otimes \sigma_s^{(\alpha)} = A_r^{(0)} \otimes I_s + A_r^{(1)} \sigma_s^{(x)} + A_r^{(2)} \sigma_s^{(y)} + A_r^{(3)} \sigma_s^{(z)}
+    \end{equation}
+where $\left(\sigma_r^{(0)}, \sigma_r^{(1)}, \sigma_r^{(2)}, \sigma_r^{(3)}\right) = \left(I_s, X_s, Y_s, Z_s\right)$ are the Pauli Matrices on the $s$-th qubit and some of $A_r^{(\alpha)}$ can be the zero matrix.
+\end{fact}
+
+\begin{fact}
+    Let $A$ be a square hermitian PSD operator on the space $\mathcal{H}_1 \otimes \mathcal{H}_2$ with dimensions of the hilbert spaces $d_1$ and $d_2$. Then,
+    \[\|A\| \geq \frac{\|\text{tr}_2(A)\|}{d_2}\]
+\end{fact}
+\begin{proof}
+    \begin{align*}
+        \|A\| &= \max_{\|\ket{\psi}\| = 1} \braket{\psi | A|\psi}\\
+        &= \max_{\|\ket{\psi}\| = 1}\text{tr}\left(A \ket{\psi}\bra{\psi}\right)\\
+        &= \max_{\rho \in \mathcal{D}_{1,2}} \text{tr}\left(A \rho\right) & \text{ by convexity }\\
+        &\geq \max_{\sigma \in \mathcal{D}_{1}} \text{tr}\left(A \left(\sigma \otimes \frac{I}{d_2}\right)\right)\\
+        &= \frac{1}{d_2} \max_{\sigma \in \mathcal{D}_{1}} \text{tr}\left(\text{tr}_2(A) \sigma \right)\\
+        &= \frac{1}{d_2} \|\text{tr}_2(A)\|
+    \end{align*}
+\AlexNote{See this stackexchange post for the partial trace identity \url{https://quantumcomputing.stackexchange.com/questions/5045/partial-trace-over-a-product-of-matrices-prove-that-rm-tr-rhoab-sigma}}
+\end{proof}
+
+\begin{lemma}
+    Let $\{M_i\}$ be a set of $d_1 \times d_1$ matrices and let $\{N_i\}$ be a set of $d_2 \times d_2$ binary observables. If
+    \begin{equation}
+        T = \sum\limits_{i} M_i \otimes N_i,
+    \end{equation}
+    then for all $i:\ \|T\| \geq \|M_i\|$.
+\end{lemma}
+\begin{proof}
+    \begin{align*}
+        \|T\|^2 &= \|T^\dagger T\|\\
+        &\geq \frac{1}{d_2} \left\|\text{tr}_2\left(T^\dagger T\right)\right\| &\text{by Fact}\\
+        &= \frac{1}{d_2} \left\|\text{tr}_2\left(\sum\limits_{i,j} M_i^\dagger M_j \otimes N_i^\dagger N_j\right)\right\|\\
+        &= \frac{1}{d_2} \left\|\text{tr}_2\left(\sum\limits_{i} M_i^\dagger M_i \otimes N_i^\dagger N_i + \sum\limits_{i \neq j} M_i^\dagger M_j \otimes N_i^\dagger N_j\right)\right\|\\
+        &= \frac{1}{d_2} \left\|\text{tr}_2\left(\sum\limits_{i} M_i^\dagger M_i \otimes I_{d_2} + \sum\limits_{i \neq j} M_i^\dagger M_j \otimes N_i N_j\right)\right\| & N_i^\dagger = N_i \text{ and } N_i^2 = I\\
+        &= \frac{1}{d_2} \left\|\text{tr}_2\left(\sum\limits_{i} M_i^\dagger M_i \otimes I_{d_2}\right)\right\| & i \neq j \implies \text{tr}_2 \left(N_i N_j\right) = 0 \\
+        &= \frac{1}{d_2} \left\|d_2 \left(\sum\limits_{i} M_i^\dagger M_i\right)\right\| \\
+        &= \left\| \left(\sum\limits_{i} M_i^\dagger M_i\right)\right\|\\
+        &\geq \|M_i^\dagger M_i\| &\forall i\\
+        &= \|M_i\|^2
+    \end{align*}
+\end{proof}
+
+\begin{theorem}[Rounding 2 Hamiltonian Terms on a Shared Qubit]
+    
+\end{theorem}
+
+\newpage
+\section{Old stuff}
+\begin{lemma}[Pinching a hermitian operator by a set of orthonormal projectors]
+
+Let $A$ be a hermitian operator with spectral decomposition:
+\begin{equation}
+    A = \sum\limits_{j = 1}^r a_j A_j
+\end{equation}
+and let $\mathcal{Q} = \left\{Q_1, \dots, Q_m\right\}$ be a set of orthonormal projectors.
+Define:
+\begin{equation}
+    \Pi_{\mathcal{Q}} := \sum\limits_{Q \in \mathcal{Q}} Q \quad\quad\quad \text{ and } \quad\quad\quad \Pi_{\mathcal{Q}}^\bot := I - \Pi_{\mathcal{Q}}
+\end{equation}
+One can see that $\Pi_Q$ and $\Pi_Q^\bot$ are hermitian projectors. Then, define the pinching of $A$ by $\mathcal{Q}$ to be as follows:
+\begin{align*}
+    [A \overset{\text{pinch}}{\gets} \mathcal{Q}] &:= \left(\sum\limits_{j = 1}^m Q_j AQ_j\right) + \left(\prod\limits_{j = m}^1 Q_j^\bot\right) A  \left(\prod\limits_{j = 1}^m Q_j^\bot\right)\\
+    &= \left(\sum\limits_{j = 1}^m Q_j AQ_j\right) + (I - Q_m) \dots (I-Q_1) A (I - Q_1) \dots (I - Q_m)\\
+    &= \left(\sum\limits_{j = 1}^m Q_j AQ_j\right) + \Pi_{\mathcal{Q}}^\bot \ A\ \Pi_{\mathcal{Q}}^\bot
+\end{align*}
+Then, we can conclude the following:
+\begin{enumerate}
+    \item let $\pi: [m] \to[m]$ be any permutation, then:
+    \begin{equation}
+        [A \overset{\text{pinch}}{\gets} \mathcal{Q}] = \left[\left[\left[[A \overset{\text{pinch}}{\gets} Q_{\pi(1)}] \overset{\text{pinch}}{\gets} Q_{\pi(2)}\right]\dots\right] \overset{\text{pinch}}{\gets} Q_{\pi(m)}\right]
+    \end{equation}
+    \item $[A \overset{\text{pinch}}{\gets} \mathcal{Q}]$ is hermitian.
+    \item For any $Q \in \mathcal{Q}$, $\left[[A \overset{\text{pinch}}{\gets} \mathcal{Q}],Q\right] = \left[[A \overset{\text{pinch}}{\gets} \mathcal{Q}],Q^\bot\right] = 0$
+    \item $\left[[A \overset{\text{pinch}}{\gets} \mathcal{Q}],\Pi_{\mathcal{Q}}\right] = \left[[A \overset{\text{pinch}}{\gets} \mathcal{Q}],\Pi_{\mathcal{Q}}^\bot\right] = 0$.
+    \item $\|[A \overset{\text{pinch}}{\gets} \mathcal{Q}] - A\| \leq $
+\end{enumerate}
+    
+\end{lemma}
+\begin{proof}
+    The first one can be verified directly from the definition. To see why $[A \overset{\text{pinch}}{\gets} \mathcal{Q}]$ is hermitian, note:
+    \begin{align*}
+        [A \overset{\text{pinch}}{\gets} \mathcal{Q}]^\dagger &= \left(\left(\sum\limits_{j = 1}^m Q_j AQ_j\right) + \Pi_{\mathcal{Q}}^\bot \ A\ \Pi_{\mathcal{Q}}^\bot\right)^\dagger\\
+        &= \left(\sum\limits_{j = 1}^m Q_j^\dagger A^\dagger Q_j^\dagger \right) + (\Pi_{\mathcal{Q}}^\bot)^\dagger \ A^\dagger\ (\Pi_{\mathcal{Q}}^\bot)^\dagger\\
+        &= [A \overset{\text{pinch}}{\gets} \mathcal{Q}].
+    \end{align*}
+To see why $[A \overset{\text{pinch}}{\gets} \mathcal{Q}]$ commutes with any $Q_z \in \mathcal{Q}$, note the following.
+\begin{align*}
+    \left[[A \overset{\text{pinch}}{\gets} \mathcal{Q}], Q_z\right] &= \left(\sum\limits_{j = 1}^m Q_j AQ_j Q_z\right) + \Pi_{\mathcal{Q}}^\bot \ A\ \Pi_{\mathcal{Q}}^\bot Q_z - \left(\sum\limits_{j = 1}^m Q_z Q_j AQ_j\right) - Q_z\Pi_{\mathcal{Q}}^\bot \ A\ \Pi_{\mathcal{Q}}^\bot\\
+    &= Q_z A Q_z - Q_z A Q_z = 0.
+\end{align*}
+Then $[A \overset{\text{pinch}}{\gets} \mathcal{Q}]$ commutes with $\Pi_{\mathcal{Q}}$ by linearity of the commutator.
+Now, let's bound the distance. For ease of notation, let $X_{j}$ be $[A \overset{\text{pinch}}{\gets} \{Q_1, \dots, Q_j\}]$. Then, $X_m = [A \overset{\text{pinch}}{\gets} \mathcal{Q}]$.
+\begin{align*}
+    \|[A \overset{\text{pinch}}{\gets} \mathcal{Q}] - A\| &= \|[A \overset{\text{pinch}}{\gets} \mathcal{Q}] - X_{m-1} + X_{m-1} - A\|\\
+    &\leq \|[X_{m-1} \overset{\text{pinch}}{\gets} Q_m] -X_{m-1}\| + \|X_{m-1} - A\| & \triangle  \text{ inequality}\\
+    &\leq r |a_r| \max_{j}\| [A_j, Q_k]\| + \|X_{m-1} - A\|\\
+    &\leq \sum\limits_{k = 1}^m r |a_r| \max_{j}\| [A_j, Q_k]\| & \triangle  \text{ inequality $m$ times}\\
+    &\leq m \cdot r \cdot |a_r|\cdot \max_{j, k}\| [A_j, Q_k]\|\\
+    &\leq m \cdot d \cdot \|A\|\cdot \max_{k}\| [A, Q_k]\|
+\end{align*}
+\end{proof}
+
+
+\begin{lemma}[Pinching a hermitian operator by a hermitian operator]
+Let $A = \sum\limits_{j = 1}^r a_j A_j$ and $B = \sum\limits_{k = 1}^m b_k B_k$ be the spectral decomposition of two Hermitian operators $A$ and $B$ on a $d$-dimensional space with bounded norm $\|A\| \leq a$ and $\|B\| \leq b$. Define $\mathcal{B} := \{B_k\}$ and define:
+\begin{equation}
+    [A \overset{\text{pinch}}{\gets} B] :=  [A \overset{\text{pinch}}{\gets} \mathcal{B}]
+\end{equation}
+
+\noindent Then,
+\begin{enumerate}
+    \item $[A \overset{\text{pinch}}{\gets} B]$ is Hermitian;
+    \item $[A \overset{\text{pinch}}{\gets} B]$ commutes with $B$ i.e. $[[A \overset{\text{pinch}}{\gets} B], B] = 0$; and
+    \item $\| A - [A \overset{\text{pinch}}{\gets} B] \| \leq$ (same bound from previous lemma).
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+
+\begin{align*}
+     [[A \overset{\text{pinch}}{\gets} B], B] &= \left[\sum\limits_{k} B_k A B_k + \Pi_{\mathcal{Q}}^\bot \ A\ \Pi_{\mathcal{Q}}^\bot + , B\right]\\
+     &= \sum\limits_{k, q} b_q\left[B_k A B_k + \Pi_{\mathcal{Q}}^\bot \ A\ \Pi_{\mathcal{Q}}^\bot + , B_q\right] = 0.
+    % [\sum\limits_{k} B_k A B_k, B] + \left[\Pi_{\mathcal{Q}}^\bot \ A\ \Pi_{\mathcal{Q}}^\bot, B\right]\\
+    % &= \sum\limits_{k, q} [B_k A B_k, b_q B_q]\\
+    % &= \sum\limits_{k, q} b_q \delta_{k,q} [B_k A B_k, B_k]\\
+    % &= 0.
+\end{align*}
+
+The distance is the same one from the previous lemma.
+
+\end{proof}
+
+\begin{example}[Oblique Projector]
+    Consider the projector:
+    \begin{equation}
+        Q = E_{11} + E_{12} = \begin{pmatrix}
+            1 & 1\\
+            0 & 0
+        \end{pmatrix}.
+    \end{equation}
+    One can verify that it is a projector because $Q^2 = Q$. However, it is \textbf{oblique} and not orthogonal (Hermitian) because:
+    \begin{equation}
+        Q^\dagger = \left(E_{11} + E_{12}\right)^\dagger = E_{11} + E_{21} = \begin{pmatrix}
+            1 & 1\\
+            0 & 0
+        \end{pmatrix}^\dagger = \begin{pmatrix}
+            1 & 0\\
+            1 & 0
+        \end{pmatrix} \neq Q.
+    \end{equation}
+    By looking at $(2Q - I)$ and $(2Q - I)^\dagger$, we will see that neither of them is unitary nor Hermitian.
+    \begin{equation}
+        2Q - I = 2 \cdot\begin{pmatrix}
+            1 & 1\\
+            0 & 0
+        \end{pmatrix} - \begin{pmatrix}
+            1 & 0\\
+            0 & 1
+        \end{pmatrix} = \begin{pmatrix}
+            1 & 2\\
+            0 & -1
+        \end{pmatrix}.
+    \end{equation}
+    \begin{equation}
+        (2Q-I)^\dagger = \begin{pmatrix}
+            1 & 0\\
+            2 & -1
+        \end{pmatrix} \neq \left(2Q - I\right).
+    \end{equation}
+\end{example}
+
+\begin{example}[Distance blowing larger than the commutator when $Q$ is not Hermitian; could it still be bounded within a factor???; need to check that]
+    Consider the following two oblique non-Hermitian projectors:
+    \begin{equation}
+        P = E_{11} + E_{21} = \begin{pmatrix}
+            1 & 0 \\1 & 0
+        \end{pmatrix}\quad\quad\quad Q = E_{11} + E_{12} = \begin{pmatrix}
+            1 & 1\\0 &0
+        \end{pmatrix}
+    \end{equation}
+    \begin{equation}
+        PQ = E_{11} + E_{12} + E_{21} + E_{22} = \begin{pmatrix}
+            1 & 1\\
+            1 & 1
+        \end{pmatrix}
+    \end{equation}
+    \begin{equation}
+        QP = 2E_{11} = \begin{pmatrix}
+            2 & 0\\0 & 0
+        \end{pmatrix}
+    \end{equation}
+    \begin{equation}
+        [P,Q] = PQ - QP = \begin{pmatrix}
+            -1 & 1\\ 1 & 1
+        \end{pmatrix}
+    \end{equation}
+Let's now compute the operator norm for this matrix.
+\begin{align*}
+    [P,Q]^\dagger[P,Q] = [P,Q]^2= 2I
+\end{align*}
+\noindent Thus, $2$ is the largest eigenvalue of $[P,Q]^\dagger[P,Q]$ and thus $\|[P,Q]\| = \sqrt{2}$.
+
+\noindent Now, let's compute the operator norm distance between $P'$ and $P$.
+\begin{align*}
+    D = P' - P &=  QPQ - (I-Q)P(I-Q) - P \\
+    &= 2QPQ - PQ - QP \\
+    &= 2QPQ - (PQ + QP)\\
+    &= 2\cdot 2E_{11} \left(E_{11} + E_{12}\right) - \begin{pmatrix}
+        3 & 1\\1&1
+    \end{pmatrix}\\
+    &= 4\left(E_{11} + E_{12} \right) - \begin{pmatrix}
+        3 & 1\\1&1
+    \end{pmatrix} \\
+    &= \begin{pmatrix}
+        4 & 4\\0 & 0
+    \end{pmatrix} - \begin{pmatrix}
+        3 & 1\\ 1 & 1
+    \end{pmatrix} \\
+    &= \begin{pmatrix}
+        1 & 3\\ -1 & -1
+    \end{pmatrix} .
+\end{align*}
+\begin{align*}
+    D^\dagger D &= \begin{pmatrix}
+        1 & -1 \\ 3 & -1
+    \end{pmatrix} \begin{pmatrix}
+        1 & 3\\-1 & -1
+    \end{pmatrix} = \begin{pmatrix}2 & 4\\4&10
+    \end{pmatrix}
+\end{align*}
+The eigenvalues of $D^\dagger D$ are $6 \pm 4\sqrt{2}$. Therefore, the operator norm of $D = P' - P$ is $\sqrt{6 + 4\sqrt{2}} > 3.41 > \sqrt{2}$.
+\end{example}
+
+\begin{lemma}
+    Suppose $A, B$ are 
+\end{lemma}
+
+\newpage
+
+sdfsdf
+\paragraph{Plan from November 21:}
+The idea is the formalize an iterative pinching procedure using a colored bipartite graph. We start out with a bipartite $n \times n$ graph with vertices corresponding to $A$ and $C$ operators, and all bipartite edges colored blue, meaning ``approximately commuting." We pick a parameter $\eta$ to be set later. We first start out by snapping all vertices that have spectral gaps less than $\eta$, and then deleting these vertices and all adjacent edges from the graph. (These snapped operators are guaranteed to commute with everything from now on.) Next, we iteratively color the edges green: we grow the ``good part'' of the graph by adding a new vertex to one of the two sides, and pinching it by one of its ``good'' neighbors. The transitivity property will guarantee that it now commutes with all of its neighbors. We do this until all edges are green.
+
+\newpage
+\appendix
+\section{OLD: Factorizing algebras}
+
+\newcommand{\calA}{\mathcal{A}}
+\newcommand{\calL}{\mathcal{L}}
+
+Here all algebras are unital star algebras. 
+
+\begin{definition}
+    An algebra $\mathcal{A}$ is ``algebraically irreducible'' if its center consists of only the multiples of identity.
+\end{definition}
+\begin{definition}
+    An algebra $\mathcal{A} \subseteq \mathcal{L}(V)$ for some vector space $V$ is irreducible if it has no invariant subspaces.
+\end{definition}
+\begin{claim}
+If $\calA \subseteq \calL(V)$ is irreducible, then it is algebraically irreducible.
+\end{claim}
+\begin{proof}
+    Suppose not, i.e. suppose that $\calA$ is not algebraically irreducible. Then there is some element $z \in Z(\calA)$ that is not equal to a multiple of identity. This $z$ has an eigenvalue $\lambda$ and $z - \lambda I \in \calA$ and non-invertible. Consider the kernel of $z - \lambda I$. This is an invariant subspace of $\calA$: suppose $v \in \ker(z -\lambda I)$. Then for all $a \in \calA$,
+    \[ (z - \lambda I) a v = a (z - \lambda I)v = 0,\]
+    so $av \in \ker(z - \lambda I)$ as well. Moreover, since $z$ was not itself a multiple of identity, this invariant subspace is not trivial, which contradicts the irreduciblity of $\calA$.
+\end{proof}
+
+\begin{theorem}[Burnside]
+For a finite dimensional complex vector space $V$, the only irreducible subalgebra of $\calL(V)$ is $\calL(V)$ itself.
+\end{theorem}
+
+\begin{lemma}[Fact 2.13 of Aharonov and Eldar]
+    Let $\calA \subseteq \calL(V)$ be an algebra. Then there is a decomposition of $V$ into orthogonal subspaces $V_\alpha$, where each $V_\alpha$ is a tensor product of two vector spaces $V_\alpha = V^1_\alpha \otimes V^2_\alpha$ such that
+    \[ \calA \cong \bigoplus_{\alpha} \calL(V^1_\alpha) \otimes \mathbf{I}(V^2_\alpha). \]
+    
+\end{lemma}
+\begin{proof}
+    Decompose $V$ into invariant subspaces for $\calA$ as follows: let $V_0$ be an invariant subspace of $V$ under $\calA$ of minimal dimension that is not equal to $\{0\}$ (since $V$ itself is an invariant subspace, such a $V_0$ is guaranteed to exist). Write $V = V_0 \oplus V_0^\perp$. Then $V_0^\perp$ is an invariant subspace for $\calA$ as well. Moreover, since $V_0$ was of minimal dimension, $\calA$ must be irreducible restricted to $V_0$. Inductively continue this procedure on $V_0^\perp$ until there's nothing left. This gives us a decomposition
+    \[ V = V_0 \oplus V_1 \oplus \dots \]
+    where the $V_i$s are all orthogonal, and $\calA$ is irreducible on each $V_i$. By Burnside, this means that for each $V_i$, $\calA|_{V_i} = \calL(V_i)$. 
+
+    Let us now group together subspaces $V_i$ according to isomporphism as $\calA$-modules: $V_i \cong V_j$ as an $\calA$ module if there exists an ``intertwiner map'' $T_{ij}: V_i \to V_j $ which is a bijective linear map such that 
+    \[ \forall v \in V_i, a \in \calA, T_{ij}(a v) = a T_{ij}(v).\] Let us label the equivalence classes under this relation by $\alpha$, and the multiplicity of each class by $m_\alpha$. Then we can write
+    \[ V = \bigoplus_\alpha V^1_\alpha \otimes V^2_\alpha, \]
+    where $V^1_\alpha$ is a representative of this isomorphism class and $V^2_\alpha \cong \mathbb{C}^{m_\alpha}$. Now we want to claim that
+    \[ \calA \cong \bigoplus_\alpha \calL(V^1_\alpha) \otimes \mathbf{I}(V^2_\alpha).\]
+    CHAT GPT SAYS try Schur's lemma here. 
+
+    % Let's now look at the center $\calA$, which we denote $Z(\calA)$. It is not hard to see that if $M \in Z(\calA)$, then
+    % \[ M = \bigoplus_i \gamma_i \Pi_i,\]
+    % where $\Pi_i$ is the projector onto $V_i$. This is because anything that doesn't look like a multiple of identity when restricted to one of the $V_i$s will fail to commute with some element of $\calA$ (since we know that $\calA |_{V_i} = \calL(V_i)$). Moreover, every element of $\calA$ that has this form is in $Z(\calA)$. 
+
+
+
+    % \textcolor{red}{Now, let us group together $V_is$ that have the same dimension. For each unique dimension $d_\alpha$, let $m_\alpha$ be its multiplicity, and let $V_\alpha$ be the direct sum of all $V_i$s with dimension $d_\alpha$. Then we have that
+    % \[ V_\alpha = \underbrace{V^1_\alpha}_{\cong \mathbb{C}^{d_\alpha}} \otimes \underbrace{V^2_\alpha}_{\cong \mathbb{C}^{m_\alpha}} \]
+    % Moreover we get that
+    % \[ \calA \cong \bigoplus_\alpha \calL(V^1_\alpha) \otimes \mathbb{I}(V^2_\alpha). \]}
+\end{proof}
+
+\pagebreak
+
+
+\begin{claim}
+    Let $\calA \subseteq \calL(V)$ be algebraically irreducible and let $T \subseteq V $ be an invariant subspace for $\calA$ such that $a_1, a_2$ are equal in their action on $T$. Then $a_1 = a_2$.
+\end{claim}
+\begin{proof}
+    Suppose $a_1 \neq a_2$. Then $a_1 - a_2$ is nonzero but its kernel contains all of $T$. In particular, $(a_1 - a_2)$ commutes with $\calA$ on $T$. 
+\end{proof}
+
+\begin{claim}
+    Let $\calA \subseteq \calL(V)$ be an algebra over a vector space $V$ and let $S$ be an invariant subspace of $\calA$. LALALALAAL
+\end{claim}
+
+\begin{lemma}
+    Let $\mathcal{A}$ be an ``algebraically'' irreducible subalgebra of the algebra $\mathcal{L}(V)$ of linear operators on a finite-dimensional complex vector space $V$. Then we can decompose $V$ and $\mathcal{A}$ as
+    \begin{align} 
+    V &\approx S \otimes \mathbb{C}^k \\
+    \mathcal{A} &\approx \mathcal{L}(S) \otimes I_k.
+    \end{align}
+\end{lemma}
+This is Fact~2.12 of Aharonov-Eldar.
+\begin{proof}
+    Pick an arbitrary vector $v_1 \in V$. Let $S_1 = \mathcal{A}(v_1)$, i.e. the subspace consisting of all vectors that can be written as $a v_1$ for some $a \in \calA$. 
+
+    SDFLSKJDFLSDKJFLSDKFJ
+
+    We have decomposed 
+    \[ V = \bigoplus_i S_i,\]
+    where each $S_i$ is irreducible. Let's group them together into copies of the same space:
+    \[V = \bigoplus_k S_k \otimes I_{n_k}, \]
+    where $n_k$ counts the multiplicty of the space $S_k$.
+    Now because of irreducibility, we have a homomorphism from $\calA$ to $\calL(S_k)$ for each $S_k$. 
+\end{proof}
+\newpage
+
+
+
+
+
+\section{The Halmos argument}
+This is a stripped-down version of the statement shown on page 6 of Arad.
+
+Below, as shorthand, when we say ``bounded operator'' we mean an operator with operator norm at most $1$. (This is not standard language FYI.)
+\begin{lemma}
+    Let $m$ be a constant. Then for any $\eps > 0$, there exists a $\delta > 0$ such that for any set of bounded operators $\{A_1, \dots, A_m\}$ where $\| [A_i, A_j] \|_F \leq \delta$ for all $i,j \in [m]$, there exists a set of bounded operators $\{a_1, \dots, a_m\}$ such that
+    \begin{enumerate}
+        \item \textbf{Exact commutation:} For all $i,j \in [m]$, $[a_i, a_j] = 0$.
+        \item \textbf{Small rounding error:} For all $i$, $\| A_i - a_i \|_F \leq \eps$.
+    \end{enumerate}
+\end{lemma}
+The version in that paper has some additional features: it cares about scaling with $m$ and the local dimension, and it has some orthogonality conditions on the $A$s and $a$s. But these are not essential to understand the argument.
+\begin{proof}
+Suppose not. Then, for some $\eps_0$, it holds that for all $\delta > 0$, there exists a set of bounded operators $\{A_1, \dots, A_m\}$ with $\| [A_i, A_j] \|_F \leq \delta$ forall $i,j$, such that for any set of bounded operators $\{a_1, \dots, a_m\}$ that satisfies the exact commutation condition, it holds that the small rounding error condition is false: there exists some $i$ such that $\|A_i(\delta) - a_i \|_F > \eps_0$. 
+
+Now, let us pick a sequence $\delta_n$ tending to $0$ as $n$ tends to infinity. The previous paragraph implies that for each $n$, there exists a set of bounded operators $\{A_1(n), \dots, A_m(n) \}$ with $\|[A_i(n), A_j(n)] \|_F \leq \delta_n$ for all $i,j$, such that for any set of bounded operators $\{a_1, \dots, a_m\}$ satisfying the exact commutation condition, there exists some $i$ such that $\|A_i(n) - a_i\|_F > \eps_0$.
+
+Now, we are going to use the compactness of the space of $m$-tuples of bounded operators to assert the sequence $\{(A_1(n), \dots, A_m(n)\}_n$ has a convergent subsequence indexed by $n_1, n_2, \dots$. Let $(a_1, \dots, a_m)$ be the limit point of that convergent subsequence. Then we claim that $a_1, \dots, a_m$ satisfy both the exact commutation property and the small rounding error property.
+\begin{enumerate}
+    \item w
+\end{enumerate}
+\end{proof}
+
+\printbibliography
+\end{document}
+
+
+
+
+

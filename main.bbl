@@ -1,0 +1,164 @@
+\newcommand{\etalchar}[1]{$^{#1}$}
+\begin{thebibliography}{FHH{\etalchar{+}}14}
+
+\bibitem[AA13]{AA13}
+Scott Aaronson and Alex Arkhipov.
+\newblock \href {http://dx.doi.org/10.4086/toc.2013.v009a004} {The
+  Computational Complexity of Linear Optics}.
+\newblock {\em Theory Comput.}, 9:143--252, 2013.
+
+\bibitem[AG04]{AG04}
+Scott Aaronson and Daniel Gottesman.
+\newblock \href {http://dx.doi.org/10.1103/PhysRevA.70.052328} {Improved
+  simulation of stabilizer circuits}.
+\newblock {\em Phys. Rev. A}, 70:052328, Nov 2004.
+
+\bibitem[BBC{\etalchar{+}}19]{BBCCGH19}
+Sergey Bravyi, Dan Browne, Padraic Calpin, Earl Campbell, David Gosset, and
+  Mark Howard.
+\newblock \href {http://dx.doi.org/10.22331/q-2019-09-02-181} {Simulation of
+  quantum circuits by low-rank stabilizer decompositions}.
+\newblock {\em {Quantum}}, 3:181, September 2019.
+
+\bibitem[BG16]{BG16}
+Sergey Bravyi and David Gosset.
+\newblock \href {http://dx.doi.org/10.1103/PhysRevLett.116.250501} {Improved
+  Classical Simulation of Quantum Circuits Dominated by Clifford Gates}.
+\newblock {\em Phys. Rev. Lett.}, 116:250501, Jun 2016.
+
+\bibitem[BK05]{BK05}
+Sergey Bravyi and Alexei Kitaev.
+\newblock \href {http://dx.doi.org/10.1103/PhysRevA.71.022316} {Universal
+  quantum computation with ideal Clifford gates and noisy ancillas}.
+\newblock {\em Phys. Rev. A}, 71:022316, Feb 2005.
+
+\bibitem[BSS16]{BSS16}
+Sergey Bravyi, Graeme Smith, and John~A. Smolin.
+\newblock \href {http://dx.doi.org/10.1103/PhysRevX.6.021043} {Trading
+  Classical and Quantum Computational Resources}.
+\newblock {\em Phys. Rev. X}, 6:021043, Jun 2016.
+
+\bibitem[BV97]{BV97}
+Ethan Bernstein and Umesh~V. Vazirani.
+\newblock \href {http://dx.doi.org/10.1137/S0097539796300921} {Quantum
+  Complexity Theory}.
+\newblock {\em {SIAM} J. Comput.}, 26(5):1411--1473, 1997.
+
+\bibitem[DDM03]{DD03}
+Jeroen Dehaene and Bart De~Moor.
+\newblock \href {http://dx.doi.org/10.1103/PhysRevA.68.042318} {Clifford group,
+  stabilizer states, and linear and quadratic operations over GF(2)}.
+\newblock {\em Phys. Rev. A}, 68:042318, Oct 2003.
+
+\bibitem[FHH{\etalchar{+}}14]{OpenProblemsSimons}
+Yuval Filmus, Hamed Hatami, Steven Heilman, Elchanan Mossel, Ryan O'Donnell,
+  Sushant Sachdeva, Andrew Wan, and Karl Wimmer.
+\newblock \href
+  {https://simons.berkeley.edu/sites/default/files/openprobsmerged.pdf} {Real
+  Analysis in Computer Science: A collection of Open Problems}.
+\newblock Simons Institute, 2014.
+
+\bibitem[Got97]{Gottesman97}
+Daniel Gottesman.
+\newblock \href {http://dx.doi.org/10.7907/rzr7-dt72} {Stabilizer Codes and
+  Quantum Error Correction}.
+\newblock {\em Dissertation (Ph.D.), California Institute of Technology}, 1997.
+
+\bibitem[Gro96]{Grover96}
+Lov~K. Grover.
+\newblock \href {http://dx.doi.org/10.1145/237814.237866} {A Fast Quantum
+  Mechanical Algorithm for Database Search}.
+\newblock In {\em Proceedings of the Twenty-Eighth Annual {ACM} Symposium on
+  the Theory of Computing}, pages 212--219. {ACM}, 1996.
+
+\bibitem[HNS20]{HNS20}
+Cupjin Huang, Michael Newman, and Mario Szegedy.
+\newblock \href {http://dx.doi.org/10.1109/TIT.2020.3004427} {Explicit Lower
+  Bounds on Strong Quantum Simulation}.
+\newblock {\em {IEEE} Trans. Inf. Theory}, 66(9):5585--5600, 2020.
+
+\bibitem[Kle66]{Kleitman66}
+Daniel~J. Kleitman.
+\newblock \href
+  {http://dx.doi.org/https://doi.org/10.1016/S0021-9800(66)80027-3} {On a
+  combinatorial conjecture of Erdös}.
+\newblock {\em Journal of Combinatorial Theory}, 1(2):209--214, 1966.
+
+\bibitem[Koc20]{Kocia20}
+Lucas Kocia.
+\newblock \href {https://arxiv.org/abs/2012.11739} {Improved Strong Simulation
+  of Universal Quantum Circuits}.
+\newblock {\em arXiv preprint arXiv:2012.11739}, 2020.
+
+\bibitem[MT19]{MT19}
+Tomoyuki Morimae and Suguru Tamaki.
+\newblock \href {http://dx.doi.org/10.26421/QIC19.13-14-2} {Fine-grained
+  quantum computational supremacy}.
+\newblock {\em Quant. Inf. Comput.}, 19:1089, 2019.
+
+\bibitem[NC16]{NC16}
+Michael~A. Nielsen and Isaac~L. Chuang.
+\newblock \href
+  {https://www.cambridge.org/de/academic/subjects/physics/quantum-physics-quantum-information-and-quantum-computation/quantum-computation-and-quantum-information-10th-anniversary-edition?format=HB}
+  {{\em Quantum Computation and Quantum Information (10th Anniversary
+  edition)}}.
+\newblock Cambridge University Press, 2016.
+
+\bibitem[Raz87]{Razborov87}
+Alexander~A. Razborov.
+\newblock \href {http://dx.doi.org/10.1007/BF01137685} {Lower bounds on the
+  size of bounded depth circuits over a complete basis with logical addition}.
+\newblock {\em Mat. Zametki}, 41:598--607, 1987.
+\newblock English translation in Mathematical Notes of the Academy of Sci. of
+  the USSR, 41(4):333-338, 1987.
+
+\bibitem[RT19]{RT19}
+Ran Raz and Avishay Tal.
+\newblock \href {http://dx.doi.org/10.1145/3313276.3316315} {Oracle separation
+  of {BQP} and {PH}}.
+\newblock In {\em Proceedings of the 51st Annual {ACM} {SIGACT} Symposium on
+  Theory of Computing, {STOC} 2019}, pages 13--23. {ACM}, 2019.
+
+\bibitem[Sho97]{Shor97}
+Peter~W. Shor.
+\newblock \href {http://dx.doi.org/10.1137/S0097539795293172} {Polynomial-Time
+  Algorithms for Prime Factorization and Discrete Logarithms on a Quantum
+  Computer}.
+\newblock {\em {SIAM} J. Comput.}, 26(5):1484--1509, 1997.
+
+\bibitem[Sim97]{Simon97}
+Daniel~R. Simon.
+\newblock \href {http://dx.doi.org/10.1137/S0097539796298637} {On the Power of
+  Quantum Computation}.
+\newblock {\em {SIAM} J. Comput.}, 26(5):1474--1483, 1997.
+
+\bibitem[Smo87]{Smolensky87}
+Roman Smolensky.
+\newblock \href {http://dx.doi.org/10.1145/28395.28404} {Algebraic Methods in
+  the Theory of Lower Bounds for Boolean Circuit Complexity}.
+\newblock In {\em Proceedings of the 19th Annual {ACM} Symposium on Theory of
+  Computing}, pages 77--82. {ACM}, 1987.
+
+\bibitem[Smo93]{Smolensky93}
+Roman Smolensky.
+\newblock \href {http://dx.doi.org/10.1109/SFCS.1993.366874} {On
+  Representations by Low-Degree Polynomials}.
+\newblock In {\em 34th Annual Symposium on Foundations of Computer Science},
+  pages 130--138. {IEEE} Computer Society, 1993.
+
+\bibitem[VdN10]{VandenNest10}
+Maarten Van~den Nest.
+\newblock \href {http://dx.doi.org/10.26421/QIC10.3-4-6} {Classical simulation
+  of quantum computation, the Gottesman-Knill theorem, and slightly beyond}.
+\newblock {\em Quant. Inf. Comput.}, 10:258, 2010.
+
+\bibitem[Wil18]{Williams18}
+R.~Ryan Williams.
+\newblock \href {http://dx.doi.org/10.4230/LIPIcs.CCC.2018.6} {Limits on
+  Representing Boolean Functions by Linear Combinations of Simple Functions:
+  Thresholds, ReLUs, and Low-Degree Polynomials}.
+\newblock In {\em 33rd Computational Complexity Conference, {CCC} 2018}, volume
+  102 of {\em LIPIcs}, pages 6:1--6:24. Schloss Dagstuhl - Leibniz-Zentrum
+  f{\"{u}}r Informatik, 2018.
+
+\end{thebibliography}

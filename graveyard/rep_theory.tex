@@ -1,0 +1,648 @@
+\section{Background: Finite-dimensional $C^*$-algebras}
+
+For our purposes, finite-dimensional $C^*$-algebras $\mathcal{A}$ are \emph{algebras} of linear operators (i.e., matrices) over complex vector spaces with the restriction that if $a \in \mathcal{A}$, then its corresponding conjugate adjoint $a^\dag$ is also in $\mathcal{A}$. Let's review all of this in detail below. 
+
+\paragraph{Complex algebras.}
+
+\begin{definition}[Complex algebra]
+A complex algebra $\mathcal{A}$ is a vector space over $\mathbb{C}$, i.e.,
+ \[
+    a,b \in \mathcal{A}, \ \lambda \in \mathbb{C} \;\; \implies \;\; a+b \in \mathcal{A}, \ \lambda a \in \mathcal{A},
+    \]
+together with a bilinear map $\mathcal{A} \times \mathcal{A} \rightarrow \mathcal{A}$ with $(a,b) \mapsto a \cdot b$ such that $(a\cdot b)\cdot c = a \cdot (b \cdot c)$.
+\begin{itemize}
+    \item If $\mathcal{A}$ contains an element $1_{\mathcal{A}} \in \mathcal{A}$ such that $1_{\mathcal{A}} \cdot a = a$, $\forall a \in \mathcal{A}$, then it is a unital algebra.
+\item If $\mathcal{A}$ is closed under the conjugate adjoint operation; meaning that
+$$
+a \in \mathcal{A} \quad \implies a^\dag \in \mathcal{A} \, ,
+$$
+then we call it a $^*$-algebra.
+\end{itemize}
+\end{definition}
+
+\begin{definition}[Sub-algebra]
+A sub-algebra $\mathcal{B} \subseteq \mathcal{A}$ is a subset of $\mathcal{A}$ such that
+\begin{itemize}
+    \item \(\mathcal{B}\) is a vector subspace of \(\mathcal{A}\), i.e.
+    \[
+    b_1,b_2 \in \mathcal{B}, \ \lambda \in \mathbb{C} \;\; \implies \;\; b_1+b_2 \in \mathcal{B}, \ \lambda b_1 \in \mathcal{B}.
+    \]
+
+    \item \(\mathcal{B}\) is closed under multiplication, i.e.
+    \[
+    b_1,b_2  \in \mathcal{B} \;\; \implies \;\; b_1 \cdot b_2  \in \mathcal{B}.
+    \]
+\end{itemize}
+    
+\end{definition}
+
+\paragraph{Representations of algebras.}
+
+\begin{definition}[Representation of an algebra]
+A representation of a complex algebra $\mathcal{A}$ (also called a left $\mathcal{A}$-module) is a vector space $V$ together with a homomorphism $\rho: \mathcal{A} \rightarrow \mathrm{End}(V)$ s.t.
+$$
+\rho(a \cdot b) = \rho(a) \cdot \rho(b), \quad \forall a,b \in \mathcal{A}.
+$$
+Note that, for $a \in \mathcal{A}$, the induced map $\rho(a) : V \rightarrow V$ is linear operator acting on $V$. For brevity, we sometimes write ``$av$'' to denote $\rho(a) \cdot v$, for $a \in \mathcal{A}$ and $v \in V$, to suggest that $\mathcal{A}$ ``acts on $V$''.
+\end{definition}
+
+
+\begin{definition}[Sub-representation]
+A sub-representation of a representation $V$ of an algebra $\mathcal{A}$ is a subspace $W \subset V$ which is invariant under all of the operators $\rho(a): V \rightarrow V$, for $a \in \mathcal{A}$; in other words, a sub-representation $W$ is ``$\mathcal{A}$-invariant'' in the sense that
+$$
+a \in \mathcal{A}, \, w \in W \quad \implies \quad \rho(a) \cdot w \,\,\in W.
+$$
+The vector space $W \subset V$ together with the restriction $\rho_{|W}: \mathcal{A} \rightarrow \mathrm{End}(W)$ therefore naturally defines another representation of  the algebra $\mathcal{A}$.
+\end{definition}
+
+Note that $\{0\}$ and $V$ always give rise to \emph{trivial} sub-representations.
+
+\begin{definition}[Irreducible representation]
+A representation $V \neq 0$ of $\mathcal{A}$ is \emph{irreducible} if the only sub-representations (or ``$\mathcal{A}$-invariant'' subspaces) of $V$ are $\{0\}$ and $V$ itself.
+\end{definition}
+
+\begin{definition}[Intertwiner]\label{def:intertwiner}
+Let $V_1,V_2$ be two sub-representations of an algebra $\mathcal{A}$. An \emph{intertwiner} (or intertwining operator) is a homomorphism $\phi: V_1 \rightarrow V_2$ (and thus a linear map) which commutes with the action of $\mathcal{A}$, i.e., it has the property that
+$$
+\phi(a v) = a\phi(v), \quad \forall a \in \mathcal{A}, \, v \in V_1.
+$$
+Letting $\rho_1: \mathcal{A} \rightarrow \mathrm{End}(V_1)$ and $\rho_2: \mathcal{A} \rightarrow \mathrm{End}(V_2)$ denote the respective homomorphism carried by the representations $V_1$ and $V_2$, this is equivalent to saying that
+$$
+\phi(\rho_1(a)\cdot v) = \rho_2(a) \cdot \phi(v), \quad \forall a \in \mathcal{A}, \, v \in V_1.
+$$The set of all homomorphisms of representations $V_1 \rightarrow V_2$ is denoted by $\mathrm{Hom}_{\mathcal{A}}(V_1, V_2)$.
+
+A homomorphism $\phi$ is an isomorphism of representations if it is an isomorphism between vector spaces. We say that two sub-representations $V_1,V_2$ of an algebra $\mathcal{A}$ are equivalent, if there exists an isomorphism $\phi: V_1 \rightarrow V_2$ such that the following diagram commutes for all $a \in \mathcal{A}$:
+\[
+\begin{tikzcd}
+V_1 \arrow[r, "\phi"] \arrow[d, "a"'] & V_2 \arrow[d, "a"] \\
+V_1 \arrow[r, "\phi"'] & V_2
+\end{tikzcd}
+\]
+\end{definition}
+
+
+\begin{definition}[Direct sum of representations]\label{def:direct-sum-repr}
+Let $V_1,V_2$ be two sub-representations of a complex algebra $\mathcal{A}$. Then, the direct sum of the two representations is given by $V_1 \oplus V_2$ such that
+$$
+a (v_1 \oplus v_2) = a \, v_1 \oplus a \, v_2, \quad \forall a \in \mathcal{A}, \,\forall v_1 \in V_1, \, \forall v_2 \in V_2.
+$$
+Letting $\rho_1: \mathcal{A} \rightarrow \mathrm{End}(V_1)$ and $\rho_2: \mathcal{A} \rightarrow \mathrm{End}(V_2)$ denote the respective homomorphism carried by the representations $V_1$ and $V_2$, this means that $(\rho_1 \oplus \rho_2): \mathcal{A} \rightarrow \mathrm{End}(V_1 \oplus V_2)$ obeys
+$$
+\big((\rho_1 \oplus \rho_2)(a)\big) (v_1 \oplus v_2) = \rho_1(a) \, v_1 \oplus \rho_2(a) \, v_2, \quad \forall a \in \mathcal{A}, \,\forall v_1 \in V_1, \, \forall v_2 \in V_2.
+$$
+Once we choose a basis of $V_1 \oplus V_2$ by taking the union of the basis vectors of $V_1$ and $V_2$, we can write the direct sum representation in matrix form as
+$$
+(\rho_1 \oplus \rho_2)(a) =
+\begin{pmatrix}
+\rho_1(a) & 0\\
+0 & \rho_2(a)
+\end{pmatrix} = \sum_{i=1}^2 \proj{i} \otimes \rho_i(a).
+$$ 
+\end{definition}
+
+\paragraph{Schur's lemma.}
+
+\begin{lemma}[Schur's lemma]\label{lem:schur}
+Let $V,W$ be a (finite-dimensional) irreducible representations of a complex algebra $\mathcal{A}$ and let $\phi: V \rightarrow W$ be an intertwiner. Then, 
+\begin{itemize}
+    \item the map $\phi: V \rightarrow W$ is either an isomorphism or $\phi \equiv 0$;
+    \item moreover, if $V=W$, then $\phi = \lambda \cdot 1_V$, for some $\lambda \in \mathbb{C}.
+$
+\end{itemize}
+\end{lemma}
+
+
+\paragraph{Commutative algebras.}
+
+\begin{definition}[Commutative algebra]
+A complex algebra $\mathcal{A}$ is called commutative, if
+$$
+a \cdot b = b \cdot a, \quad \forall a,b \in \mathcal{A}.
+$$
+\end{definition}
+
+\begin{lemma}[Irreducible representations of commutative algebras]
+Let $\mathcal{A}$ be a commutative algebra. Then, every irreducible (finite-dimensional) representation $V$ of $\mathcal{A}$ is $1$-dimensional.
+\end{lemma}
+\begin{proof}
+Suppose that $V$ is an irreducible algebra; meaning, that the only sub-representations (or ``$\mathcal{A}$-invariant'' subspaces) of $V$ are $\{0\}$ and $V$ itself. Then, for every element $a \in \mathcal{A}$, the map $\rho(a): V \rightarrow V$ is an intertwiner since
+$$
+\rho(a)(\rho(b) v) =  \rho(ab) v = \rho(ba) v = \rho(b)(\rho(a) v) \, ,
+$$
+where the second equality follows from the fact that $\mathcal{A}$ is commutative. Therefore, by Schur's Lemma (\Cref{lem:schur}), the map $\rho(a)$ must necessarily be a multiple of the identity for any $a \in \mathcal{A}$; in particular, any subspace of $V$ is an ``$\mathcal{A}$-invariant'' subspace.  However, because $V$ is irreducible, the only ``$\mathcal{A}$-invariant'' subspaces of $V$ are $\{0\}$ and $V$ itself. Since $V \neq 0$, the only possible choice is that $\mathrm{dim}(V)=1$.
+\end{proof}
+
+\paragraph{Center of an algebra.}
+
+\begin{definition}[Center of an algebra]
+Let $\mathcal{A}$ be a complex algebra. 
+Then, the center of the algebra $\mathcal{A}$, denoted by $Z(\mathcal{A})$, is the set of elements $z \in \mathcal{A}$ which commute with all elements in $\mathcal{A}$.   
+\end{definition}
+
+\begin{lemma}
+Let $\mathcal{A}$ be a complex algebra and let $V$ be a (finite-dimensional) irreducible representation of $\mathcal{A}$. Then, any element $z \in Z(\mathcal{A})$, acts in $V$ by multiplication by a scalar $\chi_V(z)$.
+\end{lemma}
+
+\paragraph{Algebra of linear operators.}
+
+\begin{definition}[Algebra of linear operators]
+Let $V$ be a finite dimensional complex vector space. Then, $\mathcal{A} = \mathcal{L}(V)$ is the algebra of linear operators mapping $V$ onto itself. Here, the multiplication rule
+$\mathcal{A} \times \mathcal{A} \rightarrow \mathcal{A}$ with $(a,b) \mapsto a \cdot b$
+is the composition of linear operators as matrices. If $\mathcal{B}$ is a sub-algebra of linear operators, we write $\mathcal{B} \subseteq \mathcal{L}(V)$. 
+\end{definition}
+
+To prove the next lemma, we make use of the following simple lemma.
+
+\begin{lemma}\label{lem:direct-sum-orth}
+Let $V$ be a complex inner product space and let $W \leq V$ be a subspace. Then, there exists a direct sum decomposition $V = W \oplus W^\perp$, where $W^\perp$ is the orthogonal complement
+$$
+W^\perp = \{ v \in V \,\, | \,\, \langle v,w\rangle = 0\,, \,\, \forall w \in W\}. 
+$$
+\end{lemma}
+
+
+\begin{lemma}[Decomposition of unital $^*$sub-algebras of linear operators]
+    Let $\mathcal{A} \subseteq \mathcal{L}(V)$ be a unital $^*$sub-algebra of linear operators over a complex inner product space $V$. Then, there exists a direct sum decomposition of $V$ into orthogonal subspaces $V_\alpha$, where each $V_\alpha$ is a tensor product of two vector spaces, denoted by $V_\alpha = V^1_\alpha \otimes V^2_\alpha$, such that
+    \[ \mathcal{A} \cong \bigoplus_{\alpha} \mathcal{L}(V^1_\alpha) \otimes \mathbb{1}_{V^2_\alpha} \, . \]
+\end{lemma}
+\begin{proof} We break down the proof into five steps.\ \\
+\ \\
+\textbf{Step 1: Decomposition into irreducibles.} The first step in the proof is to observe that the complex inner product space $V$ admits an orthogonal decomposition into irreducible subspaces.
+Let $W \subseteq V$ be an $\mathcal{A}$-invariant subspace. Because $\mathcal{A}$ is a $^*$sub-algebra, it is closed under adjoints, hence $W^\perp$ is also $\mathcal{A}$-invariant; namely, for $a \in \mathcal{A},w' \in W^\perp, w \in W$, we have
+$$
+\langle a w', w\rangle = \langle w',a^\dag w\rangle = 0 \, ,
+$$
+since $a^\dag w \in W$. Therefore, every invariant subspace has an invariant orthogonal complement, and the representation of $\mathcal{A}$ on $V$ is \emph{completely reducible:} due to \Cref{lem:direct-sum-orth}, there is an orthogonal direct-sum decomposition of $V$ into irreducible $\mathcal{A}$-modules such that
+$$
+V = \bigoplus_i V_i \, ,
+$$
+where each $V_i$ corresponds to an irreducible representation of $\mathcal{A}$.
+
+\textbf{Step 2: Group together subspaces by isomorphism class.} The second step in the proof is to group together all the subspaces $V_i$ which are themselves isomorphic as $\mathcal{A}$-modules according to \Cref{def:intertwiner}; in other words, we can group these together in terms of different isotypical components $V_\alpha$ consisting of a carrier space $V_\alpha^1$ together with the corresponding multiplicity space $V_\alpha^2 := \mathbb{C}^{m_\alpha}$ with $\dim(V_\alpha^2)=m_\alpha$ such that
+\begin{align}
+V & \cong \bigoplus_\alpha V_\alpha\\
+&\cong\bigoplus_\alpha (\underbrace{V_\alpha^1 \oplus \dots \oplus V_\alpha^1}_{m_\alpha \text{ times}})\\
+&\cong \bigoplus_\alpha \, (V_\alpha^1 \otimes \mathbb{C}^{m_\alpha})\\
+&= \bigoplus_\alpha \, (V^1_\alpha \otimes V^2_\alpha).
+\end{align}
+Choosing the bases $\{v_{\alpha,i}^1\}_{i=1}^{\dim(V_\alpha^1)}$ of $V_\alpha^1$ and $\{v_{\alpha,j}^2\}_{j=1}^{m_\alpha}$ of $V_\alpha^2$, we can write
+$$
+V = \mathrm{span}_{\mathbb{C}}\Big\{\ket{\alpha} \otimes \ket{v_{\alpha,i}^1} \otimes \ket{v_{\alpha,j}^2} \, : \,  1 \leq i \leq \dim(V_\alpha^1), \, 1 \leq j \leq m_\alpha\Big\}.
+$$
+Following \Cref{def:direct-sum-repr} and using the basis above, we know there exists a change of basis $W \in \mathcal{L}(V)$ that maps $\rho: \mathcal{A} \rightarrow \mathrm{End}(V)$ into diagonal form such that for $a \in \mathcal{A}$:
+\begin{align}
+W\rho(a)W^\dag &=\bigoplus_\alpha (\underbrace{\rho_{\alpha}(a) \oplus \dots \oplus \rho_{\alpha}(a)}_{m_\alpha \text{ times}})\\
+&=\bigoplus_{\alpha} \, \rho_{\alpha}(a) \otimes \mathbb{1}_{V_\alpha^2}\\
+&=\sum_{\alpha} \,\proj{\alpha} \otimes (\rho_{\alpha}(a) \otimes \mathbb{1}_{V_\alpha^2}) \, ,
+\end{align}
+where we can write the resolution of the identity given by $\mathbb{1}_{V_\alpha^2} = \sum_{j=1}^{m_\alpha} \proj{v_{\alpha,j}^2}$. 
+
+
+\textbf{Step 3: Structure of the commutant of $\mathcal{A}$.} Next, we investigate the structure of all operators that commute with the algebra $\mathcal{A}$, i.e., $\mathcal{B} = \mathcal{A}'$ with
+\begin{align}
+\mathcal{B} = \{B \in \mathcal{L}(V) \, : \, aB=Ba, \, \forall a \in \mathcal{A}\}.    
+\end{align}
+Let $B \in \mathcal{B} \subseteq \mathcal{L}(V)$. Since $B$ commutes with all of $\mathcal{A}$, we have
+\begin{align}
+(W \rho(a) W^\dag)\cdot(W B W^\dag) &= 
+W \, \rho(a) B  \, W^\dag\\
+&= 
+W \, B \,\rho(a) \, W^\dag\\
+&=(W B W^\dag) \cdot (W \rho(a) W^\dag), \quad \forall a \in \mathcal{A}.  
+\end{align}
+Let $\widetilde{B} = W B W^\dag$. Expanding $\widetilde{B}$ in the basis corresponding to the isotypical blocks of $V$ which are indexed by $\alpha$, we obtain
+$$
+\widetilde{B} = \sum_{\alpha,\alpha'} \ket{\alpha}\hspace{-1mm}\bra{\alpha'} \otimes \widetilde{B}_{\alpha,\alpha'}
+$$
+where $\widetilde{B}_{\alpha,\alpha'}$ acts on the carrier and multiplicity spaces. Let us now investigate the commutation identity above restricted to the sector indexed by $\alpha,\alpha'$ (formally, we apply the row vector $\bra{\alpha}$ from the left and the column vector $\ket{\alpha'}$ from the right); we find that
+\begin{align}\label{eq:comm-id}
+(\rho_{\alpha}(a) \otimes \mathbb{1}_{V_\alpha^2}) \cdot \widetilde{B}_{\alpha,\alpha'} = \widetilde{B}_{\alpha,\alpha'} \cdot (\rho_{\alpha}(a) \otimes \mathbb{1}_{V_\alpha^2}), \quad \forall a \in \mathcal{A}.
+\end{align}
+Next, we introduce the basis $\{v_{\alpha,j}^2\}_{j=1}^{m_\alpha}$ of the multiplicity space $V_\alpha^2$; this yields
+\begin{align}
+\widetilde{B}_{\alpha,\alpha'} = \sum_{j=1}^{m_\alpha} \sum_{k=1}^{m_{\alpha'}}   {\widetilde{B}_{\alpha,\alpha'}}^{(j,k)} \otimes \ket{v_{\alpha,j}^2} \hspace{-1mm}\bra{v_{\alpha',k}^2}.
+\end{align}
+where ${\widetilde{B}_{\alpha,\alpha'}}^{(j,k)}:V_\alpha^1 \rightarrow V_{\alpha'}^1$ is a linear operator. Plugging this into the commutation identity in \Cref{eq:comm-id}, we get the following two equations:
+\begin{align*}
+\text{(left-hand side:) }  \quad (\rho_{\alpha}(a) \otimes \mathbb{1}_{V_\alpha^2}) \cdot \widetilde{B}_{\alpha,\alpha'} &= \sum_{j=1}^{m_\alpha} \sum_{k=1}^{m_{\alpha'}} \,  \rho_\alpha(a) {\widetilde{B}_{\alpha,\alpha'}}^{(j,k)} \otimes \ket{v_{\alpha,j}^2} \hspace{-1mm}\bra{v_{\alpha',k}^2}   \\
+\text{(right-hand side:) }  \quad \widetilde{B}_{\alpha,\alpha'} \cdot (\rho_{\alpha}(a) \otimes \mathbb{1}_{V_\alpha^2})&= \sum_{j=1}^{m_\alpha} \sum_{k=1}^{m_{\alpha'}} \,  {\widetilde{B}_{\alpha,\alpha'}}^{(j,k)} \rho_\alpha(a) \otimes \ket{v_{\alpha,j}^2} \hspace{-1mm}\bra{v_{\alpha',k}^2};
+\end{align*}
+in particular, when restricting to the $j,k$ coefficients, ${\widetilde{B}_{\alpha,\alpha'}}^{(j,k)}$ is an intertwiner with
+\begin{align}\label{eq:intertwiner-B}
+\rho_\alpha(a) {\widetilde{B}_{\alpha,\alpha'}}^{(j,k)}  = {\widetilde{B}_{\alpha,\alpha'}}^{(j,k)} \rho_\alpha(a), \quad \forall a \in \mathcal{A}, \, B \in \mathcal{B}.    
+\end{align}
+We now distinguish between the following two cases:
+\begin{itemize}
+    \item (Case: $\alpha \neq \alpha'$) In this case, we know that $\rho_{\alpha}$ and $\rho_{\alpha'}$ correspond to distinct (and inequivalent) irreducible representations of $\mathcal{A}$. According to Schur's Lemma (\Cref{lem:schur}), we know that the intertwiner in Eq.~\eqref{eq:intertwiner-B} can only be identical to $0$, and thus
+    $$
+    {\widetilde{B}_{\alpha,\alpha'}}^{(j,k)} \equiv 0, \quad \forall \alpha \neq \alpha'.
+    $$
+
+    \item (Case: $\alpha = \alpha'$) In this case, the intertwiner in Eq.~\eqref{eq:intertwiner-B} is of the form ${\widetilde{B}_{\alpha,\alpha}}^{(j,k)}:V_\alpha^1 \rightarrow V_{\alpha}^1$ in Eq.~\eqref{eq:intertwiner-B}. Then, due to Schur's Lemma (\Cref{lem:schur}), it must be equal to a multiple of the identity; concretely, there exists some matrix $\Lambda_\alpha^B \in \mathcal{L}(V_\alpha^1)$ such that
+    $$
+    {\widetilde{B}_{\alpha,\alpha}}^{(j,k)} = (\Lambda_\alpha^B)_{jk} \cdot \mathbb{1}_{V_\alpha^1}, \quad \text{ for } \, 1 \leq j,k \leq m_\alpha.
+    $$
+\noindent This implies that
+    \begin{align}
+\widetilde{B}_{\alpha,\alpha} &= \sum_{j=1}^{m_\alpha} \sum_{k=1}^{m_{\alpha}}   {\widetilde{B}_{\alpha,\alpha}}^{(j,k)} \otimes \ket{v_{\alpha,j}^2} \hspace{-1mm}\bra{v_{\alpha,k}^2}\\
+&=\sum_{j=1}^{m_\alpha} \sum_{k=1}^{m_{\alpha}}   (\Lambda_\alpha^B)_{jk} \cdot \mathbb{1}_{V_\alpha^1} \otimes \ket{v_{\alpha,j}^2} \hspace{-1mm}\bra{v_{\alpha,k}^2}\\
+&=\sum_{j=1}^{m_\alpha} \sum_{k=1}^{m_{\alpha}}  \mathbb{1}_{V_\alpha^1} \otimes (\Lambda_\alpha^B)_{jk} \ket{v_{\alpha,j}^2} \hspace{-1mm}\bra{v_{\alpha,k}^2}\\
+&= \mathbb{1}_{V_\alpha^1} \otimes \Lambda_\alpha^B.
+\end{align}
+\end{itemize}
+Combining all blocks $\alpha$, we now know that
+\begin{align}
+\widetilde{B} = \sum_\alpha  \,\proj{\alpha} \otimes (\mathbb{1}_{V_\alpha^1} \otimes \Lambda_\alpha^B).   
+\end{align}
+and therefore
+\begin{align}
+B = W^\dag \, \sum_\alpha  \,\proj{\alpha} \otimes (\mathbb{1}_{V_\alpha^1} \otimes \Lambda_\alpha^B) \, W, \quad \forall B \in \mathcal{B}.   
+\end{align}
+In other words, there exists a change of basis $W \in \mathcal{L}(V)$ which puts $B \in \mathcal{B} \subseteq \mathcal{L}(V)$ into the block diagonal form above. Therefore, by Burnside's Theorem, we know that the only irreducible sub-algebra of $\mathcal{L}(V_\alpha^2)$ is $\mathcal{L}(V_\alpha^2)$ itself \AlexNote{Check this}, and thus
+\begin{align}
+\mathcal{B} \cong \bigoplus_{\alpha} \mathbb{1}_{V^1_\alpha} \otimes \mathcal{L}(V^2_\alpha).    
+\end{align}
+\end{proof}
+
+\newpage
+
+\section{Double Commutant Theorem}
+
+\begin{table}[h!]
+\centering
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{@{}p{3cm}ccp{3.2cm}cc@{}}
+\toprule
+\textbf{Algebra} 
+& \multicolumn{2}{c}{\textbf{Notation}} 
+& \textbf{Member Type} 
+& \multicolumn{2}{c}{\textbf{Form}} \\
+
+\cmidrule(lr){2-3}\cmidrule(lr){5-6}
+& on $\mathcal{H}$ & on $\mathcal{H} \otimes \mathcal{H}$ 
+& & on $\mathcal{H}$ & on $\mathcal{H} \otimes \mathcal{H}$ \\
+\midrule
+
+Subalgebra of linear operators 
+& $\mathcal{M}$ 
+& $\widehat{\mathcal{M}}$ 
+& Linear operator (matrix) 
+& $A$ ($d\times d$) 
+& $\widehat{A} := I \otimes A = \text{diag}(A)$ ($d^2\times d^2$) \\
+
+Commutant of a subalgebra 
+& $\mathcal{M}'$ 
+& $(\widehat{\mathcal{M}})'$ 
+& Matrix of same dimension as the subalgebra 
+& $B$ 
+& $\widehat{B} = (B_{j,k})_{j,k\le d}$, $B_{j,k}\in \mathcal{M}'$ \\
+
+Double (Second) commutant 
+& $\mathcal{M}''$ 
+& $(\widehat{\mathcal{M}})''$ 
+& \textit{(same as above)} 
+& $C$ 
+& $\widehat{C} = I \otimes C = \mathrm{diag}(C)$, $C\in\mathcal{M}''$ \\
+\bottomrule
+\end{tabular}
+\caption{Notation used in the proof of the Double Commutant Theorem.}
+\label{tab:notation-commutator-proof}
+\end{table}
+
+\IslamNote{I suspect there is a typo in the Jones' notes. The extension should act as identity on the first tensor factor, no?}
+
+% Old table below -- asked ChatGPT to make it "prettier" and it gave me the one above.
+% \begin{table}
+%     \centering
+%     \begin{tabular}{|p{2cm}|c|c|p{2cm}|c|c|}
+%     \hline
+%         Set & \multicolumn{2}{|c|}{Notation} & Member Type & \multicolumn{2}{|c|}{Notation}\\
+        
+%         & on $\mathcal{H}$ & on $\mathcal{H} \otimes \mathcal{H}$ & & on $\mathcal{H}$ & on $\mathcal{H} \otimes \mathcal{H}$\\
+%         \hline
+%          Subalgebra of linear operators & $\mathcal{M}$ & $\widehat{\mathcal{M}}$ &  Linear Operator (Matrix) & $A$ ($d \times d$ Matrix) & $\widehat{A} := A \otimes I$ ($d^2 \times d^2$ Matrix)\\
+%          \hline
+%          Commutant of a subalgebra & ($\mathcal{M}$)' & $(\widehat{\mathcal{M}})'$ & Matrix of same dimension as the subalgebra & $B$ & $\widehat{B} = \left(B_{j,k}\right)_{j,k \leq d}$ where $B_{j,k} \in \mathcal{M}'$\\
+%          \hline
+%          Second (a.k.a. Double) Commutant of subalgebra & ($\mathcal{M}$)'' & $(\widehat{\mathcal{M}})''$ & ... & C & $\widehat{C} = \text{diag}(C)$ where $C \in \mathcal{M}''$\\
+%          \hline
+%     \end{tabular}
+%     \caption{Notation used in the proof of the Double Commutant Theorem.}
+%     \label{tab:notation-commutator-proof}
+% \end{table}
+
+Here, we will prove a finite dimensional version of von Neumann's double commutant theorem. The proof is basically that in~\cite{jones15} with more details filled in. Let's first define the commutant for a subalgebra of the linear operators on a Hilbert Space.
+\begin{definition}
+\label{defn:commutant}
+    For any algebra $\mathcal{M} \subseteq \mathcal{L}(\mathcal{H})$ of linear operators over a (finite dimensional) vector space, we denote by $\mathcal{M}'$ the \emph{commutant} algebra 
+    \[ \mathcal{M}' := \{ b \in \mathcal{L}(\mathcal{H}) : bx = xb \: \forall x \in \mathcal{M}\}.\]
+\end{definition}
+
+We will prove that $\mathcal{M}'' = \mathcal{M}$. First, we will go through some helpful lemmas that we will use in the proof. The first is an isomorphism between the tensor product of a Vector space of dimension $d$ with itself and its $d$-fold Cartesian product.
+
+\IslamNote{btw, this is not Schmidt decomposition, or so i guess?}
+
+\begin{lemma}[External Direct Sum Decomposition of Tensor Product]\label{lemma:external-direct-sum-tensor-product}
+    Let $V$ be a Vector Space of dimension $d$, then:
+    \[V \otimes V \simeq \bigoplus_{k = 1}^d V.\]
+    Furthermore, if $B = \{\ket{b_1}, \dots, \ket{b_n}\}$ is any\IslamNote{Does not need to be orthornomal, right?} basis for $V$, then any vector $\ket{w} \in V \otimes V$ can be written as  $\ket{w} = \sum\limits_{k \in \{1, 2, \dots, d\}} \ket{v_{k}} \ket{b_k}$ and there exists an isomorphism\IslamNote{Should I just say bijective linear map?} map $T_B: V \otimes V \to \bigoplus_{k = 1}^d V$ defined as follows:
+    \begin{equation}
+        T_B: \ket{w} = \sum\limits_{k \in \{1, 2, \dots, d\}}  \ket{v_{k}} \ket{b_k} \mapsto \left(\ket{v_1}, \ket{v_2}, \dots, \ket{v_d}\right).
+    \end{equation}
+\end{lemma}
+
+\begin{proof}
+Since $B = \{\ket{b_j}: j \in [d]\}$ is a basis for $V$, $B\otimes B := \{\ket{b_j}\ket{b_k}: j,k \in [d] \}$ is a basis for $V \otimes V$. Therefore, any vector $\ket{w} \in V \otimes V$ can be written as:
+\begin{align*}
+    \ket{w} &= \sum\limits_{j, k \in [d]} \alpha_{j,k} \ket{b_j} \ket{b_k} \\
+    &= \sum\limits_{k \in [d]} \left(\sum\limits_{j \in [d]} \alpha_{j,k} \ket{b_j}\right) \ket{b_k}\\
+    &= \sum\limits_{k \in [d]} \ket{v_k} \ket{b_k} & \ket{v_k} := \sum\limits_{j \in [d]} \alpha_{j,k} \ket{b_j}
+\end{align*}
+
+One can verify that $T_B$ is a bijective linear map. One can verify that the map is bijective from how it is constructed. Below, we verify it is linear.
+
+\begin{align*}
+    T(\alpha \ket{v} + \beta \ket{w}) &= T \left( \alpha \sum\limits_{k \in [d]} \ket{v_k} \ket{b_k} + \beta \sum\limits_{k \in [d]} \ket{w_k} \ket{b_k} \right)\\
+    &= T \sum\limits_{k \in [d]} \left(\alpha \ket{v_k} + \beta \ket{w_k}\right) \ket{b_k}\\
+    &= \left(\alpha \ket{v_1} + \beta\ket{w_1}, \dots, \alpha \ket{v_k} + \beta \ket{w_k}\right)\\
+    &= \alpha \left( \ket{v_1}, \dots, \ket{v_k} \right) + \beta \left(\ket{w_1}, \dots, \ket{w_k} \right)\\
+    %&= T(\alpha \ket{v}) + T(\beta\ket{w})\\
+    &= \alpha T(\ket{v}) + \beta T(\ket{w}).
+\end{align*}
+
+% Consider the standard basis $\{\ket{1}, \dots, \ket{d}\}$ for the Hilbert Space $\mathbb{C}^d$. We know that~\footnote{what is this theorem called in Linear Algebra? Is it Schmidt or ``Direct Sum Decomposition''? Can I call it a special case of Schmidt?} the space $\mathbb{C}^d \otimes \mathbb{C}^d$ can be characterized as follows:
+
+% \begin{equation}
+%     \mathbb{C}^d \otimes \mathbb{C}^d \simeq \bigoplus_{i = 1}^d \mathbb{C}^d
+% \end{equation}
+
+% \noindent and $\left\{\ket{j_1}\ket{j_2}: j_1, j_2 \in \left\{1, \dots, d\right\}\right\}$ is an orthonormal basis for the space $\mathbb{C}^d \otimes \mathbb{C}^d \simeq \bigoplus_{i = 1}^d \mathbb{C}^d$.
+\end{proof}
+
+% \begin{lemma}[Exercise 2.1.14 in Jones' Notes]
+%     If $\mathcal{K}$ is a closed subspace and $a = a^*$, then:
+%     \[a \mathcal{K} \subseteq \mathcal{K} \iff [a, P_{\mathcal{K}}] = 0.\]
+% In general:
+% \[\left( \: a \mathcal{K} \text{ and } a^*\mathcal{K} \subseteq \mathcal{K} \: \right) \iff [a, P_{\mathcal{K}}] = 0.\]
+% \end{lemma}
+
+\begin{lemma}[A projector onto $\mathcal{M}$-invariant subspaces commutes with any operator $\in \mathcal{M}$; Exercise 2.1.14 in Jones' Notes]
+\label{ex-2-1-14}
+    Let $\mathcal{M} \subseteq \mathcal{L}(\mathcal{H})$ be a $*$-algebra and let $V \subseteq \mathcal{H}$ be a subspace, and let $P_V$ be the projector onto $V$. If $\mathcal{M}V \subseteq V$, then then $P_V \in \mathcal{M}'$.
+\end{lemma}
+\begin{proof}
+    From the fact that $\mathcal{M}V \subseteq V$, it follows that
+    \[ \forall x \in \mathcal{M}, x P_V = P_V x P_V.\]
+    Because $\mathcal{M}$ is a $*$-algebra, this also implies that \Wheels{$x^\dagger \in \mathcal{M}$} and thus:
+    \[ \forall x \in \mathcal{M}, x^\dagger P_V = P_V x^\dagger P_V.\]
+    Now let $\ket{u}, \ket{v}$ be any two vectors in $\mathcal{H}$ and let $x \in \mathcal{M}$.
+    \begin{align}
+        \bra{u} x P_V \ket{v} &= \bra{u} P_V x P_V \ket{v} \\
+        &= (P_V x^\dagger P_V \ket{u} )^\dagger \ket{v} \\
+        &= (x^\dagger P_V \ket{u})^\dagger \ket{v} \\
+        &= \bra{u} P_V x \ket{v}.
+    \end{align}
+    Since this holds for all $\ket{u}, \ket{v}$, it follows that $P_V x = xP_V$.
+\end{proof}
+
+Now, let's restrict ourselves to subalgebras $\mathcal{M} \subseteq \mathcal{L}(\mathbb{C}^d)$. We will define a useful extension/amplification.
+
+Consider any matrix $A \in \mathcal{M}$. Note that $A$ is a $d \times d$ matrix that acts on the $\mathbb{C}^d$ Hilbert Space. We will define an extension~\footnote{In fact, we define it for any $d \times d$ matrix.} $\widehat{A}$ that acts on the $\mathbb{C}^d \otimes \mathbb{C}^d$ Hilbert Space. That extension will act equivalently to the $A$ transformation on the second space, and will act as the identity transformation on the first space. Formally, this is characterized as follows:
+    \begin{equation}
+        \widehat{A}: \quad\quad\ket{\Psi_1} \otimes \ket{\Psi_2} \quad\quad \mapsto  \quad\quad \ket{\Psi_1} \otimes \left(A \ \ket{\Psi_2}\right)
+    \end{equation}
+where $\widehat{A}$ is a $d^2 \times d^2$ matrix, $\ket{\Psi_1} \in \mathbb{C}^d$ and $\ket{\Psi_2} \in \mathbb{C}^d$.
+
+We will denote by $\widehat{\mathcal{M}} := \{\widehat{A}: A \in \mathcal{M}\}$ the algebra that is the image of the algebra $\mathcal{M}$ under the extension $\widehat{\: }$ . Then, the commutant of the extension will be $(\widehat{\mathcal{M}})'$ and the double commutant will be $(\widehat{\mathcal{M}})''$.
+
+\begin{fact}
+\label{fact-A-diag}
+    For $A \in \mathcal{L}(\mathcal{H})$, define $\widehat{A} := I \otimes A \in \mathcal{L}(\mathcal{H} \otimes \mathcal{H})$. Then,
+    \begin{equation}
+        \widehat{A} = \text{diag}(A) = 
+    \begin{bmatrix}
+    A & \\
+    & A \\
+    & & \ddots\\
+    & & & A\\
+    \end{bmatrix}.
+    \end{equation}
+\end{fact}
+\begin{proof}
+    By definition of $\widehat{A}$ and the tensor product of matrices:
+    \begin{align*}
+        \widehat{A} &= I \otimes A\\
+        &= \text{diag}(1) \otimes A \\
+        &= \text{diag}(A).
+    \end{align*}
+\end{proof}
+\noindent As a corollary, we can characterize matrices in $\widehat{\mathcal{M}}$ as follows.
+
+\begin{claim}[Characterization of $\widehat{\mathcal{M}}$]\label{claim-m-hat}
+    Matrix $\widehat{A} \in \widehat{\mathcal{M}}$ if and only if $A \in \mathcal{M}$ and:
+    \begin{equation}
+        \widehat{A} = \text{diag}(A) = 
+    \begin{bmatrix}
+    A & \\
+    & A \\
+    & & \ddots\\
+    & & & A\\
+    \end{bmatrix}.
+    \end{equation}
+\end{claim}
+
+\begin{claim}[Characterization of $(\widehat{\mathcal{M}})'$]\label{claim-m-hat-prime}
+    Matrix $\widehat{B} \in (\widehat{\mathcal{M}})'$ if and only if:
+        \begin{equation}
+        \widehat{B} = (B_{j,k})_{j,k} = 
+    \begin{bmatrix}
+    B_{1,1} & B_{1,2} & \dots &B_{1,d} \\
+    B_{2,1} & B_{2,2} & \dots & B_{2,d}\\
+    \vdots & \vdots & \vdots & \vdots \\
+    B_{d, 1}& B_{d, 2}& \dots & B_{d,d} &\\
+    \end{bmatrix}
+    \end{equation}
+and $B_{j,k} \in \mathcal{M}'$ for all $j,k \in \{1, \dots, d\}$.
+\end{claim}
+\begin{remark}
+    Each $B_{j,k}$ is a $(d \times d)$ matrix. $\widehat{B}$ is a $(d^2 \times d^2)$ matrix because it is a big $(d \times d)$ matrix of blocks where each block is $(d \times d)$.
+\end{remark}
+\begin{proof}
+    $\widehat{B}$ is of dimension $d^2 \times d^2$. Thus, without loss of generality, like any $d^2 \times d^2$ matrix, $\widehat{B}$ can be written as $d \times d$ blocks $\widehat{B} = (B_{j,k})_{j,k}$ where each block is of size $d \times d$. Now, let $\widehat{A}$ be arbitrary in $\widehat{\mathcal{M}}$. We know, by Claim~\ref{claim-m-hat}, that $\widehat{A}$ is exactly of the form $\text{diag}(A)$ where $A \in \mathcal{M}$. Now, let's compute the commutator $[\widehat{A}, \widehat{B}]$ and see when it is exactly zero. We will use the following remark.
+
+    \begin{remark}\label{remark:compute-product-DB}
+        Let $\widehat{D} = \text{diag}(D_1, \dots, D_n) = \text{diag}(D_j)_{j \leq n}$ be a block diagonal matrix, and let $B = \left(B_{j,k}\right)_{j,k \leq n}$ be a block matrix. Then:
+        \begin{equation}
+            \widehat{D}B = \left(D_j B_{j,k}\right)_{j,k \leq n} \quad\quad \text{ and } \quad\quad B\widehat{D} = \left(B_{j,k}D_k \right)_{j,k \leq n}.
+        \end{equation}
+         Furthermore, if  $\widehat{D} = \text{diag}(D) = \text{diag}(D, \dots, D)$
+         \begin{equation}
+             [\widehat{D}, B] = \left([D, B_{j,k}]\right)_{j,k}.
+         \end{equation}
+    \end{remark}
+\noindent Using the remark, we now compute the commutator.
+    \begin{align*}
+        [\widehat{A}, \widehat{B}] &= \widehat{A} \ \widehat{B} - \widehat{B} \ \widehat{A}\\
+        &= (A B_{j,k})_{j,k} - (B_{j,k} A)_{j,k} & \text{via Remark~\ref{remark:compute-product-DB}}\\
+        &= (A B_{j,k} - B_{j,k} A)_{j,k}\\
+        &= ([A, B_{j,k}])_{j,k}
+    \end{align*}
+
+\noindent The commutator $[\widehat{A}, \widehat{B}]$ is zero $\iff$ $[A, B_{j,k}] = 0$ for all $j, k \leq d$. This means that $\widehat{B}$ commutes with all $\widehat{A} \in \widehat{\mathcal{M}}$ iff each block $B_{j,k}$ commutes with all $A \in \mathcal{M}$ i.e. $B_{j,k} \in \mathcal{M}'$.
+    
+    % Assume towards a contradiction that one of these blocks $B_{j,k} \notin \mathcal{M}'$. Thus, there is a matrix $A \in \mathcal{M}$ that does not commute with $B_{j,k}$ i.e. $[A, B_{j,k}] \neq 0$. Then, as computed below, $\widehat{A}$ does not commute with $\widehat{B}$ contradicting the fact that $\widehat{B} \in (\widehat{M})'$.
+    % \begin{align*}
+    %     \widehat{A} \ \widehat{B}  &= (A B_{j,k})_{j,k}\\
+    %     \widehat{B} \ \widehat{A} &= (B_{j,k} A)_{j,k}
+    % \end{align*}
+
+\end{proof}
+
+\begin{claim}[Characterization of $(\widehat{\mathcal{M}})''$]\label{claim-m-hat-double-prime}
+    Matrix $\widehat{C} \in (\widehat{\mathcal{M}})''$ $\iff$ $C \in \mathcal{M}''$ and:
+    \begin{equation}
+        \widehat{C} = \text{diag}(C) = 
+    \begin{bmatrix}
+    C & \\
+    & C \\
+    & & \ddots\\
+    & & & C\\
+    \end{bmatrix}.
+    \end{equation}
+\end{claim}
+\begin{proof}
+We will prove both directions.
+
+\paragraph{Direction 1 ($\impliedby$):}
+Let $C \in \mathcal{M}''$ and $\widehat{C} := \text{diag}(C)$. We need to prove that for any $\widehat{B} \in (\widehat{\mathcal{M}})'$, the commutator $[\widehat{C}, \widehat{B}]$ is zero. Let $\widehat{B} \in (\widehat{\mathcal{M}})'$ be arbitrary, and thus (by Claim~\ref{claim-m-hat-prime}) exactly of the form $\widehat{B} = \left(B_{j,k}\right)_{j,k}$ where $B_{j,k} \in \mathcal{M}'$. Since $C \in \mathcal{M}''$ and $B_{j,k} \in \mathcal{M}'$, then $C$ commutes with $B_{j,k}$.
+
+\begin{align*}
+    [\widehat{C}, \widehat{B}] &= \left([C, B_{j,k}]\right)_{j,k} & \text{via Remark~\ref{remark:compute-product-DB}}\\ 
+    &= (0)_{j,k} & [C, B_{j,k}] = 0.
+\end{align*}
+
+\paragraph{Direction 2 ($\implies$):}
+
+    Let's write $\widehat{C} = \left(C_{j,k}\right)_{j,k \leq d}$ in the general~\footnote{It is so tempting here to say that $\widehat{C} = \text{diag(C)}$ and cite Fact~\ref{fact-A-diag}. Although it is true (because eventually, we know that we will prove the double commutant theorem), by strictly applying the definition of the commutant algebra, $\widehat{C}$ can be any linear operator not necessarily in the algebra of extended operators.} form of a $d^2 \times d^2$ matrix as we did in the proof of Claim~\ref{claim-m-hat-prime}. Let $\widehat{B} \in (\widehat{\mathcal{M}})'$ be arbitrary, and thus (by Claim~\ref{claim-m-hat-prime}) is exactly of the form $\widehat{B} = \left(B_{j,k}\right)_{j,k}$ where $B_{j,k} \in \mathcal{M}'$. Let's now compute the commutator $[\widehat{B}, \widehat{C}]$ and see what conditions are sufficient for it to be zero.
+
+    \begin{align}
+        \begin{split}
+        \label{eqn:Bhat-Chat}
+            [\widehat{B}, \widehat{C}] &= \quad\quad\quad\widehat{B} \widehat{C} \quad\quad\quad -  \quad\quad\quad\widehat{C} \widehat{B} \quad\quad\quad \\
+        &= \left(\sum\limits_{t = 1}^d B_{r, t} C_{t,c}\right)_{r,c}  \ - \quad \left(\sum\limits_{t = 1}^d C_{r, t} B_{t,c} \right)_{r,c}\\
+        &= \left(\sum\limits_{t = 1}^d B_{r, t} C_{t,c} - C_{r, t} B_{t,c}\right)_{r,c}\\
+        \end{split}
+    \end{align}
+
+Any linear operator of the form $E \otimes I$ commutes with any operator in $\widehat{\mathcal{M}}$ (because they act on different tensor factors). In other words, $(E \otimes I) \in (\widehat{\mathcal{M}})'$ for any linear operator $E$. Equation~\ref{eqn:Bhat-Chat} should work for any $\widehat{B} \in (\widehat{\mathcal{M}})'$. We will consider special cases of the equation when $\widehat{B}$ is of the form:
+\begin{equation}
+    \widehat{B_{r,c}} = \left(E_{r,c} \otimes I\right) = \left(\delta_{(j,k) = (r,c)} \cdot I\right)_{j,k} = \left(\delta_{j,r} \cdot \delta_{k, c} \cdot I_{d\times d}\right)_{j,k}
+\end{equation}
+where $\{E_{r,c}\}$ are the matrix units.
+
+
+Let $r^* \neq c^*$ be arbitrary from $[d]$ and consider $[\widehat{B_{r^*,c^*}}, \widehat{C}]$:
+
+\begin{align*}
+    [\widehat{B_{r^*,c^*}}, \widehat{C}] &= \left(\sum\limits_{t = 1}^d B_{r, t} C_{t,c} - C_{r, t} B_{t,c}\right)_{r,c}\\
+    &= \left(\delta_{c,c^*}C_{c,c} - \delta_{r,r^*}C_{r,r}\right)_{r,c}.
+\end{align*}
+
+The commutator $[\widehat{B_{r^*,c^*}}, \widehat{C}]$ is zero if and only if all the blocks are zero including the $(r^*, c^*)$th block. That happens iff $C_{c^*, c^*} = C_{r^*, r^*}$. Since $r^*, c^*$ were arbitrary, this means that all the diagonal blocks are equal and equal to some matrix, say~\footnote{We cannot allege $\widetilde{C} \in \mathcal{M}''$ yet.} $\widetilde{C}$.
+
+Now, for arbitrary $q \in [d]$, consider $[\widehat{B_{q,q}}, \widehat{C}]$:
+\begin{align*}
+    [\widehat{B_{q,q}}, \widehat{C}] &= \left(\sum\limits_{t = 1}^d B_{r, t} C_{t,c} - C_{r, t} B_{t,c}\right)_{r,c}\\
+    &= \left(\delta_{r,q} C_{q,c} - \delta_{c,q} C_{r,q} \right)_{r,c}.
+\end{align*}
+
+Again, the commutator is zero if and only if all blocks are zero. For any $q' \neq q$, Consider the $(q, q')$th block. That block is zero if and only if $C_{q,q'} = 0$. Since $q \neq q'$ were arbitrary with the only restriction being different from each other, we can conclude that all of the off-diagonal blocks are $0$.
+
+Putting the pieces together, we have restricted $\widehat{C}$ to the form $\text{diag}(\widetilde{C}) = \text{diag}(\widetilde{C}, \widetilde{C}, \dots, \widetilde{C})$. It remains to show that $\widetilde{C} \in \mathcal{M}''$.
+
+Now, let $B \in \mathcal{M}'$ be arbitrary, the matrix $\text{diag}(B)$ is in $(\widehat{M})'$ because it is of the form in Claim~\ref{claim-m-hat-prime} and both of the matrices $B$ and $0_{d\times d}$ are in $\mathcal{M}'$.
+
+\begin{align*}
+    [\text{diag}(B), \text{diag}(\widetilde{C})] &= \text{diag}(B) \ \text{diag}(\widetilde{C}) \ - \ \text{diag}(\widetilde{C}) \ \text{diag}(B) \\
+    &= \text{diag}(B\ \widetilde{C}) \ -  \ \text{diag}( \widetilde{C} \ B)\\
+    &= \text{diag}(B\ \widetilde{C}\ -  \ \widetilde{C} \ B)\\
+    &= \text{diag}([B, \widetilde{C}])
+\end{align*}
+
+By the above computation, the commutator $[\text{diag}(B), \text{diag}(\widetilde{C})]$ is zero if and only if $[B, \widetilde{C}]$ is zero. Since $B \in \mathcal{M}'$ was arbitrary, this condition is equivalent to $\widetilde{C}$ commuting with all operators in $\mathcal{M}'$  i.e. $\widetilde{C} \in \mathcal{M}''$.
+
+
+\end{proof}
+Using these nice characterizations of matrices in $\widehat{M}$, $(\widehat{M})'$, $(\widehat{M})''$, we can move forward with the proof.
+
+\begin{lemma}(Double Commutant Theorem for Finite-Dimensional Unital~\footnote{Is any finite-dimensiopnal $C^*$-algebra unital?} $C^*$-Algebras~\footnote{The theorem holds more generally, but the proof is more involved.})
+    Let $\mathcal{M} \subseteq \mathcal{L}(\mathbb{C}^d)$ be a matrix algebra that is a unital $*$-algebra (that is, it contains the identity and is closed under conjugate transpose). Then $\mathcal{M}'' = \mathcal{M}$.
+\end{lemma}
+\begin{proof}
+
+    \AnandNote{The direction $\mathcal{M} \subseteq \mathcal{M}''$ is trivial (OR IS IT?????). }
+    \AnandNote{    We will do this using purification. 
+    \[ A^\top\]}
+
+
+    \paragraph{Direction 1 ($\mathcal{M} \subseteq \mathcal{M}''$):} 
+    Let $A \in \mathcal{M}$ be an arbitrary matrix. We need to show that $A \in \mathcal{M}''$ i.e. $A$ commutes with every matrix $A' \in \mathcal{M}'$. This is true by the definition of the commutant (Definition~\ref{defn:commutant}): $A'$ commutes with every matrix in $\mathcal{M}$ including $A$.
+    
+    %We focus on proving the other direction. 
+
+    \paragraph{Direction 2 ($\mathcal{M}'' \subseteq \mathcal{M}$):} Let $C \in \mathcal{M}''$ be arbitrary. We need to show that $C \in \mathcal{M}$. 
+    
+Let $\ket{\Phi^+}$ be~\footnote{called $v$ in Jones' notes.} the maximally entangled state as follows:
+\begin{equation}
+    \ket{\Phi^+} = \frac{1}{\sqrt{d}} \left(\ket{1}\ket{1} + \ket{2}\ket{2} + \dots + \ket{d}\ket{d}\right).
+\end{equation}
+
+Consider the subspace~\footnote{need to prove it is actually a subspace or clear?} $V$ 
+\begin{equation}
+ V := \widehat{\mathcal{M}}(\ket{\Phi^+}) := \text{span} \{ \widehat{A}\ket{\Phi^+}: \widehat{A} = I \otimes A, \ A \in \mathcal{M}  \}   
+\end{equation}
+resulting from applying each linear transformation $\widehat{A} = I \otimes A \in \widehat{\mathcal{M}}$ to the maximally entangled state $\ket{\Phi^+}$. We can prove that:
+\begin{claim}
+    \[\widehat{\mathcal{M}}(V)  = \widehat{\mathcal{M}}(\widehat{\mathcal{M}}(\ket{\Phi^+}))\subseteq V = \widehat{\mathcal{M}}(\ket{\Phi^+}).\]
+\end{claim}
+\begin{proof}
+To see that, consider
+\begin{align*}
+    \ket{\Psi} &= \widehat{A_2} \widehat{A_1} \ket{\Phi^+} & \text{ arbitrary } \ket{\Psi} \in \widehat{\mathcal{M}}(\widehat{\mathcal{M}}(\ket{\Phi^+}))\\
+    &= (I \otimes A_2)(I \otimes A_1) \ket{\Phi^+}\\
+    &= (I \otimes A_2 A_1) \ket{\Phi^+}\\
+    &= (I \otimes A) \ket{\Phi^+} & \text{ where } A := A_2 A_1 \in \mathcal{M} \text{ because } \mathcal{M} \text{ is an algebra}\\
+    &= \widehat{A} \ket{\Phi^+} & \in \widehat{\mathcal{M}}(\ket{\Phi^+})
+\end{align*}
+\end{proof}
+
+Since $\mathcal{M}$ is self-adjoint, then~\footnote{actually prove it} $\widehat{\mathcal{M}}$ is also self-adjoint i.e. $(\widehat{\mathcal{M}})^* = \widehat{\mathcal{M}}$. Paired with the fact that $\widehat{\mathcal{M}}(V) \subseteq V$, we can conclude by Lemma~\ref{ex-2-1-14} that $P_V \in (\widehat{\mathcal{M}})'$. Therefore, for any $\widehat{C} \in (\widehat{\mathcal{M}})''$, $P_V$ commutes~\footnote{Can we slip in the term ``central projection'' somewhere here?} with $\widehat{C}$. Furthermore, $\widehat{C}(V) \subseteq V$ because (for arbitrary vector $\ket{v} \in V$):
+
+%P_V^2\ \widehat{C}\ \ket{v} & P_V^2 = I \text{ for a projector } P_V\\&= P_V\
+\begin{align*}
+    \widehat{C}\ \ket{v} & =   \widehat{C} \ P_V\ \ket{v} &\forall v \in V:\ P_V \ket{v} = \ket{v} \\
+    &= P_V \ \widehat{C} \ \ket{v} &  P_V \text{ commutes with } \widehat{C} \\
+    &= P_V \ket{w} & \ket{w} := \widehat{C} \ \ket{v}\\
+    &= \ket{v_2} \in V & \ket{v_2} \text{ is the projection of } \ket{w} \text{ onto } V\\
+\end{align*}
+
+Since $\mathcal{M}$ is unital (with unit $1 = I$), so is $\widehat{\mathcal{M}}$ with unit $\widehat{1} = 1 \otimes I = I \otimes I = I$. Since $\widehat{C}(V) \subseteq V$ where $V = \widehat{\mathcal{M}}(\ket{\Phi^+})$, we can conclude that:
+
+\[
+    \widehat{C}\ (I \ket{\Phi^+}) = \widehat{A} \left(\ket{\Phi^+}\right) \text{ for some } \widehat{A} \in \widehat{\mathcal{M}}.
+\]
+
+\noindent By the characterization (Claim~\ref{claim-m-hat-double-prime}) of $\widehat{C} = \text{diag}(C) = I \otimes C$ with $C \in \mathcal{M}''$, we can conclude (remember that $\widehat{A} = I \otimes A$):
+
+\begin{equation}
+    \ket{1} \otimes (C\ket{1}) + \dots + \ket{d} \otimes (C\ket{d}) = \ket{1} \otimes (A\ket{1}) + \dots + \ket{d} \otimes (A\ket{d})
+\end{equation}
+
+\noindent Using the isomorphism (Lemma~\ref{lemma:external-direct-sum-tensor-product}) $\mathbb{C}^d \otimes \mathbb{C}^d \simeq \bigoplus_{i = 1}^d \mathbb{C}^d$, we can re-write the previous equation as:
+\begin{equation}
+    \left(C\ket{1}, C\ket{2}, \dots, C\ket{d}\right) = \left(A\ket{1}, A\ket{2}, \dots, A\ket{d}\right)
+\end{equation}
+
+Thus, for each basis element in the standard basis $\ket{j}$, the action of $C$ on that basis element $\ket{j}$ must agree with the action of $A$ on that same basis element $\ket{j}$. Therefore, $C = A \in \mathcal{M}$, and thus $C \in \mathcal{M}$.
+
+\end{proof}

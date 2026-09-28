@@ -1,0 +1,391 @@
+\documentclass[11pt]{article}
+%\usepackage{lipsum}
+\usepackage[dvipsnames,svgnames,x11names,hyperref]{xcolor}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage[T1]{fontenc}
+\usepackage{comment}
+\usepackage{thm-restate}
+\usepackage[margin=1in]{geometry}
+\usepackage{titling}
+\setlength{\droptitle}{-2cm}      % move title up by 2cm (tweak number)
+\usepackage{thmtools}
+\usepackage[colorlinks]{hyperref}
+\hypersetup{colorlinks={true},linkcolor={blue},citecolor=magenta}
+
+\usepackage{amssymb,amsfonts,amsmath,amsthm,amscd,dsfont,mathrsfs}
+\usepackage{complexity}
+\usepackage{tikz}
+\usetikzlibrary{decorations.pathreplacing,backgrounds,calc}
+\usepackage{tikz-cd}
+\usepackage{multirow}
+\usepackage{mathpazo}
+\usepackage{braket}
+\usepackage{cleveref} 
+\usepackage{xcolor}
+\usepackage{caption}
+\captionsetup{width=1.0\linewidth}
+\usepackage{booktabs, multirow}
+
+\usepackage[style=alphabetic,minalphanames=3,maxalphanames=4,maxnames=99,backref=true]{biblatex}
+  \renewcommand*{\labelalphaothers}{\textsuperscript{+}}
+  \renewcommand*{\multicitedelim}{\addcomma\space}
+  \addbibresource{crypto.bib}
+
+\setcounter{biburlnumpenalty}{100}
+\setcounter{biburlucpenalty}{100}
+\setcounter{biburllcpenalty}{100}
+\usepackage{url}
+\usepackage{bbm}
+\Urlmuskip=0mu plus 1mu
+\usepackage{hyperref} 
+\hypersetup{breaklinks=true}
+
+
+% Colors
+% Define a custom dark green color (adjust RGB as desired)
+\definecolor{DarkGreen}{RGB}{0,150,0}
+
+% Define a macro for convenient use
+\newcommand{\DarkGreen}[1]{\textcolor{DarkGreen}{#1}}
+
+\newcommand{\blue}[1]{{\color{blue}#1}}
+\newcommand{\red}[1]{{\color{red}#1}}
+\newcommand{\green}[1]{{\color{green}#1}}
+
+%%% Theorem env
+
+  \theoremstyle{plain}
+  \newtheorem{theorem}{Theorem}[section]
+  \newtheorem{lemma}[theorem]{Lemma}
+  \newtheorem{informallemma}[theorem]{Informal Lemma}
+  \newtheorem{informaltheorem}[theorem]{Informal Theorem}
+  %\newtheorem{claim}{Claim}
+  %\Crefname{claim}{Claim}{Claims}
+  %\newtheorem*{lemma*}{Lemma}
+  \newtheorem{corollary}[theorem]{Corollary}
+  \newtheorem{proposition}{Proposition}
+  % \newtheorem{observation}[theorem]{Observation}
+  \newtheorem{definition}[theorem]{Definition}
+  \newtheorem{remark}[theorem]{Remark}
+  \newtheorem{claim}[theorem]{Claim}
+    \newtheorem{fact}[theorem]{Fact}
+\newtheorem{example}{Example}[section]
+  \newtheorem{importedtheorem}[theorem]{Imported Theorem}
+ \newtheorem{construction}{Construction}
+ \newtheorem*{theorem*}{Theorem}
+
+\newcommand*\samethanks[1][\value{footnote}]{\footnotemark[#1]}
+
+%\newcommand{\Tr}[1]{\mathrm{Tr}\left\{#1 \right\}}  
+\DeclareMathOperator{\tr}{tr}
+\DeclareMathOperator{\Pinch}{Pinch}
+\renewcommand{\set}[1]{\left\{ #1 \right\}}
+\newcommand{\abs}[1]{\left| #1 \right|}
+\newcommand{\proj}[1]{\ket{#1}\!\bra{#1}}
+
+\newcommand{\npower}[1]{{#1}^{\otimes n}}
+\newcommand{\norm}[1]{\left\Vert {#1} \right\Vert}
+\renewcommand{\C}{\mathbb{C}}
+\renewcommand{\E}{\mathbb{E}}
+\newcommand{\F}{\mathbb{F}}
+
+\newcommand{\ind}{\mathds{1}}
+
+
+\newcommand{\THR}{\mathsf{THR}}
+\newcommand{\THRpn}{\THR_{pn}}
+\newcommand{\Maj}{\mathsf{Maj}}
+\newcommand{\diam}{\mathsf{diam}}
+
+\newcommand{\eps}{\varepsilon}
+\newcommand{\kLH}{$\gamma$-$2$-$\mathrm{LH}$}
+
+\newcommand{\Wheels}[1]{\textcolor{blue}{#1}}
+
+\newif\ifnotes\notestrue
+%\newif\ifnotes\notesfalse
+\ifnotes
+\newcommand{\AlexNote}[1]{\textcolor{purple}{(Alex: #1)}}
+\newcommand{\AnandNote}[1]{\textcolor{red}{(Anand: #1)}}
+\newcommand{\IslamNote}[1]{\textcolor{orange}{(Islam: #1)}}
+\else
+\newcommand{\AlexNote}[1]{}
+\newcommand{\AnandNote}[1]{}
+\newcommand{\IslamNote}[1]{}
+\fi
+
+
+\newcommand{\PromiseQMA}{\mathsf{PromiseQMA}}
+
+\renewcommand{\cP}{\mathcal{P}}
+
+
+\bibliography{references}
+
+\title{\hspace{6mm}Rounding Almost Commuting Hamiltonians\newline
+\large (Extended Abstract)}
+%\title{Rounding $2$-Local Hamiltonians from Almost to Exact Pairwise Commutativity and Applications to Complexity Theory and ... }
+%\title{The Complexity of $2$-Local Hamiltonians With Pairwise Almost Commuting Terms}
+
+ % \author{Islam Faisal\thanks{\texttt{islam@bu.edu}}\\\small{Boston University} \and Anand Natarajan\thanks{\texttt{anandn@mit.edu}}\\\small{MIT}\and Alexander Poremba\thanks{\texttt{poremba@bu.edu}}\\\small{Boston University}}
+
+%QIP: Author names must not appear on the extended abstract
+%Author names, affiliations, and acknowledgements must not appear in the extended abstract.
+
+  % \author{Islam Faisal\\\small{Boston University} \and Anand Natarajan\\\small{MIT}\and Alexander Poremba\\\small{Boston University}}
+
+\date{}
+
+\begin{document}
+
+\maketitle
+\vspace*{-2.3cm}
+
+Commuting Hamiltonians are a class of local Hamiltonians exhibiting rich quantum structure while remaining more tractable than general noncommuting models~\cite{bravyi2004commutativeversionklocalhamiltonian,aharonov2011complexity,schuch2011complexitycommutinghamiltonianssquare,AKV,irani2023commutinglocalhamiltonianproblem,bostanci2025commutinglocalhamiltonians2d}.
+Formally, the $k$-local commuting Hamiltonian (CLH) problem studies Hamiltonians of the form $H=\sum_{i=1}^m h_i$ such that $[h_i,h_j]=0$, for all $i,j=1,\dots,m$, such that all of the terms pair-wise commute.\footnote{The \emph{commutator} of two operators $A$ and $B$ is defined as $[A,B] = AB - BA$.}
+Commuting Hamiltonians can have ground spaces with long-range entanglement~\cite{aharonov2011complexity}, sharply distinguishing them from classical CSPs, yet evidence indicates~\cite{bravyi2004commutativeversionklocalhamiltonian,irani2023commutinglocalhamiltonianproblem,bostanci2025commutinglocalhamiltonians2d} that CLH is contained in $\NP$. This means that commmuting Hamiltonians could be an example of systems that are ``physically'' quantum yet ``computationally'' classical.
+
+However, physical systems in nature are rarely exactly commuting, and even infinitesimal noncommuting perturbations can produce dramatic qualitative changes. 
+ This motivates \emph{almost commuting} Hamiltonians, in 
+ which local terms fail to commute but only do so weakly, e.g.,
+\begin{align}
+\|[h_i,h_j]\| \leq \eps, \quad\quad \forall i,j=1,\dots,m.   
+\end{align}
+Such Hamiltonians capture a much richer range of physical phenomena, including 
+entanglement generation, slow dynamics, and emergent conservation laws~\cite{Sachdev2011}. 
+% Almost 
+%  commuting Hamiltonians arise naturally in systems exhibiting emergent integrability, prethermalization, or many-body localization. 
+An illustrative example is the transverse-field Ising model 
+in the weak-field regime, described by the $2$-local qubit Hamiltonian
+$
+H = -\sum_{\langle i,j \rangle} Z_i Z_j - h \sum_i X_i$
+with $h \ll 1$.  At $h=0$, the Hamiltonian consists of exactly 
+commuting terms and reduces to a classical Ising model with 
+product-state ground states.  Turning on a \emph{weak} transverse field 
+introduces local noncommuting terms whose pairwise commutator norms 
+$\|[Z_i Z_j,hX_k]\|$
+scale with $h$ whenever $i=j$ or $j=k$, resulting in an almost commuting Hamiltonian. The above weak-field Ising model might suggest that almost commuting Hamiltonians can easily be identified as mere small perturbations of an underlying commuting model. This intuition, however, is somewhat misleading, in general, as perturbation theory~\cite{Kato:1966:PTL} is only helpful in identifying an approximate commuting structure in very special or integrable models.
+
+Given that many physically relevant non-commuting local Hamiltonians behave very classically, and may very well be close to a commuting Hamiltionian, this raises the question:
+\begin{center}
+\emph{Is it possible to round generic almost commuting Hamiltonians
+to nearby commuting Hamiltonians?}
+\end{center}
+In this work, we give a positive quantitative answer for $2$-local Hamiltonians.
+\begin{theorem*}
+Let $H=\sum_{i=1}^m h_i$ be an $\eps$-almost commuting $2$-local 
+Hamiltonian on $n$ qubits. Then, there exists a deterministic classical algorithm that, given as input a description of $H$, runs 
+in linear time and outputs an exactly commuting Hamiltonian $\hat{H}=\sum_{i=1}^m 
+\hat{h}_i$ such that $\|h_i - \hat{h}_i\| \leq O(\eps^{1/6})$, for all 
+$i \in [m]$, and which is within overall distance 
+$\|\hat{H} - H\| \leq O(m \eps^{1/6})$.
+\end{theorem*}
+
+The two-local exactly commuting case was shown by Bravyi and Vyalyi~\cite{bravyi2004commutativeversionklocalhamiltonian} to lie in $\NP$, so our result gives the first $\NP$ containment of a family of approximately commuting Hamiltonians. It also yields faster Gibbs sampling and Hamiltonian simulation for these Hamiltonians, as we discuss below.
+
+% We hope our work leads to a better understanding of approximately commuting Hamiltonians with higher locality, and ultimately a  better understanding the boundary between classical satisfiability and inherently quantum optimization problems.
+
+
+\paragraph{Prior work.}
+The problem of rounding almost commuting matrices has a long and subtle history.  For pairs of 
+Hermitian matrices, Lin's theorem~\cite{Lin1997} guarantees that rounding is indeed possible, and
+quantitative bounds on $\delta(\eps)$ were later given by Hastings~\cite{Hastings_2009,herrera2022hastingsapproachlinstheorem}.  
+Surprisingly, the same is not possible for \emph{triplets}~\cite{Davidson1985,Hastings_2010}, at least for generic Hermitian matrices.
+
+The specific question of rounding approximately commuting Hamiltonians to commuting Hamiltonians was first studied by Arad~\cite{arad2011notepartialnogotheorem}. In this work, he showed that for two-local Hamiltonians on $d$-dimensional qudits on a $D$-regular interaction graph, whose terms are projectors, an ``asymptotically good'' rounding exists: that is, for fixed $d$ and $D$, in the limit of the commutator error $\eps$ going to $0$, the rounding error also goes to $0$. The rounding error may depend on both $d$ and $D$.  However, the rounding is \emph{non-constructive} and \emph{no explicit bound} on the rounding error was established. Arad's techniques also do not easily lend themselves to algorithmic rounding, since they are based on a nonconstructive compactness argument inspired by a work of Halmos~\cite{halmos1976some}.
+
+% Figure
+\begin{figure}[t]
+\centering
+\begin{tikzpicture}[
+    scale=1.1,
+    node distance=1.2cm,
+    spin/.style={circle, draw=black, fill=white, inner sep=2pt},
+    term/.style={rounded corners, draw=black, very thick},
+    approx arrow/.style={->, very thick},
+    bg lattice/.style={gray!40, thick},
+    fg lattice/.style={black, very thick}
+]
+
+% =========================================================
+% --------- Original lattice (foreground) -----------------
+% =========================================================
+\begin{scope}[shift={(-3,0)}]
+
+\node at (1.5,3.8) {$\|[h_i,h_j]\|\le \varepsilon$};
+
+\foreach \x in {0,1,2,3} {
+  \foreach \y in {0,1,2,3} {
+    \node[spin] (s\x\y) at (\x,\y) {};
+  }
+}
+
+\foreach \x in {0,1,2} {
+  \foreach \y in {0,1,2,3} {
+    \draw[fg lattice] (s\x\y) -- (s\the\numexpr\x+1\relax\y);
+  }
+}
+\foreach \x in {0,1,2,3} {
+  \foreach \y in {0,1,2} {
+    \draw[fg lattice] (s\x\y) -- (s\x\the\numexpr\y+1\relax);
+  }
+}
+
+\node[term, draw=blue!70, minimum width=1.6cm, minimum height=0.9cm]
+  at (1.5,1.8) {};
+
+\node[term, draw=red!70,
+      minimum width=1.6cm, minimum height=1.1cm,
+      rotate=90]
+  at (2.0,1.45) {};
+
+\node at (0.55,1.55) {$h_i$};
+\node at (2.7,0.7) {$h_j$};
+
+\node at (1.45,-0.4) {\small Almost commuting Hamiltonian};
+
+\end{scope}
+
+% =========================================================
+% ------------------ Center Arrow -------------------------
+% =========================================================
+
+\draw[approx arrow] (1,1.8) -- (2,1.8);
+\node at (1.5,2.3) {\small Rounding};
+
+% =========================================================
+% --------- Shifted background lattice (commuting) --------
+% =========================================================
+\begin{scope}[shift={(3,0)}]
+
+\node at (1.5,3.8) {$[\hat h_i,\hat h_j]=0$};
+
+\foreach \x in {0,1,2,3} {
+  \foreach \y in {0,1,2,3} {
+    \node[spin, fill=gray!20] (t\x\y) at (\x+0.15,\y) {};
+  }
+}
+
+\foreach \x in {0,1,2} {
+  \foreach \y in {0,1,2,3} {
+    \draw[bg lattice] (t\x\y) -- (t\the\numexpr\x+1\relax\y);
+  }
+}
+\foreach \x in {0,1,2,3} {
+  \foreach \y in {0,1,2} {
+    \draw[bg lattice] (t\x\y) -- (t\x\the\numexpr\y+1\relax);
+  }
+}
+
+\node[term, draw=blue!70, fill=blue!5, fill opacity=0.2,
+      minimum width=1.6cm, minimum height=0.9cm]
+  at (1.65,1.8) {};
+
+\node[term, draw=red!70, fill=red!5, fill opacity=0.2,
+      minimum width=2.1cm, minimum height=1.1cm,
+      rotate=90]
+  at (2.15,1.55) {};
+
+\node at (0.7,1.55) {$\hat h_i$};
+\node at (2.9,0.7) {$\hat h_j$};
+
+\node at (1.67,-0.4) {\small Nearby commuting Hamiltonian};
+
+\end{scope}
+
+\end{tikzpicture}
+\caption{Illustration of our locality-preserving rounding transformation. 
+Left: an almost commuting Hamiltonian $H=\sum_{i=1}^m h_i$ on a 2D lattice. 
+Right: a nearby commuting Hamiltonian $\hat{H}=\sum_{i=1}^m \hat{h}_i$ of exactly the same locality. We remark that our rounding map does not require geometric locality.}
+\label{fig:rounding}
+\end{figure}
+
+
+
+
+\paragraph{Technical contributions.}
+
+We overcome prior limitations on rounding 
+approximately commuting Hamiltonians which have so far hindered 
+applications to many-body physics. We develop a locality-preserving \emph{algorithmic rounding technique} which allows us to 
+simultaneously
+round large collections of almost commuting Hermitian matrices by exploiting the structure
+of physical many-body Hamiltonians.
+% \begin{itemize}
+% \item (\emph{Locality:}) Interactions in physical quantum many-body Hamiltonians tend 
+% to be \emph{local} in the sense that they involve a constant number of 
+% particles at a time; consequently, each term in the Hamiltonian is 
+% actually a 
+% highly non-generic Hermitian operator: it only acts non-trivially on a 
+% few sub-systems at a time and is equal to the identity everywhere else.
+
+% \item (\emph{Dimensionality:}) Physical many-body Hamiltonians tend to 
+% involve particles whose Hilbert space carries a fixed local dimension. 
+% In the case of two-level systems (or ``spin systems'') described by 
+% two-dimensional
+% qubits, such constrained dimensionality can give rise to unexpected 
+% mathematical properties of Hermitian operators, such as the fact that commutation becomes 
+% \emph{transitive}: if single-qubit operators $A,B$ commute and $B,C$ 
+% commute, then $A$ and $C$ must also commute, provided that $B$ is not 
+% the identity. This fails in higher dimensions.
+% \end{itemize}
+Our rounding technique (visualized in \Cref{fig:rounding}) exploits these physical constraints, 
+and allows us to
+efficiently approximate any almost commuting $2$-local 
+Hamiltonian (on qubits) by a nearby commuting one. 
+
+SAY SOMETHING ABOUT GAP AND SNAP
+
+This extends the classical $\mathsf{NP}$ containment result of Bravyi and Vyalyi~\cite{bravyi2004commutativeversionklocalhamiltonian} well
+beyond the commuting setting.
+In addition, the above theorem also implies a new no-go result in the context of quantum PCPs~\cite{aharonov2011complexity,Hastings2012} akin to~\cite{arad2011notepartialnogotheorem}. Specifically, it suggests that any qPCP-hard family of $2$-local qubit Hamiltonians must exhibit some moderate amount of noncommutativity: assuming $\mathsf{NP} \neq \mathsf{QMA}$, any
+family of $2$-local qubit Hamiltonians for which the $\gamma$-LH problem is $\QMA$-hard for \emph{constant} $\gamma$ must allow for pairwise commutator norms of $\omega(\frac{1}{m^6})$.
+
+More broadly, this places almost commuting Hamiltonians in an intermediate regime between classical constraint satisfaction and fully quantum optimization. It shows that, at least for $2$-local qubit systems, genuine $\mathsf{QMA}$-hardness requires a significant departure from the structure of commuting models, thereby linking a complexity-theoretic transition to a quantitative, operator-algebraic measure of noncommutativity.
+
+
+% \begin{restatable}[Informal Statement of~\Cref{corollary:NP-Containment}]{informaltheorem}{InformalContainment}
+%     Let $\gamma(n)$ and $\eps(n)$ be such that $\gamma - 96\sqrt[3]{\eps} \geq 1/\poly(n)$. Then, there exists a polynomial $q(n)$ and deterministic polynomial-time verifier $V_{\gamma, \eps}(H, a, w)$ such that when for any input number $a(n)$ and a local Hamiltonian $H = \sum\limits_{j}^m H_j$ with $m = \poly(n)$ terms on $n$ qubits, then the following holds:
+%     \begin{enumerate}
+%         \item if there exists a quantum state $\ket{\psi}$ such that $\braket{\psi|H|\psi} \leq a(n)$, then there exists $w$ with $|w| = q(n)$ such that $V(H, a, w) = 1$; and
+%         \item if all quantum states $\ket{\psi}$ have large energy i.e. $\braket{\psi|H|\psi} \geq b(n) := a(n) + m \cdot \gamma(n)$, then for all $w$ with $|w| = q(n)$: $V(H, a, w) = 0$.
+%     \end{enumerate}
+% \end{restatable}
+
+%\paragraph{Working with a Pair of Hamiltonian Terms:}
+
+
+
+\paragraph{Applications.} As an application of our rounding technique for almost commuting quantum many-body
+systems, we present two algorithmic applications; the first one in the context of quantum
+Gibbs sampling and the second in the context of Hamiltonian simulation.
+
+\begin{itemize}
+    \item \textbf{Quantum Gibbs sampling.} The Gibbs ensemble connects microscopic descriptions of physical systems with their macroscopic thermodynamic behavior, allowing one to compute quantities such as free energies, effective partition functions, and equilibrium expectation values~\cite{PathriaBeale2011,Chandler1987,Callen1985,LandauLifshitz1980,Sachdev2011,AltlandSimons2010,Mermin1965,Tuckerman2010,LandauBinder2014}. Currently, all existing quantum Gibbs sampling methods fail to take such almost commuting structure into account; in particular, virtually all techniques for the commuting case are known to break down in the presence of (even mild) non-commuting interactions. This begs the question: \emph{is it possible to extend quantum Gibbs sampling techniques for commuting Hamiltonians towards almost-commuting Hamiltonians?}
+We give an affirmative answer: our rounding technique allows us to reduce Gibbs sampling for almost 
+commuting $2$-local Hamiltonians to Gibbs sampling to a nearby 
+commuting Hamiltonian, thereby enabling us to use 
+the full toolbox on samplers for the commuting case~\cite{hwang2025gibbsstatepreparationcommuting,schmidhuber2025hamiltoniandecodedquantuminterferometry}.
+
+    \item \textbf{Fast Hamiltonian Simulation.} Simulating quantum-mechanical systems efficiently is a central task in quantum algorithms.
+It is well known that Trotter-based Hamiltonian simulation methods can perform better in the presence of commutativity in the Hamiltonian. In fact, for an exactly commuting Hamiltonian, the runtime of Hamiltonian simulation algorithms can be logarithmic in the simulation time $t$, unlike the linear or worse scaling in the general case.
+For Hamiltonians that do not exactly commute, prior investigations~\cite{childs2021theory} have used bounds on higher-order commutators to control the runtime of Trotter-based simulation. We observe that our rounding, together with the ``interaction picture'' method of Low and Wiebe~\cite{low2018hamiltonian}, gives us a way to directly leverage the first-order commutators alone to speed up Hamiltonian simulation. At a high level, we apply the algorithm of~\cite{low2018hamiltonian} with the ``fast'' part of the Hamiltonian being the commuting rounding, and the ``slow'' part being the error term incurred in the rounding. 
+Our simulation cost is governed by how far the Hamiltonian is from commuting, rather than by the full norm of the Hamiltonian itself.
+\end{itemize}
+
+
+
+
+\printbibliography
+
+\appendix
+% \section{Proofs of Preliminary Lemmas}
+% \label{appendix:proofs-prelms}
+
+
+
+
+
+
+\end{document}

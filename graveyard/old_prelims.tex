@@ -1,0 +1,180 @@
+
+\subsection{Mathematical Preliminaries}
+
+\begin{definition}
+    The following are preliminary definitions on matrices.
+\begin{enumerate}
+    \item $M^\dagger$ is the conjugate transpose of the matrix $M$.
+    \item A square matrix $M$ is a matrix of the dimensions $n \times n$ for some $n$.
+    \item We say that $M$ is Hermitian (a.k.a. orthogonal) if $M^\dagger = M$.
+    \item We say that an $n \times n$ hermitian matrix $M$ is positive semi-definite (PSD) if for all $\ket{\psi} \in \mathbb{C}^n$:
+    \begin{equation}
+        \braket{\psi|M|\psi} \geq 0.
+    \end{equation}
+    \item We say that a matrix $P$ is a projector if $P^2 = P$.
+    \item The commutator of two matrices $A$ and $B$ is notated $[A,B]$ and defined as follows:
+        \begin{equation}
+            [A, B] := AB - BA.
+        \end{equation}
+    \item We say that $A$ commutes with $B$ (or, equivalently, $A$ and $B$ commute) if the commutator $[A, B] = 0$ (which happens if and only if $AB = BA$).
+    \item We say that $A$ and $B$ $\eps$-almost commute if $\|[A,B]\| \leq \eps$ where $\|.\|$ is the operator norm defined below.
+\end{enumerate}
+\end{definition}
+\noindent Consequently, $P$ is a hermitian projector (a.k.a. orthogonal projector) if and only if $P^\dagger = P = P^2$.
+
+\begin{definition}[Operator Norm]
+    Let $A: V \to W$ be a linear operator between normed spaces $V$ and $W$. The operator norm of $A$, notated $\|A\|$ is defined as follows:
+    \begin{equation}
+        \|A\| := \sup\{\|Av\|: \|v\| \leq 1, v \in V\}.
+    \end{equation}
+    When $V \neq \{0\}$, $\|A\| = \sup\{\|Av\|: \|v\| = 1, v \in V\}$.
+\end{definition}
+
+\begin{fact}
+    The following are true of the operator norm for any matrices $A$ and $B$.
+    \begin{enumerate}
+        \item $\|A\| \geq 0$.
+        \item for any constant $c$: $\|cA\| = |c| \cdot \|A\|$.
+        \item Triangle Inequality: $\|A + B\| \leq \|A\| + \|B\|$.
+        \item Sub-Multiplicativity: $\|AB\| \leq \|A\| \cdot \|B\|$.
+    \end{enumerate}
+\end{fact}
+
+\begin{definition}[Binary Observable]
+A binary observable $O$ on $\mathbb{C}^n$ is a hermitian matrix of the form:
+\begin{equation}
+    O = \lambda_1 P + \lambda_2 (I - P)
+\end{equation}
+where $\lambda_1 \neq \lambda_2$ and $P$ is a hermitian projector.\IslamNote{Should we say that $\lambda_1 \neq \lambda_2$? Are we allowing the identity to be observable?}
+\end{definition}
+
+\noindent A set of $2\times 2$ matrices that play an important role in quantum information theory is the Pauli matrices.
+
+\begin{definition}[Pauli Matrices]
+    The Pauli matrices are the $2\times 2$ matrices:
+    \begin{equation}
+        \sigma^{(0)} = I, \quad \sigma^{(1)} = X = \begin{pmatrix} 0 & 1 \\ 1 & 0 \end{pmatrix}, \quad \sigma^{(2)} = Y = \begin{pmatrix} 0 & -i \\ i & 0 \end{pmatrix}, \,\, \text{ and} \quad \sigma^{(3)} = Z = \begin{pmatrix} 1 & 0 \\ 0 & -1 \end{pmatrix}.
+    \end{equation}
+\end{definition}
+
+\noindent For a linear operator, we will use the notation $A_j$ to indicate that the operator is acting on the $j$th qubit. For example, $H_{\{s, r\}} = \sigma^{(1)}_{s} \otimes \sigma^{(3)}_r$ acts as the Pauli $X$ matrix on the $s$-th qubit and as the Pauli $Z$ matrix on the $r$-th qubit.
+
+\begin{fact}[Properties of Pauli Matrices]\label{fact:pauli-properties}The following are true facts of the Pauli matrices.
+\begin{enumerate}
+    \item Each Pauli matrix is hermitian: for any $\alpha$, ${\left(\sigma^{(\alpha)}\right)}^\dagger = \sigma^{(\alpha)}$.
+    \item Each non-identity Pauli matrix is a binary observable.
+    \item For $\alpha \neq 0$, $\tr(\sigma^{(\alpha)}) = 0$. Note that $\tr(I) = 2$ where $I$ is the $2 \times 2$ identity matrix.
+    \item\label{trace-of-product-of-paulis} Let $\sigma^{(\alpha)}$ and $\sigma^{(\beta)}$ be two Pauli matrices, then the following holds:
+    \begin{equation}
+        \mathrm{Tr}\left(\sigma^{(\alpha)} \sigma^{(\beta)}\right) = 2 \delta_{\alpha,\beta}
+    \end{equation}
+where $\delta_{\alpha,\beta}$ is the Kronecker delta: $\delta_{\alpha,\beta} = 1$ if and only if $\alpha = \beta$ and $0$ otherwise.
+\end{enumerate}
+
+\end{fact}
+
+\begin{fact}\label{fact:tensor-product-observables}
+    Let $\{O_1^{(j)}\}_j$ be a set of $d_1 \times d_1$ observables and let $\{O_2^{(k)}\}_k$ be a set of $d_2 \times d_2$ observables. Then, $\{O_1^{(j)} \otimes O_2^{(k)}\}_{j,k}$ is a set of $d_1 d_2 \times d_1 d_2$ observables.
+\end{fact}
+
+\begin{fact}
+    Let $N$ be a hermitian $2 \times 2$ matrix, then there exists a hermitian projector $P$ such that $N$ can be written as:
+    \begin{equation}
+        N = \lambda_1 P + \lambda_2 (I - P). \tag{\ref{eqn:hermitian-2-2}}
+    \end{equation}
+\end{fact}
+
+\begin{fact}[Simultaneous Diagonalization]\label{fact:sim-diag}
+    Let $A$ and $B$ be two Hermitian matrices that commute, then $A$ and $B$ can be simultaneously diagonalized. In particular, for $2 \times 2$ hermitian matrices $A$ and $B$, there exists a hermitian projector $P$ such that:
+    \begin{equation}
+        A = a_1 P + a_2 (I -P) \quad\quad \text{and} \quad\quad B = b_1 P + b_2 (I - P).
+    \end{equation}
+\end{fact}
+
+\begin{definition}
+    The spectral gap of a $2 \times 2$ hermitian matrix $N = \lambda_1 P + \lambda_2 (I - P)$ is $\Delta(N) := |\lambda_1 - \lambda_2|$.
+\end{definition}
+
+\begin{definition}
+    A $2\times 2$ Hermitian operator $N$ is said to be $\eta$-gapped if $\Delta(N) \geq \eta$.
+\end{definition}
+
+\begin{restatable}{fact}{TransitivityLeadingFact}\label{lem:transitivity-of-almost-commutatitivty}
+Let $A,B,C \in \mathbb{C}^{d \times d}$ be matrices. Then,
+\begin{equation}
+\| [A,C] \| \leq 2 \cdot \|A-B\| \cdot \|C\|+ \| [B,C]||.    
+\end{equation}
+\end{restatable}
+\begin{proof}
+By linearity of the commutator, we can write
+\begin{align}
+[A,C] = [A-B,C] + [B,C].    
+\end{align}
+Using the triangle inequality and the sub-multiplicativity of the operator norm, we get
+\begin{align}
+\| [A,C] \| &= \| [A-B,C] + [B,C] \| \\    
+&\leq \| [A-B,C]\| + \|[B,C] \| \\
+&= \| (A-B)C - C(A-B)\| + \|[B,C] \| \\
+&\leq \| (A-B)C\| + \|C(A-B)\| + \|[B,C] \|\\
+&\leq 2 \cdot \|A-B\| \cdot \|C\| + \| [B,C]||.
+\end{align}
+\end{proof}
+
+%Let $\{v_1, \dots, v_{d_1}\}$ and $\{w_1, \dots, w_{d_2}\}$ be bases for $V$ and $W$ respectively. 
+
+\begin{definition}[Partial Trace]
+    Let $V$ and $W$ be two finite-dimensional vector spaces over a field $\mathbb{F}$ with dimensions $d_1$ and $d_2$ respectively. The partial trace over $W$, is the map 
+    \begin{equation}
+        \tr_W: \mathcal{L}(V \otimes W) \to \mathcal{L}(V),
+    \end{equation}
+    sometimes also notated as $\tr_2$ if $W$ appears as the second tensor factor, uniquely determined by the property:
+    \begin{equation}
+        \tr_W(R \otimes S) = \tr(S) R \quad\quad \forall R \in \mathcal{L}(V)\ \forall S \in \mathcal{L}(W).
+    \end{equation}
+\end{definition}
+
+\begin{definition}[Density Matrices/Operators]
+    A density matrix (a.k.a. density operator) on $\mathbb{C}^n$ is a hermitian positive semi-definite operator of trace one acting on $\mathbb{C}^n$. We will use $\mathcal{D}_n$ to denote the set of all density matrices on $\mathbb{C}^n$.
+\end{definition}
+
+\begin{restatable}{fact}{FactOPNormPTrace} \label{fact:op-norm-ptrace}
+    Let $A$ be a square hermitian PSD operator on the space $\mathbb{C}^{d_1} \otimes \mathbb{C}^{d_2}$. Then,
+    \[\|A\| \geq \frac{\|\tr_2(A)\|}{d_2}.\]
+    \AnandNote{Define the subscript $2$ notation, as well as the $\mathcal{D}$ notation that's used in the proof.}\IslamNote{Added definition for partial trace an density matrices.}
+\end{restatable}
+\begin{proof}
+    Recall that for a Hermitian positive matrix, the operator norm has the variational characterizations
+    \begin{equation}
+        \| M \| = \max_{\| \ket{\psi} \| = 1} \bra{\psi} M \ket{\psi} = \max_{\rho \in \mathcal{D}} \tr(M \rho),
+    \end{equation}
+    where $\mathcal{D}$ is the space of density matrices of the appropriate dimension \AnandNote{reference this or prove it}. The second characterization holds because the pure states $\ket{\psi}\bra{\psi}$ are the extreme points of $\mathcal{D}$. Applying this characterization together with the partial trace, we obtain the desired conclusion.
+    \begin{align*}
+        \|A\|  &= \max_{\rho \in \mathcal{D}_{1,2}} \tr\left(A \rho\right) \\
+        &\geq \max_{\sigma \in \mathcal{D}_{1}} \tr\left(A \left(\sigma \otimes \frac{I}{d_2}\right)\right)\\
+        &= \max_{\sigma \in \mathcal{D}_1} \sum_{i=1}^{d_1} \sum_{j=1}^{d_2} \bra{i}\bra{j} \left(A \left(\sigma \otimes \frac{I}{d_2} \right)\right) \ket{i} \ket{j} \\
+        &= \max_{\sigma \in \mathcal{D}_1} \frac{1}{d_2} \sum_{i=1}^{d_1}  \sum_{k=1}^{d_1} \underbrace{\left(\sum_{j=1}^{d_2} A_{(ij) (kj)}\right)}_{\tr_2(A)_{ik}}  \sigma_{ki} \\
+        &= \frac{1}{d_2} \max_{\sigma \in \mathcal{D}_{1}} \tr\left(\tr_2(A) \sigma \right)\\
+        &= \frac{1}{d_2} \|\tr_2(A)\|.
+    \end{align*}
+    (We have explicitly computed the trace in order to be clear that the factor of $1/d_2$ remains after taking the partial trace.)
+\end{proof}
+
+
+
+
+
+\noindent We also use Weyl's \emph{spectral stability} lemma.
+\AlexNote{This holds for general matrices too}
+\begin{lemma}[Weyl's inequality]\label{lem:spectral-stab}
+Let $A,B \in \mathrm{Herm}(\mathbb{C}^{2 \times 2})$. Then, for $i \in \{1,2\}$,
+$$
+\left|\lambda_i(A+B) - \lambda_i(A) \right| \, \leq \, \max \{|\lambda_1(B)|, |\lambda_2(B)|\} \, = \, \|B\|.
+$$
+\end{lemma}
+
+\begin{fact}
+If $H$ and $H'$ are two square hermitian matrices of the same dimensions, then 
+\begin{equation}
+    \|H - H'\| \leq \eps \implies |\lambda_{\mathrm{min}}(H) -\lambda_{\mathrm{min}}(H')| \leq \eps.
+\end{equation}
+\end{fact}

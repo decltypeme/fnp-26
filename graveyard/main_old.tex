@@ -1,0 +1,1061 @@
+\documentclass[11pt]{article}
+\usepackage[dvipsnames,svgnames,x11names,hyperref]{xcolor}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage[T1]{fontenc}
+\usepackage{comment}
+\usepackage[margin=1in]{geometry}
+\usepackage{thmtools}
+\usepackage[colorlinks]{hyperref}
+\hypersetup{colorlinks={true},linkcolor={blue},citecolor=magenta}
+
+\usepackage{amssymb,amsfonts,amsmath,amsthm,amscd,dsfont,mathrsfs}
+\usepackage{complexity}
+\usepackage{tikz}
+\usetikzlibrary{decorations.pathreplacing,backgrounds}
+\usepackage{tikz-cd}
+\usepackage{multirow}
+\usepackage{mathpazo}
+\usepackage{braket}
+\usepackage{cleveref} 
+\usepackage{xcolor}
+
+\usepackage{booktabs, multirow}
+
+\usepackage[style=alphabetic,minalphanames=3,maxalphanames=4,maxnames=99,backref=true]{biblatex}
+  \renewcommand*{\labelalphaothers}{\textsuperscript{+}}
+  \renewcommand*{\multicitedelim}{\addcomma\space}
+  \addbibresource{crypto.bib}
+
+\setcounter{biburlnumpenalty}{100}
+\setcounter{biburlucpenalty}{100}
+\setcounter{biburllcpenalty}{100}
+\usepackage{url}
+\usepackage{bbm}
+\Urlmuskip=0mu plus 1mu
+\usepackage{hyperref} 
+\hypersetup{breaklinks=true}
+
+
+% Colors
+% Define a custom dark green color (adjust RGB as desired)
+\definecolor{DarkGreen}{RGB}{0,150,0}
+
+% Define a macro for convenient use
+\newcommand{\DarkGreen}[1]{\textcolor{DarkGreen}{#1}}
+
+
+%%% Theorem env
+
+  \theoremstyle{plain}
+  \newtheorem{theorem}{Theorem}[section]
+  \newtheorem{lemma}[theorem]{Lemma}
+  %\newtheorem{claim}{Claim}
+  %\Crefname{claim}{Claim}{Claims}
+  %\newtheorem*{lemma*}{Lemma}
+  \newtheorem{corollary}[theorem]{Corollary}
+  %\newtheorem{proposition}{Proposition}
+  % \newtheorem{observation}[theorem]{Observation}
+  \newtheorem{definition}[theorem]{Definition}
+  \newtheorem{remark}[theorem]{Remark}
+  \newtheorem{claim}[theorem]{Claim}
+    \newtheorem{fact}[theorem]{Fact}
+\newtheorem{example}{Example}[section]
+  \newtheorem{importedtheorem}[theorem]{Imported Theorem}
+ \newtheorem{construction}{Construction}
+ \newtheorem*{theorem*}{Theorem}
+
+\newcommand*\samethanks[1][\value{footnote}]{\footnotemark[#1]}
+
+%\newcommand{\Tr}[1]{\mathrm{Tr}\left\{#1 \right\}}  
+\DeclareMathOperator{\tr}{tr}
+\DeclareMathOperator{\Pinch}{Pinch}
+\renewcommand{\set}[1]{\left\{ #1 \right\}}
+\newcommand{\abs}[1]{\left| #1 \right|}
+\newcommand{\proj}[1]{\ket{#1}\!\bra{#1}}
+
+\newcommand{\npower}[1]{{#1}^{\otimes n}}
+\newcommand{\norm}[1]{\left\Vert {#1} \right\Vert}
+\renewcommand{\C}{\mathbb{C}}
+\renewcommand{\E}{\mathbb{E}}
+\newcommand{\F}{\mathbb{F}}
+
+\newcommand{\ind}{\mathds{1}}
+
+
+\newcommand{\THR}{\mathsf{THR}}
+\newcommand{\THRpn}{\THR_{pn}}
+\newcommand{\Maj}{\mathsf{Maj}}
+\newcommand{\diam}{\mathsf{diam}}
+
+\newcommand{\eps}{\varepsilon}
+
+\renewcommand{\cP}{\mathcal{P}}
+
+\newcommand{\Wheels}[1]{\textcolor{blue}{#1}}
+
+\newif\ifnotes\notestrue
+%\newif\ifnotes\notesfalse
+\ifnotes
+\newcommand{\AlexNote}[1]{\textcolor{red}{(Alex: #1)}}
+\newcommand{\AnandNote}[1]{\textcolor{red}{(Anand: #1)}}
+\newcommand{\IslamNote}[1]{\textcolor{red}{(Islam: #1)}}
+\else
+\newcommand{\AlexNote}[1]{}
+\newcommand{\AnandNote}[1]{}
+\newcommand{\IslamNote}[1]{}
+\fi
+
+
+
+\title{Almost Commuting Hamiltonians}
+
+
+
+
+
+\author{ }
+
+\date{}
+
+\begin{document}
+
+
+\maketitle
+
+\abstract{
+We show that any 2-local qubit Hamiltonian $H$ with $m$ terms, where the commutator of every pair of terms is bounded by $\eps$ in operator norm, can be rounded to a \emph{commuting} 2-local qubit Hamiltonian $H'$ with $\| H' - H \| = O(m \eps^{1/3})$.
+}
+
+\tableofcontents
+
+\newpage
+
+\section{Meeting notes}
+
+\paragraph{March 13}
+\begin{enumerate}
+    \item it seems possible to extend to $k$-local, Islam writing the details.
+    \item Alex talking about average commutation error
+    \begin{equation}
+        \E_{(i,j), (j,k)}\left[\| [h_{i,j}, h_{j,k}] \|\right] \leq \eps.
+    \end{equation}
+    \item Anand asked if we can find a class of hamiltonians such that their ground states have long-range entanglement
+    \item finding parent hamiltonian; commuting parent hamiltonians
+\end{enumerate}
+
+\paragraph{February 27}
+
+\begin{enumerate}
+    \item \url{https://arxiv.org/abs/1404.5327}
+    \item \url{https://arxiv.org/pdf/2512.07908}
+    \item \url{https://errorcorrectionzoo.org/list/hamiltonian}
+    \item \url{https://arxiv.org/pdf/2601.19848}
+    \item \url{https://arxiv.org/pdf/2601.18773}
+    \item \url{https://www.nature.com/articles/s41586-025-09527-5}
+\end{enumerate}
+
+
+
+\paragraph{February 20}
+
+\begin{enumerate}
+    \item Alex via Anthony at QIP: Can we find another rounding technique where the locality blows up but you get a better distance? Can it actually be such that the distance is exactly zero but different numbers of terms and different locality?
+    \item On many body of localization of quantum spin chains \url{https://arxiv.org/abs/1403.7837}
+    \item Understand why transitivity fails for $> 2 $ dim.
+    \item From attendees:
+    \begin{enumerate}
+        \item Linear combination of atomic orbitals
+        \item Perturbation Theory
+        \item Hubbard Model
+        \item Spin Glass Model
+        \item Sampling from Random Hamiltonians
+    \end{enumerate}
+    \item Schrieffer-Wolff transformation
+    \item Anand: One way to sell our result is as follows: people in physics like hamiltonians which can be written as commuting + error/perturbation. We show that any almost commuting hamiltonian can be written like that and we show how to explicitly do that.
+    \item Alex: how about instead of the maximum commutator norm being at most epsilon, we say that the average commutator norm is at most epsilon.
+    \item Anand on signal: Review on many-body localization: \url{https://arxiv.org/pdf/1804.11065}
+    The problem here seems to be: given a local Hamiltonian H (approx commuting?), find a collection of nonlocal operators $\hat{\tau}_i$ that: (1) are ``quasilocal" in that the nonlocality decays exponentially with the distance, (2) they commute exactly with each other and the Hamiltonian
+    \item Approximate error correction? 
+    \item Alex's ChatGPT on sampling random hamiltonians
+
+\end{enumerate}
+
+
+\paragraph{Feb 9}
+
+\begin{enumerate}
+    \item C-* algebra for approximately commuting algebras (re-doing the work in terms of C-* algebra).
+    \item Alex via QIP: Can you get better distance by blowing up the locality?
+    \item No-Go results for qudits (maybe using rep theory).
+    \item 
+\end{enumerate}
+
+\paragraph{Plan from November 21:}
+The idea is the formalize an iterative pinching procedure using a colored bipartite graph. We start out with a bipartite $n \times n$ graph with vertices corresponding to $A$ and $C$ operators, and all bipartite edges colored blue, meaning ``approximately commuting." We pick a parameter $\eta$ to be set later. We first start out by snapping all vertices that have spectral gaps less than $\eta$, and then deleting these vertices and all adjacent edges from the graph. (These snapped operators are guaranteed to commute with everything from now on.) Next, we iteratively color the edges green: we grow the ``good part'' of the graph by adding a new vertex to one of the two sides, and pinching it by one of its ``good'' neighbors. The transitivity property will guarantee that it now commutes with all of its neighbors. We do this until all edges are green.
+
+\paragraph{What to do next after the star:} Chinmay asked whether a quantum Zeno effect on the line graph might be an obstacle to our result. Specifically, if you have $h_{12}, h_{23}, h_{34}, \dots$ where each subsequent term is a little bit rotated from the previous, will this force you to move $h_{n-1, n}$ by a very large distance to get everything to commute? As a simple test case, let's just try to figure out $h_{12}, h_{23}, h_{34}$. 
+
+\paragraph{December 1st:} First of all, we think we know how to round a star graph of any size. This uses the property of our rounding lemma that it whenever we add a new operator to be rounded, we only perturb that operator (by pinching it) and do not perturb the existing operators at all. So we can kind of go around the star one edge at a time.
+
+Now, Islam's proposal to boost this into an NP protocol: take the protocol 3.4 from AE and whenever you want to eliminate a vertex, first round its star, then ask Merlin for the witness for the vertex, and then use that witness to eliminate the vertex. 
+
+Note that this does not give you a full rounding of the whole Hamiltonian, because you are at each step projecting yourself into a smaller sector of the space. It is in fact unclear if it is even possible to get a full rounding. The simplest example that we cannot round is the triangle graph. (Note that we \emph{can} round the line graph of any length by sliding from one end to another.) For the triangle, we hoped to use some kind of transitivity but this is false: $XXI$ commutes with $IXZ$, $IXZ$ commutes with $ZIZ$, but $XXI$ does not commute with $ZIZ$.
+
+\paragraph{December 5}
+\begin{enumerate}
+    \item We will be working on modifying Algorithm Algorithm 3.4 in AE by adding a step where we round the star hamiltonian.
+    \item Note that there is a blowup in the commutator, but it is not issue because the slicing in the NP algorithm will help us not worry about that blown up commutator
+    \item So, we have a counterexample for impossibility of making a triangle that is almost commuting into a triangle that exactly commute via sequential rounding
+    \item Maybe, global rounding works. Actually, we have it working? (diagonalize simultaneously) but it increases the locality.
+    
+\end{enumerate}
+
+\paragraph{December 8}
+\begin{enumerate}
+    \item We need to write an $\epsilon$-transitivity lemma that invokes the exact transitivity lemma.
+    \item We noticed that we are getting as a byproduct intra-commutativity, so could we maybe start by that as an "unnatural" task because we know we are getting anyway (why? so that we can just pinch by any of them later and the first bipartite graph won't be special).
+    \item Alex noticed that we have some sort of star within a star
+\end{enumerate}
+
+\paragraph{December 12}
+\begin{enumerate}
+    \item We believe in the pivot lemma.
+    \item We are looking at the triangle case (c.f. notes on December 5)
+    \item Anand was looking at Hamiltonian Sparsification and gap amplification (by Aharnov and Zhou)
+    \item Alex mentioned Robbie King's Paper on Max Cut
+    \item Anand mentioned the paper by Chapman Vidick and Yuen
+    \item Alex said maybe we can just do the rounding through the triangle and actually just change something that was already rounded.... maybe it is not that bad after all.
+    \item After lunch: we think we can get a global rounding in one shot using pivots! 
+\end{enumerate}
+
+\paragraph{December 16}
+\begin{enumerate}
+    \item Alex suggests that we are proving a no-go result similar to that in Itai Arad's paper: A note about a partial no-go theorem for quantum PCP (If QMA is different from NP, then PCPs for QMA cannot be almost commuting, they will need higher commutators).
+    \item On the out-of-the-box Kitaev circuit-to-hamiltonian reducation, what is a bound on the norm of the pairwise commutator of the terms? For what value of epsilon is it QMA-complete? Can we give lower bounds on $\eps$? For example, assuming $$\mathsf{NP} \subsetneq \mathsf{QMA}$$ a necessary condition for any QMA-hard Hamiltonian is that it must be sufficiently non-commuting with $\epsilon = \Omega(1/m)$.
+    \item Can we come up with a procedure for reducing the norm of the commutator (from say $\eps$ to $\eps^2$)?
+    \item Alex (via Bostanci): there is 
+    \item What commutation parameter is the LH problem QCMA-complete or QMA-complete?
+\end{enumerate}
+
+\paragraph{December 29}
+\begin{enumerate}
+    \item On Alex's suggestion we looked at Arad: we think we are essentially giving a quantitative version of his result (he just shows something in the limit of the commutator going to $0$) and possibly answering several of his open questions. 
+    \item How non-commuting are the canonical QMA-hard Hamiltonians, e.g. FK?
+    \item Prove results for average commutator norm.
+    \item How tight are the bounds we have? At least can we convince ourselves that the $\eta$ dependence is tight?
+\end{enumerate}
+
+\newpage
+\section{Introduction}
+
+Suppose we have a $k$-local Hamiltonian of the form $H = \sum_{i=1}^m H_i$
+for some Hermitian matrices $H_i$ such that $\| H_i \| \leq 1$. The
+commuting local Hamiltonians
+(CLHs) where $[H_i,H_j]=0$ is a popular constraint satisfaction problem because it "sits at the halfway point" between classical and quantum complexity. It is well known\footnote{\url{https://quantumcomputing.stackexchange.com/questions/35085/if-all-terms-of-a-local-hamiltonian-commute-how-hard-is-it-to-learn-the-ground}} that the ground states of commuting Hamiltonians can still exhibit high
+entanglement and can be non-trivial (see Toric code and the proof of NLTS theorem).
+
+Bravyi and Vyalyi~\cite{bravyi2004commutativeversionklocalhamiltonian} showed that the $2$-local CLH problem is in $\mathsf{NP}$, and thus the ground
+energy is classically verifiable. What about the "next best thing"? Are \emph{almost commuting} Hamiltonians still entirely classical, or is there a sharp complexity transition and the problem is $\mathsf{QMA}$-hard? There are two natural ways of extending the commuting Hamiltonians towards "almost commuting" Hamiltonians:
+\begin{itemize}
+    \item (Small commutators:) For any pair $(i,j)$, it holds that $\|[H_i,H_j]\| \leq \eps$.
+
+    \item (Anti-commuting Paulis:) If $H$ is a $k$-local Pauli Hamiltonian $H=\sum_i v_i P_i$ for some coefficients $v_i$ and $n$-qubit Pauli operators $P_i \in \{I,X,Y,Z\}^{\otimes n}$, then we require that at most an $\eps$-fraction of the Paulis $\{P_i\}_{i=1}^m$ anti-commute. In other words, their anti-commutation graph has density $\eps$ and includes at most $\eps \cdot \binom{m}{2}$ many edges.
+\end{itemize}
+
+The first definition seems more intuitive. We can formalize the problem as follows:
+
+\begin{definition}[Almost-Commuting Local Hamiltonian Problem] 
+The almost-commuting $k$-local Hamiltonian $(k,a,b,\eps)$-ACLH problem is the following decision problem:
+\begin{description}
+    \item[Input:] A description of a $k$-local Hamiltonian $H = \sum_{i=1}^m H_i$ on $n$ qubits, where each $H_i$ acts on at most $k$-qubits with $\|H_i \| \leq 1$, and where $\|[H_i,H_j]\| \leq \eps$ for some $\eps > 0$.
+
+    \item[Promise:] The ground state energy $\lambda_{\mathrm{min}}(H)$ is either less than $a$, or larger than $b$.
+
+    \item[Task:] Decide which is the case.
+\end{description}    
+\end{definition}
+In the definition above, we should think of $m=\mathrm{poly}(n)$ and $\eps(n)= 1/\mathrm{poly}(n)$.
+
+\subsection{Warm-Up: Rounding Almost-Commuting Hamiltonians}
+
+Let's say we have a certain $(k,a,b,\eps)$-ACLH instance where the Hamiltonian $H$ consists of almost-commuting terms for which one of those "rounding technique" applies.
+
+One such example is the overlapping qubits paper~\cite[Theorem 3.2]{https://doi.org/10.4230/lipics.itcs.2017.48}, which says that $\eps$-almost commuting projectors $P_1,\dots,P_m$ with $\|[P_i,P_j]\| \leq \eps$ can be rounded towards nearby projectors $Q_1,\dots,Q_m$ with the property that they
+\begin{itemize}
+    \item all mutually commute with $[Q_i,Q_j]=0$, and
+    \item they are close such that $\|P_i - Q_i\| \leq 8 m \eps$.
+\end{itemize}
+How hard is the corresponding $(k,a,b,\eps)$-ACLH problem with respect to $H= \sum_{i=1}^m P_i$?
+
+Recent work by Bostanci and Hwang~\cite{bostanci2025commutinglocalhamiltonians2d} shows that the CLH problem for $2D$ Hamiltonians is in $\mathsf{NP}$ provided that the underlying Hamiltonians are of the form $H'=\sum_i Q_i$, where $Q_i$ are commuting rank-$1$ projectors\footnote{They also use the word "rounding" a lot, but they mean something else I think. Maybe we should call our technique "lifting" instead?}. 
+
+
+\paragraph{Can we show $\mathsf{NP}$ containment?}
+Does the following reduction work? Given an instance of the $(k,a,b,\eps)$-ACLH problem with respect to $H= \sum_{i=1}^m P_i$, we apply the rounding technique~\cite[Theorem 3.2]{https://doi.org/10.4230/lipics.itcs.2017.48} and construct $H'=\sum_i Q_i$, where $Q_i$ are commuting rank-$1$, which is in $\mathsf{NP}$. Because the rounding technique is constructive, we actually know what each of the commuting projectors $Q_i$ look like. Then we need to figure out:
+\begin{itemize}
+    \item If the original $H$ had low energy $\lambda_{\mathrm{min}}(H) < a$ and the distance by which we moved $H$ is much smaller than $1$, then $H'=\sum_i Q_i$ must have a zero energy state (since the eigenvalues must be integers).
+
+    \item Claim: If $\|H - H'\| \leq \delta$, then $|\lambda_{\mathrm{min}}(H) -\lambda_{\mathrm{min}}(H')| \leq \delta$. This can be seen as follows: Because $\|H - H'\| \leq \delta$, we can use the property of the operator norm and write:
+$$
+\sup_{\| \ket{\psi}\|=1} \left|\bra{\psi} (H - H') \ket{\psi}\right| \leq \delta.
+$$
+But this implies that (Cauchy-Schwarz?)
+\begin{align*}
+|\lambda_{\mathrm{min}}(H) -\lambda_{\mathrm{min}}(H')| 
+&\leq \|H - H'\| \leq \delta
+\end{align*}
+(Check this... I think it also follows more generally from Weyl's inequality: \url{https://en.wikipedia.org/wiki/Weyl%27s_inequality#:~:text=In%20linear%20algebra%2C%20Weyl's%20inequality,of%20a%20perturbed%20Hermitian%20matrix.})
+\end{itemize}
+
+
+% Representation theory
+\newpage
+\include{rep_theory.tex}
+
+
+\newpage
+
+\section{Age of enlightenment}
+\begin{fact}
+    Let $A$ and $Q$ be $n \times n$ matrices where $Q$ is a projector (i.e. $Q^2 = Q$). Define:
+    \begin{equation}
+        X = \Pinch_{Q}[A] := QAQ + Q^\bot AQ^\bot
+    \end{equation}
+    
+    \noindent Then, $[X, Q] = 0$.
+    
+    \noindent If $Q$ is a hermitian projector, then $\|X - A\| = \|[A,Q]\|$.
+\end{fact}
+\begin{proof}
+    \begin{align*}
+    \| X - A \| &= \| QAQ + Q^\bot A Q^\bot - A\|\\
+    &= \| QAQ + (I-Q)A(I-Q) - A \|\\
+    &= \| QAQ + A - AQ - QA + QAQ - A \|\\
+    &= \| QAQ - AQ - QA + QAQ \|\\
+    &= \|(Q - I)AQ - QA(I - Q) \|\\
+    &= \|(I - Q)AQU + QA(I - Q) U \| & \cdot \times \|-U\| = 1\\
+    &= \|(I - Q)AQ + QA(Q - I) \|\\
+    &= \| AQ - QAQ + QAQ - QA\|\\
+    &= \| AQ - QA\|\\
+    &= \|[A, Q] \|.
+\end{align*}
+\end{proof}
+\begin{theorem}[Pinching any matrix by a Hermitian Projector]\label{thm:pinch_herm_proj}
+Let $A$ be any matrix and let $Q$ be a hermitian projector, define $X$, the pinching of $A$ by $Q$ as follows:
+\begin{equation}
+	X = \Pinch_Q[A] := Q A Q + (I - Q) A (I - Q)
+\end{equation}
+Then, $[X, Q] = 0$ and $\|X - A\| = \|[A, Q]\|$.
+\end{theorem}
+
+\begin{theorem}[Pinching any matrix by a Hermitian Matrix with 2 eigenvalues i.e. linear combination of a projector and its complement]\label{thm:pinch}
+    Let $M = \begin{pmatrix}
+        M_{1,1} & M_{1,2}\\
+        M_{2,1} & M_{2,2}
+    \end{pmatrix}$ be any $2d \times 2d$ matrix and let $N$ be a $2d \times 2d$ Hermitian matrix with eigenvalues $\lambda_1 > \lambda_2$. Write
+    \[ N= \lambda_1 P + \lambda_2 (I - P) = U \begin{pmatrix}
+        \lambda_1\: I_{d \times d} & 0\\ 0 & \lambda_2\: I_{d \times d}
+    \end{pmatrix} U^\dagger , \] where $P$ is the projector into the $\lambda_1$-eigenspace and $U$ is the unitary diagonalizing $N$. Define:
+    \begin{equation}
+        M' := P\ M\ P + (I - P)\ M\ (I - P)
+    \end{equation}
+    Then, $[M', N] = 0$ and $\|M' - M \| = \frac{1}{\lambda_1 - \lambda_2} \|[M, N]\|$.
+\end{theorem}
+
+\begin{proof}
+Without loss of generality, assume $U = I$, i.e. assume we have changed basis so that $N$ is diagonal.
+\begin{align*}
+[M, N] &= M\ N - N\ M\\
+&= \begin{pmatrix} \lambda_1 M_{1,1} - \lambda_1 M_{1,1} & \lambda_2 M_{1,2} - \lambda_1 M_{1,2} \\ \lambda_1 M_{2,1} - \lambda_2 M_{2,1} & \lambda_2 M_{2,2} - \lambda_2 M_{2,2}
+\end{pmatrix}\\
+&= \begin{pmatrix} 0 & - \left(\lambda_1 - \lambda_2\right) M_{1,2} \\ \left(\lambda_1 - \lambda_2\right) M_{2,1} & 0
+\end{pmatrix}\\
+&= \left(\lambda_1 - \lambda_2\right)\begin{pmatrix} 0 & - M_{1,2} \\  M_{2,1} & 0
+\end{pmatrix}\\
+\end{align*}
+
+\begin{align*}
+\|M - M' \| &= \| (M - M')(2P - I)\|\\
+&= \|\begin{pmatrix}
+            0 & -M_{1,2}\\
+            M_{2,1} & 0
+        \end{pmatrix} \|\\
+&= \frac{\lambda_1 - \lambda_2}{\lambda_1 - \lambda_2}\|\begin{pmatrix}
+            0 & -M_{1,2}\\
+            M_{2,1} & 0
+        \end{pmatrix} \|\\  
+&= \frac{1}{\lambda_1 - \lambda_2}\|(\lambda_1 - \lambda_2)\begin{pmatrix}
+            0 & -M_{1,2}\\
+            M_{2,1} & 0
+        \end{pmatrix} \|\\
+&= \frac{\|[M, N]\|}{\lambda_1 - \lambda_2}
+\end{align*}
+
+\end{proof}
+
+
+\begin{theorem}[Globally Snapping a hermitian matrix with 2 eigenvalues into identity]
+\label{lemma:snapping-hermitian-qubit-hermitian-operator}
+Let $B$ be a hermitian matrix of the form $B = \lambda_1 P + \lambda_2 (I - P) = U \begin{pmatrix}
+        \lambda_1\: I_{d \times d} & 0\\ 0 & \lambda_2\: I_{d \times d}
+    \end{pmatrix} U^\dagger$. Define:
+    \begin{equation}
+    B' = \lambda_1\: I_{2d \times 2d}
+    \end{equation}
+Then, $\|B' - B \| = |\lambda_1 - \lambda_2|$.
+\end{theorem}
+
+\begin{proof}
+\begin{align*}
+\|B' - B \| &= \|\begin{pmatrix}
+        0 & 0\\ 0 & \left(\lambda_1 - \lambda_2\right)\: I_{d \times d}
+    \end{pmatrix}\| = |\lambda_1 - \lambda_2|
+\end{align*}
+\end{proof}
+
+\begin{theorem}[Snapping a $2$-local Hamiltonian Term into $1$-local Hamiltonian Term]
+\label{thm:snapping-2-local-hamiltonian-term}
+    Let $h_{i,j}$ be a $2$-local Hamiltonian Term (Hermitian Matrix) that is not $i$-subsystem-$\eta$-gapped. Then, there exist a $1$-local Hamiltonian Term $\widehat{h_{j}}$ such that:
+    \begin{equation}
+    \label{eqn:snapped-distance-between-hamiltonian-terms}
+        \|h_{i,j} - \widehat{h_{j}}\| \leq 4 \eta.
+    \end{equation}
+    % and
+    % \begin{equation}
+    % \label{eqn:snapped-lambda-min-difference}
+    %     |\lambda_{\min}(h_{i,j}) - \lambda_{\min}(\widehat{h_{j}})| \leq 4 \eta .
+    % \end{equation}
+\end{theorem}
+\begin{proof}
+We can write $h_{\{i,j\}}$ via~\Cref{algebra-fact-pauli-decomposition} as:
+    \begin{align*}
+        h_{i,j}& = \sum\limits_{\alpha = 0}^{3} A_{i}^{\alpha} \otimes \sigma_{j}^{(\alpha)}\\
+        &= \sum\limits_{\alpha = 0}^{3} \left[\lambda_1^{\alpha} P_{i}^{\alpha} + \lambda_2^{\alpha} \left(I - P_{i}^{\alpha}\right)\right] \otimes \sigma_{j}^{(\alpha)}
+    \end{align*}
+where $\Delta(A_{i}^{\alpha}) < \eta$. Then, we can define $\widehat{h_j}$ by snapping all of the $\{A_i^{\alpha}\}$ into multiples of identity $\{A_i^{'\alpha}\}$ as in~\Cref{lemma:snapping-hermitian-qubit-hermitian-operator} then letting the jth operator ``suck'' in the multiples as follows.
+
+\begin{equation}
+    \widehat{h_j} := \sum\limits_{\alpha = 0}^{3} \lambda_1^{\alpha} I_{i} \otimes \sigma_{j}^{(\alpha)} = \sum\limits_{\alpha = 0}^{3} \lambda_1^{\alpha} \sigma_{j}^{(\alpha)}
+\end{equation}
+
+\begin{align*}
+    \|h_{i,j} - \widehat{h_{j}}\| &= \left\|\sum\limits_{\alpha = 0}^{3} \left( A_i^{\alpha} - A_i^{'\alpha} \right)\otimes \sigma_{j}^{(\alpha)}\right\|\\
+    &\leq \sum\limits_{\alpha = 0}^{3} \left\|\left( A_i^{\alpha} - A_i^{'\alpha} \right)\otimes \sigma_{j}^{(\alpha)} \right\|\\
+    &\leq \sum\limits_{\alpha = 0}^{3} \left\| A_i^{\alpha} - A_i^{'\alpha}  \right\|\\
+    &\leq \sum\limits_{\alpha = 0}^{3} \Delta(A_{i}^{\alpha})\\
+    &\leq 4 \eta.
+\end{align*}
+\end{proof}
+
+\begin{corollary}[Unified Rounding Theorem]
+    Let $A$ and $B$ be ($2d \times 2d$) Hermitian matrices where $B = \lambda_1 P + \lambda_2 (I - P) = U \begin{pmatrix}
+        \lambda_1\: I_{d \times d} & 0\\ 0 & \lambda_2\: I_{d \times d}
+    \end{pmatrix} U^\dagger$. Then, there exist two hermitian matrices $A'$ and $B'$ such that: $[A', B'] = 0$ and one of $\|A' - A\|$ and $\|B' - B \|$ is zero while the other is bounded above by $\sqrt{\|[A, B]\|}$.
+\end{corollary}
+\begin{proof}
+    Let $\eps_1 := |\lambda_1 - \lambda_2|$ be the distance between $B'$ and $B$ if we were to ``snap'' $B$ into $B'$. Let $\eps_2 := \frac{\|[A, B]\|}{|\lambda_1 - \lambda_2|}$ which is the distance between $A'$ and $A$ if $A'$ is the pinching of $A$ by $B$.
+    There are two cases:
+    \begin{enumerate}
+        \item If $\eps_1 \leq \eps_2$, let $A' = A$ and $B'$ be the result of snapping $B$.
+        \item Otherwise ($\eps_2 > \eps_1$), let $A'$ be the pinching of $A$ by $B$ and let $B' = B$.
+    \end{enumerate}
+    The corollary then follows because $\min\{|\lambda_1 - \lambda_2|, \frac{\|[A, B]\|}{|\lambda_1 - \lambda_2|}\} \leq \sqrt{\|[A, B]\|}$.
+\end{proof}
+
+\subsection{Working with 2 hamiltonian terms that are $2$-local and overlapping on a shared qubit}
+
+\begin{fact}[Algebra Theorem]\label{algebra-fact-pauli-decomposition}
+    Let $H_{r,s}$ be a Hamiltonian term on the qubits $r$ and $s$. Then, $H_{r,s}$ can be decomposed as follows:
+    \begin{equation}
+        H_{r,s} = \sum\limits_{\alpha = 0}^{3} A_r^{(\alpha)} \otimes \sigma_s^{(\alpha)} = A_r^{(0)} \otimes I_s + A_r^{(1)} \sigma_s^{(1)} + A_r^{(2)} \sigma_s^{(
+        2
+        )} + A_r^{(3)} \sigma_s^{(3)}
+    \end{equation}
+where $\left(\sigma_r^{(0)}, \sigma_r^{(1)}, \sigma_r^{(2)}, \sigma_r^{(3)}\right) = \left(I_s, X_s, Y_s, Z_s\right)$ are the Pauli Matrices on the $s$-th qubit and some of $A_r^{(\alpha)}$ can be the zero matrix.
+\end{fact}
+
+\AnandNote{The reason we are decomposing the `non-shared' qubit in the Pauli basis is that if we have two overlapping Hamiltonian terms that \emph{exactly} commute, then the algebras generated on the shared qubit by this decomposition will commute as well, by the AE structure theorem. This will not be true if we put the Pauli factor on the shared qubit since the algebra we get will likely just be the full one-qubit algebra for both terms.}
+\begin{fact} \label{fact:op-norm-ptrace}
+    Let $A$ be a square hermitian PSD operator on the space $\mathcal{H}_1 \otimes \mathcal{H}_2$ with dimensions of the Hilbert spaces $d_1$ and $d_2$. Then,
+    \[\|A\| \geq \frac{\|\tr_2(A)\|}{d_2}\]
+\end{fact}
+\begin{proof}
+    \begin{align*}
+        \|A\| &= \max_{\|\ket{\psi}\| = 1} \braket{\psi | A|\psi}\\
+        &= \max_{\|\ket{\psi}\| = 1}\tr\left(A \ket{\psi}\bra{\psi}\right)\\
+        &= \max_{\rho \in \mathcal{D}_{1,2}} \tr\left(A \rho\right) & \text{ by convexity }\\
+        &\geq \max_{\sigma \in \mathcal{D}_{1}} \tr\left(A \left(\sigma \otimes \frac{I}{d_2}\right)\right)\\
+        &= \frac{1}{d_2} \max_{\sigma \in \mathcal{D}_{1}} \tr\left(\tr_2(A) \sigma \right)\\
+        &= \frac{1}{d_2} \|\tr_2(A)\|
+    \end{align*}
+\AlexNote{See this stackexchange post for the partial trace identity \url{https://quantumcomputing.stackexchange.com/questions/5045/partial-trace-over-a-product-of-matrices-prove-that-rm-tr-rhoab-sigma}}
+\end{proof}
+
+
+
+\begin{lemma} \label{lem:opnorm-orthog-components}
+    Let $\{M_i\}$ be a set of $d_1 \times d_1$ matrices and let $\{N_i\}$ be a set of $d_2 \times d_2$ binary observables that are pairwise orthogonal in the Hilbert-Schmidt inner product (i.e. $\tr[N_i N_j] = d_2 \cdot \delta_{ij}$). If
+    \begin{equation}
+        T = \sum\limits_{i} M_i \otimes N_i,
+    \end{equation}
+    then for all $i$, $ \|T\| \geq \|M_i\|$.
+\end{lemma}
+\begin{proof}
+    \begin{align*}
+        \|T\|^2 &= \|T^\dagger T\|\\
+        &\geq \frac{1}{d_2} \left\|\text{tr}_2\left(T^\dagger T\right)\right\| &\text{by Fact~\ref{fact:op-norm-ptrace}}\\
+        &= \frac{1}{d_2} \left\|\text{tr}_2\left(\sum\limits_{i,j} M_i^\dagger M_j \otimes N_i^\dagger N_j\right)\right\|\\
+        &= \frac{1}{d_2} \left\|\text{tr}_2\left(\sum\limits_{i} M_i^\dagger M_i \otimes N_i^\dagger N_i + \sum\limits_{i \neq j} M_i^\dagger M_j \otimes N_i^\dagger N_j\right)\right\|\\
+        &= \frac{1}{d_2} \left\|\text{tr}_2\left(\sum\limits_{i} M_i^\dagger M_i \otimes I_{d_2} + \sum\limits_{i \neq j} M_i^\dagger M_j \otimes N_i N_j\right)\right\| & N_i^\dagger = N_i \text{ and } N_i^2 = I\\
+        &= \frac{1}{d_2} \left\|\text{tr}_2\left(\sum\limits_{i} M_i^\dagger M_i \otimes I_{d_2}\right)\right\| & i \neq j \implies \text{tr}_2 \left(N_i N_j\right) = 0 \\
+        &= \frac{1}{d_2} \left\|d_2 \left(\sum\limits_{i} M_i^\dagger M_i\right)\right\| \\
+        &= \left\| \left(\sum\limits_{i} M_i^\dagger M_i\right)\right\|\\
+        &\geq \|M_i^\dagger M_i\| &\forall i\\
+        &= \|M_i\|^2
+    \end{align*}
+    Here in the last inequality, we used the fact that $M_j ^\dagger M_j \succeq 0$ for all $j$.
+\end{proof}
+\begin{fact}\label{fact:tensor-product-observables}
+    Let $\{O_1^{(j)}\}_j$ be a set of $d_1 \times d_1$ observables and let $\{O_2^{(k)}\}_k$ be a set of $d_2 \times d_2$ observables. Then, $\{O_1^{(j)} \otimes O_2^{(k)}\}_{j,k}$ is a set of $d_1 d_2 \times d_1 d_2$ observables.
+\end{fact}
+
+\begin{lemma}\label{lem:comm-propagates-down}
+Let $H_{s, r}$ and $H_{s, q}$ be two $2$-local Hamiltonian terms on a shared qubit with index $s$. According to Fact~\ref{algebra-fact-pauli-decomposition}, without loss of generality, they can be written as.
+    \begin{equation}
+        H_{s,r} = \sum\limits_{\alpha = 0}^{3} A_s^{(\alpha)} \otimes \sigma_r^{(\alpha)} \quad\quad\quad H_{s,q} = \sum\limits_{\gamma = 0}^{3} B_s^{(\gamma)} \otimes \sigma_q^{(\gamma)}
+    \end{equation}
+If $\|[H_{s, r}, H_{s, q}]\| \leq \eps$, then for all $\alpha, \gamma$ we have $\|[A_s^{(\alpha)}, B_s^{(\gamma)}]\| \leq \eps$.
+\end{lemma}
+\begin{proof}
+We can re-write the Hamiltonian terms with an identity factor on the unaffected qubit.
+    \begin{equation}
+        H_{s,r} = \sum\limits_{\alpha = 0}^{3} A_s^{(\alpha)} \otimes \sigma_r^{(\alpha)} \otimes I_{q}\quad\quad\quad H_{s,q} = \sum\limits_{\gamma = 0}^{3} B_s^{(\gamma)} \otimes I_r \otimes \sigma_q^{(\gamma)}
+    \end{equation}
+Then, we can compute the products $H_{s,r} H_{s,q}$ and $H_{s,q} H_{s,r}$ as follows.
+\begin{equation}
+    H_{s,r} H_{s,q} = \sum\limits_{\alpha, \gamma} A_s^{(\alpha)} B_s^{(\gamma)} \otimes \sigma_r^{(\alpha)} \otimes \sigma_q^{(\gamma)}
+\end{equation}
+\begin{equation}
+    H_{s,q} H_{s,r} = \sum\limits_{\alpha, \gamma}  B_s^{(\gamma)} A_s^{(\alpha)} \otimes \sigma_r^{(\alpha)} \otimes \sigma_q^{(\gamma)}
+\end{equation}
+Then, we can plug these in the definition of the commutator.
+\begin{align*}
+    \left[H_{s,r}, H_{s,q}\right] &= H_{s,r} H_{s,q} - H_{s,q} H_{s,r}\\
+    &= \sum\limits_{\alpha, \gamma} \left(A_s^{(\alpha)} B_s^{(\gamma)} - B_s^{(\gamma)} A_s^{(\alpha)}\right) \otimes \sigma_r^{(\alpha)} \otimes \sigma_q^{(\gamma)}\\
+    &= \sum\limits_{\alpha, \gamma} \left[A_s^{(\alpha)}, B_s^{(\gamma)} \right] \otimes \left[\sigma_r^{(\alpha)} \otimes \sigma_q^{(\gamma)}\right]
+\end{align*}
+By Fact~\ref{fact:tensor-product-observables}, the set $\{\sigma_r^{(\alpha)} \otimes \sigma_q^{(\gamma)}\}_{\alpha,\gamma}$ is a set of pairwise orthogonal observables. Thus, for each $\alpha, \gamma$, we can apply Lemma~\ref{lem:opnorm-orthog-components} to conclude that $\|[A_s^{(\alpha)}, B_s^{(\gamma)}]\| \leq \|[H_{s, r}, H_{s, q}]\| \leq \eps$.
+\end{proof}
+
+
+
+\begin{fact}[Simultaneous Diagonalization]\label{fact:sim-diag}
+    Let $A$ and $B$ be two Hermitian matrices that commute, then $A$ and $B$ can be simultaneously diagonalized.
+\end{fact}
+
+\begin{lemma}[Gapped spectra imply transitivity of commutativity]\label{lem:transitivity}
+Let $A,B,C \in \mathrm{Herm}(\mathbb{C}^{2 \times 2})$ and suppose that $B$ has non-zero spectral gap $\Delta(B)=|\lambda_1(B) - \lambda_2(B)| > 0$. Then, 
+$$
+[A,B] = 0 \quad \text{ and } \quad [B,C] = 0 \quad \implies \quad [A,C]=0.
+$$
+\end{lemma}
+\begin{proof}
+According to Fact~\ref{fact:sim-diag}, since $A$ commutes with $B$, and $C$ commutes with $B$, and since~\footnote{Without that condition, we can only conclude that $A$ and $B$ can be simultaneously diagonalized and that $B$ and $C$ can be simultaneously diagonalized, but not necessarily all three can be simultaneously diagonalized. If $B$ is a multiple of the identity, then any two non-commuting matrices will be a counterexample.} $\Delta(B) > 0$, we can diagonalize all the three matrices in $B$'s basis as follows:
+\begin{equation}
+    A = a_1 P + a_2 P^\bot
+\end{equation}
+\begin{equation}
+    B = b_1 P + b_2 P^\bot
+\end{equation}
+\begin{equation}
+    C = c_1 P + c_2 P^\bot
+\end{equation}
+Thus, we can see that:
+\begin{align*}
+    [A, C] &= \left[a_1 P + a_2 P^\bot,  c_1 P + c_2 P^\bot\right]\\
+    &= a_1c_1 [P, P] + a_1 c_2 [P, P^\bot] + a_2 c_1 [P^\bot, P] + a_2 c_2 [P^\bot, P^\bot]\\
+    &= 0.
+\end{align*}
+\end{proof}
+
+\begin{lemma}[Gapped Spectra imply transitivity of almost-commutativity]\label{lem:transitivity-almost}
+    Let $A,B,C \in \mathrm{Herm}(\mathbb{C}^{2 \times 2})$ and suppose that $B$ has non-zero spectral gap $\Delta(B)=|\lambda_1(B) - \lambda_2(B)| > \xi$. Then, 
+$$
+\|[A,B]\| \leq \|[B,C]\| \leq \eps \quad \implies \quad \|[A,C]\| \leq \frac{2\eps}{\xi}\left(\|A\| + \|C\| + \frac{\eps}{\xi} \right) .
+$$
+\end{lemma}
+\begin{proof}
+Now, let's consider the case where both of $A$ and $C$ are $\eta$-gapped. According to \Cref{thm:pinch}, there exist (via pinching by $B$) $A'$ and $C'$ such that $[A', B] = [B, C'] = 0$ and $\|A - A'\| \leq \|C - C'\| \leq \frac{\eps}{\xi}$. \textcolor{red}{Note that the denominator here is controlled by the gap of $B$, \emph{not} the gap of $A$ or $C$.}
+    \begin{align*}
+        \|[A,C]\| & \leq 2 \cdot \|A - A'\| \cdot \|C\| + \|[A', C]\| & \text{via \Cref{lem:transitivity-of-almost-commutatitivty}}\\
+        &\leq \frac{2\epsilon}{\xi} \cdot \|C\| + \|[C, A']\| & \|A - A'\| \leq \frac{\eps}{\xi} \text{ and } [C,A'] = -[A',C]\\
+        &\leq \frac{2\epsilon}{\xi} \cdot \|C\| + 2 \cdot \|C - C'\| \cdot \|A'\| + \|[C',A']\| & \text{via \Cref{lem:transitivity-of-almost-commutatitivty}}\\
+        & \leq \frac{2\epsilon}{\xi} \cdot \|C\| + \frac{2\eps}{\eta} \cdot \|A'\| & \|C - C'\| \leq \frac{\eps}{\xi} \text{ and } [C', A'] = 0\\
+        & \leq \frac{2\eps}{\xi} \left(\|C\| + \|A\| + \eps/\xi \right) & \|A'\| = \|A\| + \eps/\xi.
+    \end{align*}
+% If we set $\eta := \frac{\sqrt{\eps}}{2}$, then
+% \[
+% \|[A,C]\| \leq \max\{\sqrt{\eps} \left(\|C\| + \|A\| + \eps\right), \sqrt{\eps}\} = \sqrt{\eps} \left(\|C\| + \|A\| + 2\sqrt{\eps} \right) \leq 4 \sqrt{\eps}.
+% \]
+\end{proof}
+
+\noindent When $\|A\|\leq 1$, $\|C\|\leq 1$, and $\eps < \xi$, the bound in the previous lemma becomes \[\|[A, C]\| \leq \frac{4\eps}{\xi} + \frac{2\eps^2}{\xi^2} \leq \frac{6\eps}{\xi}.\]
+
+\begin{lemma}
+    Let $A, C \in \mathrm{Herm}(\mathbb{C}^{2 \times 2})$ and suppose either $\Delta(A) < \eta$ or $\Delta(C) < \eta$. Then
+    \[ \| [A, C] \| \leq 2 \eta \cdot \|C\|. \]
+\end{lemma}
+\begin{proof}
+ WLOG suppose $\Delta(A) < \eta$. Then
+\[
+\|[A,C]\| \leq 2 \cdot \|A - \mathrm{Snap}(A)\| \cdot \|C\| + \|[\mathrm{Snap}(A), C]\| < 2 \cdot \eta \cdot \|C\|. \]
+\end{proof}
+
+\IslamNote{Anand, is this project  of computing the exact commutator going somewhere?}
+
+\begin{lemma}
+    Let $A, B \in \mathrm{Herm}(\mathbb{C}^{2 \times 2})$ be given by eigendecompositions
+    \begin{align}
+        A &= \alpha_1 \ket{u}\bra{u} + \alpha_2 \ket{u^\perp}\bra{u^\perp} = (\alpha_1 - \alpha_2) \ket{u}\bra{u} + \alpha_2 I \\
+        B &= \beta_1 \ket{v}\bra{v} + \beta_2\ket{v^\perp}\bra{v^\perp} = (\beta_1 - \beta_2) \ket{v}\bra{v} + \beta_2 I,
+    \end{align}
+    where $\ket{u}, \ket{u^\perp}, \ket{v}, \ket{v^\perp}$ are unit vectors.
+    Let $\theta = \arccos(|\braket{u|v}|) \in [0, \pi/2]$. Then
+    \[ \|[A,B] \| = |\alpha_1 - \alpha_2| \cdot |\beta_1 - \beta_2| \cdot \frac{1}{2} \sin 2\theta. \]
+\end{lemma}
+\begin{proof}
+    Shut up and calculate, to quote David Mermin. WLOG suppose that $B$ is diagonal in the standard basis, and write
+    \[ \ket{u} = \cos \theta \ket{0} + e^{i \phi} \sin\theta \ket{1}.\]
+    (This form for $\ket{u}$ is fully general up to an irrelevant global phase.) Then an explicit calculation yields
+    \begin{align}
+        [A,B] &= (\alpha_1 - \alpha_2)\cdot (\beta_1 -\beta_2) [ \ket{u}\bra{u}, \ket{0}, \bra{0}] \\
+        &= (\alpha_1 - \alpha_2)\cdot (\beta_1 -\beta_2) \left[ 
+        \begin{pmatrix} \cos^2\theta & e^{-i\phi} \cos\theta\sin\theta \\ e^{i\phi} \cos\theta \sin\theta & \sin^2\theta \end{pmatrix} , \begin{pmatrix} 1 & 0 \\ 0 & 0 \end{pmatrix} \right] \\
+        &= (\alpha_1 - \alpha_2)\cdot (\beta_1 -\beta_2) \begin{pmatrix} 0 & -e^{-i\phi} \cos\theta \sin\theta \\ e^{i \phi} \cos\theta \sin\theta & 0 \end{pmatrix} \\
+        &= (\alpha_1 - \alpha_2)\cdot (\beta_1 -\beta_2) \cos\theta \sin\theta \begin{pmatrix} 0 & -e^{-i\phi} \\ e^{i\phi} & 0 \end{pmatrix}.
+    \end{align}
+    Again, by explicit calculation, we can see that the eigenvalues of
+    \[ \begin{pmatrix} 0 & e^{-i\phi} \\ -e^{i\phi} & 0 \end{pmatrix}\]
+    are $\pm i$, so this matrix has operator norm $1$. Applying this, and the fact that $\cos\theta \sin\theta = (\sin 2\theta)/2$, we obtain that
+    \begin{align}
+        \| [A,B] \| &= |\alpha_1 - \alpha_2| \cdot |\beta_1 - \beta_2| \cdot \frac{\sin 2\theta}{2}. 
+    \end{align}
+\end{proof}
+\begin{example}
+    Consider a family of matrices $A,B,C$ where $B$ is diagonal and $A$ and $C$ have eigenbases that are at some constant angle to $B$. Moreover, supppose that $\Delta(B) = \xi$ (e.g. $\xi = \eps^{9/10}$) and $\Delta(A) = \Delta(C) = \eps/\xi$ (e.g. $\eps^{1/10}$). Then $\|[A,B] \|$ and $\|[B, C] \| $ are both $O(\eps)$ but $\| [A,C]\| = \Omega(\eps^2/\xi^2)$ (e.g. $\Omega(\eps^{2/10})$ for us). This says that some dependence on the gap of $B$ is necessary for the transitivity lemma.
+\end{example}
+
+We also use Weyl's \emph{spectral stability} lemma.
+\begin{lemma}[Weyl's inequality]\label{lem:spectral-stab}
+Let $A,B \in \mathrm{Herm}(\mathbb{C}^{2 \times 2})$. Then, for $i \in \{1,2\}$,
+$$
+\left|\lambda_i(A+B) - \lambda_i(A) \right| \, \leq \, \max(|\lambda_1(B)|, |\lambda_2(B)|) \, = \, \|B\|.
+$$
+\end{lemma}
+\newpage
+
+
+
+\begin{definition}
+    A $2\times 2$ Hermitian operator $M$ is $\eta$-gapped if it has two distinct eigenvalues $\lambda_1, \lambda_2$ such that $|\lambda_1 - \lambda_2| \geq \eta$.
+\end{definition}
+
+\begin{definition}
+    A $4 \times 4$ Hermitian Operator $h_{i,j}$ is $i$-subsystem-$\eta$-gapped if any of the local factors $\{A_i^{\alpha}\}$ is $\eta$-gapped in the decomposition:
+    \[h_{i,j} = \sum\limits_{\alpha = 0}^{3} A_{i}^{\alpha} \otimes \sigma_{j}^{(\alpha)}.\]
+    The property $\left(\eta, j\right)$-block-gapped is similarly defined.
+\end{definition}
+
+\IslamNote{TODO: restate previous lemmas and theorems using the gapped definition.}
+\newcommand{\tdA}{\tilde{A}}
+\newcommand{\tdC}{\tilde{C}}
+\begin{lemma}\label{lem:iterative-pinching}
+    Let $\{\tdA^{(i)}\}_{i=1}^{k}$ and $\{\tdC^{(j)}\}_{j=1}^{\ell}$ be two sets of $2\times 2$ $\eta$-gapped Hermitian operators such that 
+    \begin{equation} \forall i \in [k], \forall j \in [\ell], \: [\tdA^{(i)}, \tdC^{(j)}] = 0. \end{equation}
+    Let $A^{(k+1)}$ be a $2\times 2$ $\eta$-gapped Hermitian operator such that 
+    \begin{equation} \forall j \in [\ell],\: \|[A^{(k+1)}, \tdC^{(j)}] \| \leq \eps. \end{equation}
+    Then there exists a $2\times 2$ $\eta'$-gapped Hermitian operator $\tdA^{(k+1)}$, such that
+    \begin{align}
+       \| \tdA^{(k+1)} - A^{(k+1)}\| &\leq \delta \label{eq:Aprime-A-close} \\
+        \forall i \in [k+1], \forall j \in [\ell], \: [\tdA^{(i)}, \tdC^{(j)}] &= 0, \label{eq:prime-commutator}
+    \end{align}
+    where
+    \begin{align}
+        \delta &= \frac{\eps}{\eta} \\
+        \eta' &= \eta - \frac{2\eps}{\eta}. 
+    \end{align}
+\end{lemma}
+\begin{proof}
+    We define $\tdA^{(k+1)}$ by
+    \begin{align}
+        \tdA^{(k+1)} &= \Pinch_{\tdC^{(1)}}[A^{(k+1)}]. 
+    \end{align}
+    We now show the claimed properties. First, for \Cref{eq:Aprime-A-close} with $i=k+1$, we have 
+    \begin{equation}
+        \| \tdA^{k+1} - A^{k+1} \| = \| \Pinch_{\tdC^{(1)}}[A^{(k+1)}] - A^{(k+1)} \| \leq \frac{\eps}{\eta} = \delta, 
+    \end{equation}
+    by \Cref{thm:pinch}.
+    Second for \Cref{eq:prime-commutator}, the only nontrivial case is when $i = k+1$. In this case, by construction, the commutator vanishes when $j = 1$:
+    \begin{equation}
+        [\tdA^{(k+1)}, \tdC^{(1)}] = 0. 
+    \end{equation}
+    For $j \neq 1$, observe that
+    \begin{align}
+        [\tdC^{(1)}, \tdA^{(1)}] &= 0 \\
+        [\tdA^{(1)}, \tdC^{(j)}] &= 0,
+    \end{align}
+    by the hypothesis of the theorem. Hence, by \Cref{lem:transitivity} plus the gap condition on the operators, we have
+    \begin{equation}
+        [\tdC^{(1)}, \tdC^{(j)}] = 0.
+    \end{equation}
+    Now, applying \Cref{lem:transitivity} once again with $A = \tdA^{(k+1)}$, $B = \tdC^{(1)}$, and $C = \tdC^{(j)}$, we deduce
+    \begin{equation}
+        [\tdA^{(k+1)}, \tdC^{(j)}] = 0.
+    \end{equation}
+    It only remains now to prove that $\tdA^{(k+1)}$ is an $\eta'$-gapped operator. For this, by \Cref{lem:spectral-stab}, we see that each eigenvalue of $\tdA^{(k+1)}$ is within a distance of $\delta$ of the corresponding eigenvalue of $A^{(k+1)}$. This means the spectral gap can decrease by at most $2\delta$, giving us the bound
+    \begin{equation}
+        \eta' = \eta - 2\delta = \eta - \frac{2\eps}{\eta}. 
+    \end{equation}
+    
+\end{proof}
+
+
+
+\newpage
+
+\section{One-shot rounding}
+\begin{theorem}
+There exists a linear-time deterministic algorithm that given $(H, \epsilon)$ outputs $\widehat{H}$ where
+\[ H = \sum_{(i,j) \in E} h_{ij}\] is a 2-local qubit Hamiltonian with the following properties:
+\begin{enumerate}
+    \item $m = |E|$ is the number of terms,
+    \item each term is a Hermitian operator with $\| h_{ij} \| \leq 1$,
+    \item $d$ is the maximum degree of any particle i.e. each qubit appears in at most $d$ Hamiltonian terms
+    \item for all~\footnote{Note that $h_{ij}$ can be re-written as $h_{ji}$ for convenience of this notation.} $(i,j), (j,k) \in E$, it holds that
+\[ \| [h_{ij}, h_{jk} ] \| \leq \eps. \]
+\end{enumerate}
+and the output Hamiltonian $\widehat{H}$ is
+\[ \widehat{H} = \sum_{(i,j) \in E} \widehat{h}_{i,j}\]
+such that
+\begin{align} 
+\forall (i,j), (k,\ell) \in E, [\widehat{h}_{i,j}, \widehat{h}_{k,\ell}] &= 0, \text{and} \label{eq:exact-commutation} \\ 
+\|\widehat{H} - H\|\leq .\label{eq:rounding-error}
+\end{align}
+\end{theorem}
+\begin{proof}
+We construct $\widehat{H}$ by the following procedure.
+\begin{enumerate}
+    \item Let $\eta$ be a parameter to be chosen later.
+    \IslamNote{I conjecture that the subsystems are either gapped together or ungapped together just by how the decomposition works.}
+    \item If $h_{ij}$ is both $i$-subsystem-$\eta$-gapped and $j$-subsystem-$\eta$-gapped, add it to $H_1$. Otherwise, add it to $H_2$. Let $m_1$ be the number of terms in $H_1$ and $m_2$ be the number of terms in $H_2$. Note that $H = H_1 + H_2$ by construction and thus $m = m_1 + m_2$.
+    \item Snap the Hamiltonian $H_1$ according to~\Cref{lemma:snapping-hamiltonian} into $\widehat{H_1}$ where $\|\widehat{H_1} - H_1\| \leq 4 m_1 \eta$ where $m_1$ is the number of Hamiltonian terms in $H_1$.
+    \item Round the Hamiltonian $H_2$ according to~\Cref{lemma:rounding-hamiltonian} into $\widehat{H_2}$ where $\|\widehat{H_2} - H_2\| \leq \dots $.
+    \item Let $\widehat{H} := \widehat{H_1} + \widehat{H_2}$.
+\end{enumerate}
+
+\IslamNote{Question: Can we just get rid of the multiples of identities (treat them as perturbation/error) and delete them? Do they reflect anything useful in terms of constraint satisfaction? They are like tolls, every quantum state will pay them, but I guess we should be interested in terms that treat quantum states differently.}
+
+\paragraph{Proving Pairwise Exact Commutativity i.e. \Cref{eq:exact-commutation}:} By the guarantee of~\Cref{lemma:rounding-hamiltonian}, all terms in $\widehat{H_2}$ pairwise commute. Since all terms of $\widehat{H_1}$ are multiples of the identity, they pairwise commute and each term commutes with each term in $\widehat{H_2}$.
+
+
+\paragraph{Distance between input and output Hamiltonians}
+\begin{align*}
+    \|\widehat{H} - H\| &= \|\widehat{H_1} + \widehat{H_2} - H_2 - H_1\|\\
+    &\leq \|\widehat{H_1} - H_1\| + \|\widehat{H_2} - H_2\|\\
+    & \leq 4 m_1 \eta + \\
+    & \leq 
+\end{align*}
+
+\AnandNote{Note that we are using the qubit structure in two crucial ways here. Firstly, the initial step of ``gap or snap'' only works in the qubit case: in the qudit case, it is possible for operators to have no spectral gap but also not be snappable to identity. Secondly, in computing the rounding error, we will need to use transitivity to compute the commutator between an $A^\alpha$ and a pivot that comes from the decomposition of the same Hamiltonian term, and transitivity only holds for qubit operators.}
+\end{proof}
+
+\begin{lemma}[Snapping a Hamiltonian]
+\label{lemma:snapping-hamiltonian}
+Then there exists a linear-time deterministic algorithm that given $(H, \eta)$ (with properties below) outputs a $1$-local qubit Hamiltonian $\widehat{H}$ such that
+\begin{equation}
+    \|\widehat{H} - H\| \leq 4 m \eta
+\end{equation}
+where \[ H = \sum_{\{i,j\} \in E} h_{\{i,j\}}\]
+is a 2-local qubit Hamiltonian on $n$ qubits with $m = |E|$ terms, where each term is a Hermitian operator with $\| h_{ij} \| \leq 1$ that is not $i$-subsytem-$\eta$-gapped. 
+\end{lemma}
+\begin{proof}
+    Apply~\Cref{thm:snapping-2-local-hamiltonian-term} for each $h_{\{i,j\}}$ to get $\widehat{h_{j}}$ with the guarantee that $\|h_{\{i,j\}} - \widehat{h_{j}}\| \leq 4 \eta$. Define $\widehat{H}$ as follows:
+    \begin{equation}
+        \widehat{H} := \sum\limits_{\{i,j\} \in E} \widehat{h_j}.
+    \end{equation}
+    Then, it follows by the triangle inequality that:
+    \begin{equation}
+        \|\widehat{H} - H\| \leq m \cdot 4 \eta = 4 \cdot m \cdot \eta.
+    \end{equation}
+    \IslamNote{TODO: Verify runtime is linear.}
+\end{proof}
+
+\begin{lemma}[One-Shot Rounding of a Hamiltonian whose terms are sub-gapped]
+\label{lemma:rounding-hamiltonian}
+There exists a linear-time deterministic algorithm $\mathrm{Round}(H, \epsilon, \eta)$ that given $(H, \epsilon, \eta)$, outputs $\widehat{H}$ with the properties below.
+\[ H = \sum_{(i,j) \in E} h_{ij}\] is a 2-local qubit Hamiltonian with $m = |E|$ terms, where each term is a Hermitian operator with $\| h_{ij} \| \leq 1$ that is both $i$-subsystem-$\eta$-gapped and $j$-subsystem-$\eta$-gapped. Let $d$ be the maximum degree of any particle i.e. each qubit appears in at most $d$ Hamiltonian terms. Moreover suppose that for all $\{i,j\}, \{j,k\} \in E$, it holds that
+\[ \| [h_{ij}, h_{jk} ] \| \leq \eps. \]
+The output Hamiltonian $\widehat{H}$ is given by
+\[ \widehat{H} = \sum_{(i,j) \in E} \widehat{h_{i,j}}\]
+such that
+\begin{align} 
+\forall (i,j), (j,k) \in E, [\hat{h}_{i,j}, \hat{h}_{j,k}] &= 0 \label{eq:exact-commutation} \\ 
+\forall (i,j) \in E, \| \hat{h}_{i,j} - h_{i,j} \| &\leq \frac{48\eps}{\eta^2} \label{eq:rounding-error}\\
+|\lambda_{\min}(\hat{H}) - \lambda_{\min}(H)| & \leq \frac{48 m \eps}{\eta^2}.
+\label{eq:min-eigenvalue-rounded-hamiltonian}
+\end{align}
+
+\end{lemma}
+\begin{proof}
+ We construct $\widehat{H}$ by an explicit rounding procedure.
+   
+\begin{enumerate}
+    % \item For each hamiltonian term $h_{ij}$ where $\{i, j\} \in E$, compute its decompositions on the subsystems $i$ and $j$ as follows:
+    % \begin{equation}
+    %     h_{ij} = 
+    % \end{equation}
+
+    \item For each qubit $i \in [n]$, if the degree of $i$ is $\geq 2$ (i.e. qubit $i$ participates in at least $2$ Hamiltonian terms), compute the algebra decomposition of all the Hamiltonian terms touching qubit $i$, i.e. for each such term, compute
+    \[ h_{ij} = \sum_{\alpha =0}^{3} A^{j, \alpha}_i \otimes \sigma^{\alpha}_j, \]
+    where $\sigma^\alpha$ denotes the corresponding single-qubit Pauli matrix. Choose an operator (first on the list) $A^{j, \alpha}_i$ that has spectral gap at least $\eta$ (guaranteed to exist by the subsystem-$\eta$-gap assumption), then set the \emph{$i$-th pivot} $R_i$ to be
+    \[ R_i = A^{j, \alpha}_i.\]
+    Let $\mathcal{P}_i$ be the superoperator corresponding to pinching by $R_i$.
+
+    Otherwise (i.e. if the degree of qubit $i$ is $0$ or $1$), let $\mathcal{P}_i = \mathrm{id}$.
+%    Else snap everything and eliminate the $i$th qubit (TODO add details).
+    \item  For every $(i,j) \in E$, let
+    %Anand, I removed this \ could be confusing (\bigotimes_{i=1}^{n} \mathcal{P}_i)(h_{ij})
+    \[ \widehat{h}_{ij} = (\mathcal{P}_i \otimes \mathcal{P}_j \otimes \mathrm{id}_{[n] \setminus \{i,j\}})(h_{ij}). \]
+\end{enumerate}
+
+\paragraph{Proving Pairwise Exact Commutativity i.e. \Cref{eq:exact-commutation}:} Let $(i,j), (j,k) \in E$  with $j \neq k$ and write the corresponding Hamiltonian terms in their shared qubit decompositions:
+\begin{align}
+    h_{ij} &= \sum_{\alpha =0}^{3} \sigma^{\alpha}_i \otimes A^{\alpha}_j \\
+    h_{jk} &= \sum_{\beta =0}^{3} B^{\beta}_j \otimes \sigma^{\beta}_k.
+\end{align}
+
+Now, compute the new Hamiltonian terms after applying the pinching superoperators.
+
+\begin{align}
+    \widehat{h_{ij}} &= \sum_{\alpha=0}^{3} \cP_i(\sigma^{\alpha}_i) \otimes \cP_j(A^{\alpha}_j) \\
+    \widehat{h_{jk}} &= \sum_{\beta =0}^{3} \cP_j(B^{\beta}_j) \otimes \cP_k(\sigma^{\beta}_k).
+\end{align}
+
+We now compute the commutator.
+\begin{align}
+    [\widehat{h_{ij}}, \widehat{h_{jk}}] &= \sum_{\alpha,\beta} \cP_i(\sigma_i^\alpha) \otimes \underbrace{[ \cP_j(A_j^\alpha), \cP_j(B_j^\beta)]}_{=0} \otimes \cP_k(\sigma_k^\beta) = 0.
+\end{align}
+To see that the commutators in the sum are $0$, observe that by \Cref{thm:pinch}, each $\cP_j(A_j^\alpha)$ and $\cP_j(B_j^\beta)$ commutes with $R_j$, and by thus \Cref{lem:transitivity} and the fact that $R_j$ is gapped, we get that $\cP_j(A_j^\alpha)$ and $\cP_j(B_j^\beta)$ commute with each other. 
+
+\paragraph{Bounding the rounding error.}
+
+To bound the rounding error, we will first show a commutativity property of the pivot operators $R_i$ for every qubit where they are defined, i.e. for every qubit with degree at least $2$. Consider such a qubit $i$ and let $R_i$ be its pivot: suppose the pivot arose from a Hamiltonian term $h_{ik}$ with decomposition
+\begin{equation}
+    h_{ik} = \sum_\beta B_i^\beta \otimes \sigma_k^\beta,
+\end{equation}
+where $R_i = B_i^{\beta^*}$. Let $h_{ij}$ be a Hamiltonian term acting on qubit $i$. Now, suppose $j \neq k$. Then decompose $h_{ij}$ as
+\begin{equation}
+    h_{ij}  = \sum_\alpha A_i^\alpha \otimes \sigma_j^\alpha. 
+\end{equation}
+Then we claim that for each $\alpha$,
+\begin{equation}
+ \| [A_i^\alpha, R_i] \| \leq \eps. \label{eq:pivot-commutes-different-term}
+\end{equation}
+To prove this, recall that by the hypothesis of the theorem (ADD REFERENCE), 
+\begin{align}
+    \eps &\geq \| [ h_{ij}, h_{ik}] \| \\
+    &= \| \sum_{\alpha', \beta} [A_i^{\alpha'}, B_i^\beta] \otimes \sigma_j^{\alpha'} \otimes \sigma_k^\beta \| \\
+    &\geq \| [A_i^\alpha, B_i^{\beta^*}]\| = \| [A_i^\alpha, R^i] \|,
+\end{align}
+where in the last line we applied \Cref{lem:opnorm-orthog-components} taking $N_i$ in the lemma to be $\sigma_j^\alpha \otimes \sigma_k^\beta$. 
+
+Now, suppose $j = k$. In this case, we are going to use transitivity (\Cref{lem:transitivity-almost}) to obtain our conclusion. Pick $j' \neq k$ and consider the corresponding Hamiltonian term
+\begin{equation}
+    h_{ij'} = \sum_{\alpha} A_i^\alpha \otimes \sigma_{j'}^\alpha. 
+\end{equation}
+By \Cref{eq:pivot-commutes-different-term}, we know that for each $\alpha$, $\| [A_i^\alpha, R_i]\| \leq \eps.$ Now, let $B_i^\beta$ be an operator from the decomposition of $h_{ik}$. We know that
+\begin{align}
+    \eps &\geq \| [h_{ik}, h_{ij'}] \| \\
+    &= \| \sum_{\alpha, \beta'} [B_i^{\beta'}, A_i^\alpha] \otimes \sigma_k^{\beta'} \otimes \sigma_{j'}^{\alpha} \| \\
+    &\geq \| [ B_i^\beta, A_i^\alpha] \| \quad \forall \alpha,
+\end{align}
+where we have applied \Cref{lem:opnorm-orthog-components} in the last line. Furthermore, by assumption there exists an $\alpha$ such that $\Delta(A_i^\alpha) \geq \eta$. 
+
+Now we will use transitivity: we know that $\|[B_i^\beta, A_i^\alpha]\| \leq \eps$ and $\|[A_i^\alpha, R_i]\| \leq \eps$, so by \Cref{lem:transitivity-almost}, we conclude that 
+\begin{equation}
+    \| [B_i^\beta, R_i] \| \leq \frac{6\eps}{\Delta(A_i^\alpha)} \leq \frac{6 \eps}{\eta},
+\end{equation}
+where we are assuming that $\eps < \eta$ and moreover that the terms of the Hamiltonian have operator norm at most $1$. 
+
+Thus, overall, we have shown that for any qubit $i$ with degree at least $2$, and for any Hamiltonian term 
+\begin{equation} h_{ij} = \sum_{\alpha } A_i^\alpha \otimes \sigma_j^{\alpha}, \end{equation}
+it holds that for all $\alpha$, 
+\begin{equation}
+    \| [A_i^\alpha, R_i] \| \leq \max(\eps, \frac{6\eps}{\eta}) \leq \frac{6\eps}{\eta}, \label{eq:pivot-commutator}
+\end{equation}
+assuming that $\eta \leq 6$.
+
+
+\IslamNote{If there is just one hamiltonian term on the particle, can we still safely pinch? I think that could be dangerous. The transitivity guarantee depends on a gapped matrix outside the neighbors of the pivot. Resolution if it is an issue, just do not pinch.}
+
+Now, we can compute the rounding error of any Hamiltonian term. Let $h_{ij}$ be any term of the Hamiltonian. If both qubits $i$ and $j$ have degree at most $1$, then $\widehat{h_{ij}}= h_{ij}$, and so there is nothing to prove.
+
+Now, suppose without loss of generality that qubit $i$ has degree at least $2$. Then we can obtain the bound
+\begin{align}
+    \| \cP_i(h_{ij}) - h_{ij} \| &= \| (\sum_\alpha \cP_i(A_i^\alpha)  - A_i^\alpha) \otimes \sigma_j^\alpha \| \\
+    &\leq \sum_\alpha \| \cP_i(A_i^\alpha) - A_i^\alpha\| \\
+    &\leq  \frac{1}{\Delta(R_i)} \sum_\alpha \|[A_i^\alpha, R_i] \| \\
+    &\leq \frac{4}{\Delta(R_i)} \cdot \frac{6\eps}{\eta} \leq \frac{24\eps}{\eta^2},
+ \end{align}
+ where in the second to last line we applied \Cref{thm:pinch} and \Cref{eq:pivot-commutator}. Now, if qubit $j$ has degree at most $1$, then $\widehat{h_{ij}} = \cP_i(h_{ij})$, so we have shown \Cref{eq:rounding-error} in this case.
+
+The remaining case is if qubit $j$ also has degree at least $2$. In this case, we can similarly derive the bound
+\begin{align}
+    \| (\cP_i \otimes \cP_j)(h_{ij}) - \cP_i(h_{ij}) \| &= \| \sum_\alpha (\cP_j(C_j^\alpha) - C_j^\alpha) \otimes \cP_i(\sigma_i^\alpha) \| \\
+    &\leq  \sum_\alpha \| (\cP_j(C_j^\alpha) - C_j^\alpha) \| \\
+    &\leq \frac{1}{\Delta(R_j)} \sum_\alpha \| [C_j^\alpha, R_j] \| \\
+    &\leq \frac{24 \eps}{\eta^2},
+\end{align}
+where we have used the bound $\| \cP_i(\sigma_i^\alpha) \| \leq \| \sigma_i^\alpha \| = 1$, which follows from the fact that $\cP_i$ is a positive unital map and thus contractive in operator norm (see Theorem~6.12 of Watrous). 
+So overall, by the triangle inequality, we get
+\begin{align}
+    \| h_{ij} - (\cP_i \otimes \cP_j)(h_{ij})  \| &\leq \| h_{ij} - \cP_i(h_{ij}) \| + \| \cP_i(h_{ij}) - (\cP_i \otimes \cP_j)(h_ij) \| \\
+    &\leq \frac{48 \eps}{\eta^2}. 
+\end{align}
+This proves \Cref{eq:rounding-error}.
+
+\paragraph{Change in the ground energy.}
+The bound \Cref{eq:min-eigenvalue-rounded-hamiltonian} follows straightforwardly by applying the triangle inequality to the previous bound.
+
+
+
+\end{proof}
+
+
+\newpage
+
+\printbibliography
+
+\appendix
+\section{Graveyard}
+
+\begin{lemma}[Transitivity of almost-commutativity]\label{lem:transitivity-of-almost-commutatitivty}
+Let $A,B,C \in \mathbb{C}^{d \times d}$ be matrices. Then,
+\begin{equation}
+\| [A,C] \| \leq 2 \cdot \|A-B\| \cdot \|C\|+ \| [B,C]||.    
+\end{equation}
+\end{lemma}
+\begin{proof}
+By linearity of the commutator, we can write
+\begin{align}
+[A,C] = [A-B,C] + [B,C].    
+\end{align}
+Using the triangle inequality and the sub-multiplicativity of the operator norm, we get
+\begin{align}
+\| [A,C] \| &= \| [A-B,C] + [B,C] \| \\    
+&\leq \| [A-B,C]\| + \|[B,C] \| \\
+&= \| (A-B)C - C(A-B)\| + \|[B,C] \| \\
+&\leq \| (A-B)C\| + \|C(A-B)\| + \|[B,C] \|\\
+&\leq 2 \cdot \|A-B\| \cdot \|C\| + \| [B,C]||.
+\end{align}
+\end{proof}
+
+\AlexNote{Idea for figure: two C matrices and one A matrix. Then, add another A matrix. Snapping takes care of colored vertices}
+
+\begin{theorem}[Rounding 2 Hamiltonian Terms on a Shared Qubit]
+%\AlexNote{Statement: given Hamiltonian terms with $\epsilon$ commutativity, we generate new commuting Hamiltonian terms with power-$\epsilon$ distance}
+Let $H=H_{s, r}+H_{s, q}$, where $H_{s, r}$ and $H_{s, q}$ are two $2$-local Hamiltonian terms on a shared qubit with index $s$ such that
+$$
+\|[H_{s, r}, H_{s, q}]\| \leq \eps.
+$$
+Let $\eta \in (0,1)$ be a threshold parameter (depending on $\eps$). Then, there exist rounded $2$-local Hamiltonian terms $\tilde H_{s, r}$ and $\tilde H_{s, q}$ which commute, i.e. $[\tilde H_{s, r},\tilde H_{s, q}] = 0$, and
+\begin{equation}
+\| \tilde H_{s, r}  - H_{s, r}\| \leq 4 \max\left(\frac{\eps'}{\eta'},\frac{\eps}{\eta} \right)  \quad \text{ and } \quad
+\| \tilde H_{s, q}  - H_{s, q}\| \leq 4 \max\left(\frac{\eps'}{\eta'},\frac{\eps}{\eta} \right) 
+\end{equation}
+for some $\eta'$ and $\eps'$ \AlexNote{To Do: Figure out how to set parameters}.
+\end{theorem}
+\begin{proof}
+According to Fact~\ref{algebra-fact-pauli-decomposition}, without loss of generality, they can be written as.
+    \begin{equation}
+        H_{s,r} = \sum\limits_{\alpha = 0}^{3} A_s^{(\alpha)} \otimes \sigma_r^{(\alpha)} \quad\quad\quad H_{s,q} = \sum\limits_{\gamma = 0}^{3} B_s^{(\gamma)} \otimes \sigma_q^{(\gamma)}
+    \end{equation}
+Since $\|[H_{s, r}, H_{s, q}]\| \leq \eps$, then for all $\alpha, \gamma$ we have $\|[A_s^{(\alpha)}, B_s^{(\gamma)}]\| \leq \eps$ by \Cref{lem:comm-propagates-down}.    
+
+Let $G_H = (V_A,V_B,E)$ denote the complete bipartite graph where
+\begin{itemize}
+    \item the vertex set $V_A$ consists of four $2 \times 2$ matrices $\{A_s^{(\alpha)}\}_{\alpha=0}^3$;
+    \item the vertex set $V_B$ consists of four $2 \times 2$ matrices $\{B_s^{(\gamma)}\}_{\gamma=0}^3$;
+\item the edge set $E$ contains edges between each all pairs $A_s^{(\alpha)}$ and $B_s^{(\gamma)}$ for $\alpha,\gamma$, specifying that the matrices pair-wise almost commute, i.e., $\|[A_s^{(\alpha)}, B_s^{(\gamma)}]\| \leq \eps$.
+\end{itemize}
+Notice that we do not have control over the spectral properties of the families $\{A_s^{(\alpha)}\}_\alpha$ and $\{B_s^{(\gamma)}\}_\beta$. To remedy this, we choose a threshold parameter $\eta \in (0,1)$ which will allow us to treat gapped and non-gapped matrices separately.
+
+We now describe our rounding procedure which will sequentially replace all of the \textbf{black edges} in the graph $G_H$ with \textbf{\textcolor{DarkGreen}{green edges}}; here, we call an edge $(a,b)$ corresponding to some pair of $2 \times 2$ matrices $a$ and $b$
+\begin{itemize}
+    \item a \textbf{black edge}, if 
+$    
+\|[a,b]\| >0$, and we call it
+\item a 
+\textbf{\textcolor{DarkGreen}{green edge}}, if $    
+[a,b]=0$.
+\end{itemize}
+Let $\tilde{V}_A = \tilde{V}_B= \emptyset$. We will use these two sets to keep track of the matrices which have been rounded to commuting ones. Our rounding procedure takes place as follows:
+\begin{enumerate}
+\item \emph{(Initial snapping:)} For all vertices $a \in V_A$ and $b \in V_B$ with gap $\Delta(a),\Delta(b) < \eta$, we
+\begin{itemize}
+    \item add $\mathrm{Snap}(a)$ to $\tilde{V}_A$ and $\mathrm{Snap}(b)$ to $\tilde{V}_B$.
+
+    \item delete $a$ from $V_A$ and $b$ from $V_B$.%, as well as all edges in $E$ which involve $a$ or $b$.
+\end{itemize}
+
+\item \emph{(Iterative pinching:)} For the remaining $a \in V_A$ and $b \in V_B$ with $\Delta(a),\Delta(b) \geq \eta$, we
+\begin{itemize}
+\item pick the first vertex in $V_B$, say $b$. Next, for all $a \in V_A$, we add $\mathrm{Pinch}_b(a)$ to $\tilde{V}_A$. Finally, we remove $b$ from $V_B$ and add it to $\tilde{V}_B$.
+
+\item Next, we pick the first vertex in $\tilde{V}_A$ which we added in the previous step, say $a$. Then, for all remaining $b \in V_B$, we add $\mathrm{Pinch}_a(b)$ to $\tilde{V}_B$.
+\end{itemize}
+\end{enumerate}
+We now claim that the complete bipartite graph $\tilde{G}_H = (\tilde{V}_A,\tilde{V}_B,\tilde{E})$ has the property that all edges in $\tilde{E}$ between $\tilde{V}_A$ and $\tilde{V}_B$ are \textbf{\textcolor{DarkGreen}{green}}; moreover, the vertices in $\tilde{V}_A$ and $\tilde{V}_B$ are still somewhat \emph{close} to their initial counterparts in $V_A$ and $V_B$, respectively.
+
+To see this, we first analyze the effects of our \emph{initial snapping} step. Note that, for all vertices $a \in V_A$ and $b \in V_B$ with gap $\Delta(a),\Delta(b) < \eta$, we have
+\begin{equation}
+\| a- \mathrm{Snap}(a)\| = \Delta(a) \,< \, \eta \quad\,\, \text{ and } \quad \,\, \| b- \mathrm{Snap}(b)\| = \Delta(b) \, < \, \eta.   
+\end{equation} 
+Moreover, because the snapped vertices correspond to matrices which are multiples of the identity matrix, so far all edges between $\tilde{V}_A$ and $\tilde{V}_B$ are \textbf{\textcolor{DarkGreen}{green}}. 
+
+Next, we analyze the effects of \emph{iterative pinching} on the remaining vertices $a \in V_A$ and $b \in V_B$ with $\Delta(a),\Delta(b) \geq \eta$. During the first step of the procedure, we pick the first vertex $b$ in $V_B$, and pinch all of the elements in $a \in V_A$ by $b$. According to \Cref{lem:iterative-pinching}, all of the new vertices $\mathrm{Pinch}_b(a)$ which are added to $\tilde{V}_A$ have the following properties:
+\begin{itemize}
+    \item $\|a - \mathrm{Pinch}_b(a) \| \leq \frac{\eps}{\eta}$;
+
+    \item  $\mathrm{Pinch}_b(a)$ is $\eta'$-gapped for $\eta ' = \eta - \frac{2\eps}{\eta}$, and
+    \item $\mathrm{Pinch}_b(a)$ commutes with $b$.
+\end{itemize}
+Moreover, by \Cref{lem:transitivity-of-almost-commutatitivty}, we also know that for all $b' \in V_B \setminus \{b\}$ it holds that
+\begin{equation}
+\|[\mathrm{Pinch}_b(a),b']\| \leq 2\cdot \| \mathrm{Pinch}_b(a) -a \| \cdot \|b\| + \|[a,b']\| \leq \frac{2\eps}{\eta} + \eps =: \eps'.
+\end{equation}
+\AlexNote{I'm assuming $\|b\| \leq 1$ ... should be fine right?}\ \\
+In the next step, we pick the first vertex $a$ in $\tilde{V}_A$ and, for all remaining $b \in V_B$, we add $\mathrm{Pinch}_a(b)$ to $\tilde{V}_B$. According to \Cref{lem:iterative-pinching}, the new vertices $\mathrm{Pinch}_a(b)$ which are added to $\tilde{V}_B$ have the following properties:
+\begin{itemize}
+    \item $\|b - \mathrm{Pinch}_a(b) \| \leq \frac{\eps'}{\eta'}$;
+
+    \item  $\mathrm{Pinch}_a(b)$ is $\eta''$-gapped for $\eta'' = \eta' - \frac{2\eps'}{\eta'}$, and
+    \item $\mathrm{Pinch}_a(b)$ commutes with $a$.
+\end{itemize}
+Because our \emph{iterative pinching} procedure only ever produces vertices which are gapped, the transitivity lemma (\Cref{lem:transitivity}) applies and all edges in $\tilde{E}$ with respect to the complete bipartite graph $\tilde{G}_H = (\tilde{V}_A,\tilde{V}_B,\tilde{E})$ are now \textbf{\textcolor{DarkGreen}{green}}.
+
+Let $\tilde H= \tilde H_{s, r}+ \tilde H_{s, q}$, where $\tilde H_{s, r}$ and $\tilde H_{s, q}$ are two $2$-local Hamiltonian terms which we obtain by replacing each matrix in $\{A_s^{(\alpha)}\}_{\alpha=0}^3$ and $\{B_s^{(\gamma)}\}_{\gamma=0}^3$ by their corresponding rounded matrices $\{\tilde A_s^{(\alpha)}\}_{\alpha=0}^3$ in $\tilde{V}_A$ and $\{\tilde B_s^{(\gamma)}\}_{\gamma=0}^3$ in $\tilde{V}_B$, respectively. Then, the rounded Hamiltonian terms commute, i.e. $[\tilde H_{s, r},\tilde H_{s, q}] = 0$, and we have
+\begin{align}
+\| \tilde H_{s, r}  - H_{s, r}\| &= \left\|\sum\limits_{\alpha = 0}^{3} (\tilde A_s^{(\alpha)} -  A_s^{(\alpha)})  \otimes \sigma_r^{(\alpha)} \right\|\\
+&\leq \sum\limits_{\alpha = 0}^{3} \left\| (\tilde A_s^{(\alpha)} -  A_s^{(\alpha)})  \otimes \sigma_r^{(\alpha)} \right\|\\
+&= \sum\limits_{\alpha = 0}^{3} \| \tilde A_s^{(\alpha)} -  A_s^{(\alpha)} \| \cdot \underbrace{\| \sigma_r^{(\alpha)}\|}_{=1} \leq 4 \max\left(\frac{\eps'}{\eta'},\frac{\eps}{\eta} \right).
+\end{align}
+Similarly, we can show $\| \tilde H_{s, q}  - H_{s, q}\| \leq 4 \max\left(\frac{\eps'}{\eta'},\frac{\eps}{\eta} \right)$.
+\end{proof}
+\end{document}
+
+
+
+
+

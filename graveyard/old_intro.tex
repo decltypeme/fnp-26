@@ -1,0 +1,75 @@
+
+\subsubsection{Commutativity in the World of Qubit Operators}
+\paragraph{Pinching any matrix by a hermitian projector:}
+Let $M$ be any matrix and $P$ be a hermitian projector. There is a folklore method (given in \cite{overlapping}, stackexchange, and maybe other places) to neatly  \textbf{\emph{``pinch''}} $M$ by $P$ as follows:
+\begin{equation}
+    M' := PMP + (I-P)M(I - P).
+\end{equation}
+The new ``pinched'' operator $M'$ commutes with $P$. Furthermore, $M'$ is at a distance (in operator norm) exactly $\|[P, M]\|$ from $M$. This technique transforms a matrix $M$ and a hermitian projector $P$ that $\eps$-almost commute into a new matrix $M'$ and the same hermitian projector $P$ such that the output exactly commute and the matrix $M$ travels to $M'$ a distance exactly $\eps$.
+
+\paragraph{Pinching any matrix by a hermitian matrix (\Cref{thm:pinch}):}
+Let $N$ be any $2 \times 2$ hermitian matrix. Without loss of generality, it can be written as:
+\begin{equation}
+\label{eqn:hermitian-2-2}
+    N = \lambda_1 P + \lambda_2 (I - P)
+\end{equation}
+where $P$ is a hermitian projector. For brevity, let $\Delta(N) := |\lambda_2 - \lambda_1|$ be the spectral gap of the hermitian matrix $N$. We will say that a $2 \times 2$ matrix $N$ is $\eta$-gapped if $\Delta(n) \geq \eta$.
+
+Now, let $M$ be any matrix and consider the following ``pinching'' of $M$ by $N$ (which will basically be the pinching of $M$ by the underlying hermitian projector $P$):
+\begin{equation}
+    M' := PMP + (I-P)M(I-P).
+\end{equation}
+The resulting ``pinched'' operator $M'$ commutes with $N$. Furthermore, $M'$ is at distance $\frac{\|[M, N]\|}{\Delta(N)}$ from $M$. This result, proven in \Cref{thm:pinch}, shows how to transform a matrix $M$ and a hermitian $\eta$-gapped qubit operator $N$ where $M$ and $N$ happen to $\eps$-almost commute into a new Matrix $M'$ and the same hermitian operator $N$ such that the output exactly commute and $M'$ is at distance at most $\frac{\eps}{\eta}$ from $M$.
+
+\paragraph{What about hermitian operators with small gap? (\Cref{lemma:snapping-hermitian-qubit-hermitian-operator})} The technique we just explained works for $\eta$-gapped hermitian operators. The distance that the pinched matrix travels by increases as $\eta$ decreases. What about hermitian operators of a small spectral gap $\eta$? In this case, instead of pinching $M$ by $N$, we actually ``snap'' $N$ into a multiple of the identity:
+
+\begin{equation}
+    N' := \lambda_1 I.
+\end{equation}
+Multiples of the identity commute with any operator including $M$. The distance between $N$ and its snapped counterpart $N'$ is $\Delta(N)$. This result is proven in \Cref{lemma:snapping-hermitian-qubit-hermitian-operator}.
+
+\AnandNote{Note that we are using the qubit structure in two crucial ways here. Firstly, the initial step of ``gap or snap'' only works in the qubit case: in the qudit case, it is possible for operators to have no spectral gap but also not be snappable to identity. Secondly, in computing the rounding error, we will need to use transitivity to compute the commutator between an $A^\alpha$ and a pivot that comes from the decomposition of the same Hamiltonian term, and transitivity only holds for qubit operators.}
+
+\paragraph{Transitivity of Commutativity for Hermitian Qubit Operators:}
+Commutativity of hermitian qubit operators is not a transitive relation in general. For example, let $A := X$ (Pauli X matrix), let $C:= Z$ (Pauli Z matrix), and let $B := I$. Although $A = X$ commutes with $B = I$ and $B = I$ commutes with $C = Z$, it does not follow that $A = X$ commutes with $C = Z$. In fact the Pauli matrices $X$ and $Z$ anti-commute.
+
+Interestingly, however, when the intermediate hermitian operator $B$ is $\eta$-gapped for any $\eta > 0$, we get some interesting transitivity properties. Concretely, let $A, B, C$ be hermitian $2 \times 2$ matrices where $\Delta(B) \geq \eta > 0$. Then the following hold.
+\begin{enumerate}
+    \item \Cref{lem:transitivity}: If $A$ commutes with $B$ and $B$ commutes with $C$, then $A$ commutes with $C$.
+    \item \Cref{lem:transitivity-almost}: If $\|A\| \leq 1$, $\|C\| \leq 1$, and $\|[A,B]\| \leq \| [B, C] \| \leq \eps$, then $\|[A, C]\| \leq \frac{6\eps}{\eta}$.
+\end{enumerate}
+
+\subsubsection{Moving to Operators on $2$ Qubits}
+Let's now move from qubit operators to operators on $2$ qubits. We will exploit the \emph{local Pauli decomposition} of any $4 \times 4$ matrix $M$ into $4$ local $2 \times 2$ matrices $\{A^{(\alpha)}\}_{\alpha = 0}^{3}$ (we will also refer to them as \emph{components}) as follows (\Cref{algebra-fact-pauli-decomposition}):
+\begin{equation}
+    M = \sum\limits_{\alpha = 0}^{3} A^{(\alpha)} \otimes \sigma^{(\alpha)}
+\end{equation}
+where $\left(\sigma^{(0)}, \sigma^{(1)}, \sigma^{(2)}, \sigma^{(3)}\right) = \left(I, X, Y, Z\right)$ are the Pauli Matrices. Two Hamiltonian terms $H_{\{s,r\}}$ and $H_{\{s, q\}}$ that overlap on the $s$-th qubit where $r \neq q$ can be decomposed as follows:
+    \begin{equation}
+        H_{\{s,r\}} = \sum\limits_{\alpha = 0}^{3} A_s^{(\alpha)} \otimes \sigma_r^{(\alpha)} \quad\quad\quad H_{\{s, q\}} = \sum\limits_{\gamma = 0}^{3} B_s^{(\gamma)} \otimes \sigma_q^{(\gamma)}.
+    \end{equation}
+It turns out that $H_{\{s,r\}}$ exactly commutes with $H_{\{s, q\}}$ if and only if for all of the $16$ pairs $\left(\alpha, \gamma\right)$, the component $A^{(\alpha)}$ exactly commutes with the component $B^{(\gamma)}$.
+
+We have seen how to transform a pair of $2 \times 2$ $\eta$-gapped matrices that $\eps$-almost commute into a pair of commuting matrices where each component is $\frac{\eps}{\eta}$-close to its original counterpart. Before attempting to apply this rounding however to the components, we first ask the following question: if a pair of Hamiltonian terms $\eps$-almost commute, can we conclude that each pair of components $\eps$-almost commute? The answer is yes, and this is the result of \Cref{thm:comm-propagates-down}. Given this assurance, we can move forward.
+
+\paragraph{``Gap or Snap'':} If none of the components of either Hamiltonian term is $\eta$-gapped, we can ``snap'' that Hamiltonian term (say $H_{\{s,r\}}$ without loss of generality) into a $1$-local term on the $r$-th qubit which would definitely commute with $H_{\{s, q\}}$ because they act non-trivially on non-overlapping qubits. This is the result of \Cref{lemma:snapping-hamiltonian}.
+
+\paragraph{Transforming sub-gapped Hamiltonian Terms:} We can now move to consider the case where $H_{\{s,r\}}$ has at least one $\eta$-gapped component (say $A^{(\alpha^*)}$), and $H_{\{s,r\}}$ has at least one $\eta$-gapped component (say $B^{(\gamma^*)}$). Now, consider the following ``commutation manifesto'':
+\begin{enumerate}
+    \item pinch all of the components $B^{(\gamma)}$ by $A^{(\alpha^*)}$ to get $\widehat{B}^{(\gamma)}$; and
+    \item pinch all of the components $\{A^{(\alpha)}\}\setminus\{A^{(\alpha^*)}\}$ by $\widehat{B}^{(\gamma^*)}$ to get $\{\widehat{A}^{(\alpha)}\}$ where $\widehat{A}^{(\alpha^*)} = A^{(\alpha^*)}$.
+\end{enumerate}
+Here is what we get:
+\begin{enumerate}
+    \item each $\widehat{B}^{(\gamma)}$ commutes with $\widehat{A}^{(\alpha^*)} = A^{(\alpha^*)}$ (a direct consequence of pinching); similarly,
+    \item each $\widehat{A}^{(\alpha)}$ commutes with $\widehat{B}^{(\gamma^*)}$;
+    \item\label{item:intra-commutation-1} for any pair $\alpha \neq \alpha'$, $\widehat{A}^{(\alpha)}$ commutes with $\widehat{A}^{(\alpha')}$ (by transitivity of commutativity for hermitian qubit operators - \Cref{lem:transitivity} - because both commute with $\widehat{B}^{(\gamma^*)}$); similarly,
+    \item\label{item:intra-commutation-2} for any pair $\gamma \neq \gamma'$, $\widehat{B}^{(\gamma)}$ commutes with $\widehat{B}^{(\gamma')}$ (by transitivity of commutativity for hermitian qubit operators - \Cref{lem:transitivity} - because both commute with $\widehat{A}^{(\alpha^*)}$); and
+    \item\label{item:inter-commutation} for any pair $(\alpha, \beta)$, $\widehat{A}^{(\alpha)}$ commutes with $\widehat{B}^{(\gamma)}$ (by transitivity because both commute with $\widehat{A}^{(\alpha^*)}$.
+\end{enumerate}
+\Cref{item:intra-commutation-1} and \Cref{item:intra-commutation-2} are interesting byproducts that we did not aim for. Our procedure aimed at achieving an ``inter-commutativity'' property (\Cref{item:inter-commutation}): $\left[\widehat{A}^{(\alpha)}, \widehat{B}^{(\gamma)}\right] = 0$, but we additionally get an ``intra-commutativity'' property as a byproduct of the procedure described above: $\left[\widehat{A}^{(\alpha)}, \widehat{A}^{(\alpha')}\right] = \left[\widehat{B}^{(\gamma)}, \widehat{B}^{(\gamma')}\right] = 0$. This gives rise to a simplified procedure that might seem ``unnatural'' at its face, but achieves the desired result. The idea is that since the components of each term are going to ``intra-commute'' anyway, we could then choose a ``pivot'' in any of the components and ``pinch'' everything by it. 
+
+\paragraph{One-Shot Rounding:} Pinch each component in $\{A^{(\alpha)}\}$ as well as $\{B^{(\gamma)}\}$ by $A^{(\alpha^*)}$ to get $\{\widehat{A}^{(\alpha)}\}$ and $\{\widehat{B}^{(\gamma)}\}$.
+
+
+\IslamNote{Add a couple of lines referring to the triangle subsection for how to transform three hamiltonian terms.}

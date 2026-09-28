@@ -1,0 +1,510 @@
+\section{Rounding by pinching}
+
+\IslamNote{Need to give proper credit to stackexchange and Overlapping qubits paper.}
+
+\begin{fact}[Projector Icebreakers]\label{I-minus-P}
+    If $P$ and $Q$ are (Hermitian) projectors, then:
+    \begin{enumerate}
+        \item $P^\bot = (I - P)$ is a (hermitian) projector;
+        \item $\left(2P - I\right)$ is involutive (i.e. $\left(2P - I\right)^2 = I$);
+        \item $P P^\bot = 0$;
+        \item $[P, P^\bot] = 0$;
+        \item $QPQ$ and $Q^\bot P Q^\bot$ are (hermitian) projectors; and
+        \item $P' := QPQ + Q^\bot P Q^\bot$ are (hermitian) projectors.
+    \end{enumerate}
+Moreover, if $Q$ is a Hermitian projector, then:
+\begin{enumerate}
+\setcounter{enumi}{6}
+    \item $U := (2Q - I)$ is Hermitian and unitary;
+    \item $Q\ U = Q$.
+    \item $Q^\bot\ U = -Q^\bot$.
+    \item $\| Q\| = 1$.
+\end{enumerate}
+Furthermore, if $S$ and $T$ are two Hermitian Projectors orthogonal to each other (i.e. $\{S, T\}$ are orthonormal projectors), then:
+\begin{enumerate}
+\setcounter{enumi}{8}
+    \item $S^\bot T = T S^\bot = T$; and
+    \item $S^\bot T^\bot = T^\bot S^\bot = I - (S + T)$.
+\end{enumerate}
+Inductively, we also have for any $\{T_1, \dots, T_r\}$ set of orthonormal projectors, and any permutation $\pi: [r] \to [r]$
+\begin{enumerate}
+\setcounter{enumi}{10}
+    \item $T_{\pi(1)}^\bot T_{\pi(2)}^\bot\dots T_{\pi(r)}^\bot = I - (\sum\limits_{k = 1}^r T_k)$.
+\end{enumerate}
+
+
+\end{fact}
+\begin{proof}
+    I will prove \# 6.
+    \begin{align*}
+        P'^2 &= \left(QPQ + Q^\bot P Q^\bot\right)^2\\
+        &= (QPQ)^2 + QPQ Q^\bot P Q^\bot + Q^\bot P Q^\bot QPQ + \left(Q^\bot P Q^\bot\right)^2\\
+        &= (QPQ)^2 + 0 + 0 + \left(Q^\bot P Q^\bot\right)^2 & QQ^\bot = Q^\bot Q = 0\\
+        &= QPQ + Q^\bot P Q^\bot & QPQ \text{ and } Q^\bot P Q^\bot \text{ are projectors}\\
+        &= P'.
+    \end{align*}
+\end{proof}
+
+\begin{fact}[Spectral Theorem with a Cute Fact]
+    Let $B$ be a Hermitian Operator $(B^\dagger = B)$ on a $d$-dimensional space. Then, there exist:
+\begin{enumerate}
+    \item a positive integer $0 < r \leq d$;
+    \item a list of orthonormal projectors $\left(B_1, \dots, B_j, \dots, B_{r}\right)$; and 
+    \item a list of non-zero real numbers (eigenvalues) in strictly increasing order of their absolute value $|b_1| < |b_2| <\dots < |b_r|$.
+\end{enumerate}
+ such that:
+\begin{equation}
+    B = \sum\limits_{j = 1}^{r} b_j B_j.
+\end{equation}
+Furthermore, define the ``support projection'' of $B$ to be $\Pi_B := \sum\limits_{j = 1}^r B_j$ and $\Pi_B^\bot := I - \Pi_B$. Then:
+\begin{enumerate}
+    \item $\Pi_B$ and $\Pi_B^\bot$ are hermitian projectors;
+    \item $\Pi_B\ B = B\ \Pi_B = B$; and
+    \item $\Pi_B^\bot\ B = B \ \Pi_B^\bot = 0$.
+    \item $\|\Pi_B - B \| \leq \max_{j} | b_j - 1|\leq 1 + \| B \|$.
+    \item If $b_1 > 0$, then $\|\Pi_B - B \| \leq \max_{j} |b_j - 1|\leq \| B \|$.
+\end{enumerate}
+\end{fact}
+\begin{proof}
+    \begin{align*}
+        \|\Pi_B - B \| &= \|\Pi_B - \Pi_B\ B \| \\
+        &= \|\Pi_B \left(I - B\right)\|\\
+        &\leq \|\Pi_B\| \cdot \|I - B\|\\
+        &= \|I - B\| & \|\Pi_B\| = 1\\
+        &= \max_{j} |b_j - 1|\\
+        &\leq 1 + \|B\|
+    \end{align*}
+\end{proof}
+
+
+
+% \begin{proof}
+%     \begin{align*}
+%         (I - P)^2 &= I^2 - 2P + P^2\\
+%         &= I - 2P + P & (P^2 = P)\\
+%         &= (I - P).
+%     \end{align*}
+% \end{proof}
+
+\begin{lemma}[A projector sandwich commutes with the bread.]
+    Let $P, Q$ be projectors. Then,
+    \[[QPQ, Q] = [QPQ, Q^\bot] = [Q^\bot P Q^\bot, Q^\bot] = [Q^\bot P Q^\bot, Q] = 0.\]
+\end{lemma}
+\begin{proof}
+    \begin{align*}
+        [QPQ, Q] &= QPQ^2 - Q^2PQ\\
+        &= QPQ - QPQ\\
+        &= 0.
+    \end{align*}
+
+\noindent To see why the second commutator is zero, observe:
+\[
+    [QPQ, Q^\bot] = QPQQ^\bot - Q^\bot QPQ = 0 - 0 = 0.
+\]
+
+\noindent The third and fourth commutators can be proven to be zero as a corollary by applying the above with the projector $Q^\bot$ in place of $Q$.
+\end{proof}
+
+\begin{fact}
+    Let $A$ and $Q$ be $n \times n$ matrices where $Q$ is a projector (i.e. $Q^2 = Q$). Define:
+    \begin{equation}
+        X := QAQ + Q^\bot AQ^\bot
+    \end{equation}
+    
+    \noindent Then, $[X, Q] = 0$.
+    
+    \noindent If $Q$ is a hermitian projector, then $\|X - A\| = \|[A,Q]\|$.
+\end{fact}
+\begin{proof}
+    \begin{align*}
+    \| X - A \| &= \| QAQ + Q^\bot A Q^\bot - A\|\\
+    &= \| QAQ + (I-Q)A(I-Q) - A \|\\
+    &= \| QAQ + A - AQ - QA + QAQ - A \|\\
+    &= \| QAQ - AQ - QA + QAQ \|\\
+    &= \|(Q - I)AQ - QA(I - Q) \|\\
+    &= \|(I - Q)AQU + QA(I - Q) U \| & \cdot \times \|-U\| = 1\\
+    &= \|(I - Q)AQ + QA(Q - I) \|\\
+    &= \| AQ - QAQ + QAQ - QA\|\\
+    &= \| AQ - QA\|\\
+    &= \|[A, Q] \|.
+\end{align*}
+\end{proof}
+
+\begin{theorem}[Pinching a Projector]
+    Let $P$ and $Q$ be (hermitian) projectors and let 
+    \[P' := QPQ + Q^\bot P Q^\bot.\]
+    Then, $P'$ is a (hermitian) projector such that $[P', Q] = 0$. 
+    
+    \noindent Furthermore, if $P$ is any projector and $Q$ is a hermitian projector, then $\| P' - P \| = \|[P,Q] \| $.
+\end{theorem}
+\begin{proof}
+$P'$ is a (hermitian) projector by Fact~\ref{I-minus-P}. We now prove it commutes with $Q$.
+
+\begin{align*}
+    [P', Q] &= [QPQ + Q^\bot P Q^\bot, Q]\\
+    &= [QPQ, Q] + [Q^\bot P Q^\bot, Q]\\
+    &= 0 + 0.
+\end{align*}
+When $Q$ is a hermitian projector, $U := (2Q - I)$ is unitary with $\|U\| = \|-U\| = 1$. %Further, note that $Q = \frac{I + U}{2}$ and $Q^\bot = \frac{I - U}{2}$.
+
+\end{proof}
+
+%\noindent Let's now look at what happens when you try to ``pinch'' using an oblique projector (bread).
+
+
+
+\begin{lemma}[Pinching any matrix by a hermitian projector]
+Let $A$ be an operator on a $d$-dimensional space. For a hermitian projector $Q$ on the same space, define:
+\begin{equation}
+    [A \overset{\text{pinch}}{\gets} Q] :=  Q A Q + (I-Q) A (I - Q).
+\end{equation}
+
+% \noindent According to the spectral theorem, there exist:
+% \begin{enumerate}
+%     \item a positive integer $0 <r \leq d$;
+%     \item a list of orthonormal projectors $\left(A_1, \dots, A_j, \dots, A_{r}\right)$; and 
+%     \item a list of real numbers (eigenvalues) in non-decreasing order of their absolute value $\left(a_1, \dots, a_j, \dots, a_{r}\right)$
+% \end{enumerate}
+%  such that:
+% \begin{equation}
+%     A = \sum\limits_{j = 1}^{r} a_j A_j
+% \end{equation}
+
+\noindent Then,
+\begin{enumerate}
+    \item $[A \overset{\text{pinch}}{\gets} Q]$ commutes with $Q$ i.e. $[[A \overset{\text{pinch}}{\gets} Q], Q] = 0$; and
+    \item $\| [A \overset{\text{pinch}}{\gets} Q] - A\| = \|[A,Q]\|$.
+\end{enumerate}
+
+\noindent If $A$ is hermitian, then $[A \overset{\text{pinch}}{\gets} Q]$ is Hermitian.
+
+\end{lemma}
+
+\begin{proof}
+To prove that $[A \overset{\text{pinch}}{\gets} Q]$ is Hermitian.
+
+\begin{align*}
+    [A \overset{\text{pinch}}{\gets} Q]^\dagger &=  \left(Q A Q + (I-Q) A (I - Q)\right)^\dagger \\
+    &= Q^\dagger A^\dagger Q^\dagger + (I - Q)^\dagger A^\dagger (I-Q)^\dagger\\
+    &= Q A Q + (I-Q) A (I - Q)\\
+    &= [A \overset{\text{pinch}}{\gets} Q]
+\end{align*}
+
+\noindent The others follow from the previous results.
+
+% \noindent Now, let's prove that $[A \overset{\text{pinch}}{\gets} Q]$ commutes with $Q$.
+
+% \begin{align*}
+%     \left[[A \overset{\text{pinch}}{\gets} Q], Q\right] &= \left[Q A Q + (I-Q) A (I - Q), Q\right]\\
+%     &= \left[Q \left(\sum\limits_{j = 1}^{r} a_j A_j\right) Q + (I-Q) \left(\sum\limits_{j = 1}^{r} a_j A_j\right) (I - Q), Q\right]\\
+%     &= \left[\sum\limits_{j = 1}^r a_j Q A_jQ + a_j(I - Q)A_j(I-Q), Q\right]\\
+%     &= \sum\limits_{j = 1}^r a_j \left[Q A_jQ + (I - Q)A_j(I-Q), Q\right]\\
+%     &= \sum\limits_{j = 1}^r a_j \left[[A_j \overset{\text{pinch}}{\gets} Q], Q\right]\\
+%     &= \sum\limits_{j = 1}^r a_j \cdot 0 = 0.
+% \end{align*}
+
+% \noindent Now, we bound the distance.
+
+% \begin{align*}
+%     \| [A \overset{\text{pinch}}{\gets} Q] - A \| &=  \| Q A Q + (I-Q) A (I - Q) - A \|\\
+%     &= \| Q \left(\sum\limits_{j = 1}^{r} a_j A_j\right) Q + (I-Q) \left(\sum\limits_{j = 1}^{r} a_j A_j\right) (I - Q) - \left(\sum\limits_{j = 1}^{r} a_j A_j\right) \|\\
+%     &= \| \sum\limits_{j = 1}^{r} a_j \left(Q A_j Q + (I-Q) A_j (I - Q) - A_j\right) \|\\
+%     &\leq \sum\limits_{j = 1}^{r} |a_j| \cdot \| \left(Q A_j Q + (I-Q) A_j (I - Q) - A_j\right) \|\\
+%     &= \sum\limits_{j = 1}^{r} |a_j| \cdot  \| [A_j \overset{\text{pinch}}{\gets} Q] - A_j \|\\
+%     &= \sum\limits_{j = 1}^{r} |a_j| \cdot  \| [A_j , Q] \|\\
+%     &\leq r \cdot |a_r| \max_j{\| [A_j , Q] \|}\\
+%     &\leq d \cdot \|A\|\|[A, Q]\| & \text{is that legal?}
+% \end{align*}
+    
+\end{proof}
+
+
+
+
+% Old stuff
+
+\section{Old stuff}
+\begin{lemma}[Pinching a hermitian operator by a set of orthonormal projectors]
+
+Let $A$ be a hermitian operator with spectral decomposition:
+\begin{equation}
+    A = \sum\limits_{j = 1}^r a_j A_j
+\end{equation}
+and let $\mathcal{Q} = \left\{Q_1, \dots, Q_m\right\}$ be a set of orthonormal projectors.
+Define:
+\begin{equation}
+    \Pi_{\mathcal{Q}} := \sum\limits_{Q \in \mathcal{Q}} Q \quad\quad\quad \text{ and } \quad\quad\quad \Pi_{\mathcal{Q}}^\bot := I - \Pi_{\mathcal{Q}}
+\end{equation}
+One can see that $\Pi_Q$ and $\Pi_Q^\bot$ are hermitian projectors. Then, define the pinching of $A$ by $\mathcal{Q}$ to be as follows:
+\begin{align*}
+    [A \overset{\text{pinch}}{\gets} \mathcal{Q}] &:= \left(\sum\limits_{j = 1}^m Q_j AQ_j\right) + \left(\prod\limits_{j = m}^1 Q_j^\bot\right) A  \left(\prod\limits_{j = 1}^m Q_j^\bot\right)\\
+    &= \left(\sum\limits_{j = 1}^m Q_j AQ_j\right) + (I - Q_m) \dots (I-Q_1) A (I - Q_1) \dots (I - Q_m)\\
+    &= \left(\sum\limits_{j = 1}^m Q_j AQ_j\right) + \Pi_{\mathcal{Q}}^\bot \ A\ \Pi_{\mathcal{Q}}^\bot
+\end{align*}
+Then, we can conclude the following:
+\begin{enumerate}
+    \item let $\pi: [m] \to[m]$ be any permutation, then:
+    \begin{equation}
+        [A \overset{\text{pinch}}{\gets} \mathcal{Q}] = \left[\left[\left[[A \overset{\text{pinch}}{\gets} Q_{\pi(1)}] \overset{\text{pinch}}{\gets} Q_{\pi(2)}\right]\dots\right] \overset{\text{pinch}}{\gets} Q_{\pi(m)}\right]
+    \end{equation}
+    \item $[A \overset{\text{pinch}}{\gets} \mathcal{Q}]$ is hermitian.
+    \item For any $Q \in \mathcal{Q}$, $\left[[A \overset{\text{pinch}}{\gets} \mathcal{Q}],Q\right] = \left[[A \overset{\text{pinch}}{\gets} \mathcal{Q}],Q^\bot\right] = 0$
+    \item $\left[[A \overset{\text{pinch}}{\gets} \mathcal{Q}],\Pi_{\mathcal{Q}}\right] = \left[[A \overset{\text{pinch}}{\gets} \mathcal{Q}],\Pi_{\mathcal{Q}}^\bot\right] = 0$.
+    \item $\|[A \overset{\text{pinch}}{\gets} \mathcal{Q}] - A\| \leq $
+\end{enumerate}
+    
+\end{lemma}
+\begin{proof}
+    The first one can be verified directly from the definition. To see why $[A \overset{\text{pinch}}{\gets} \mathcal{Q}]$ is hermitian, note:
+    \begin{align*}
+        [A \overset{\text{pinch}}{\gets} \mathcal{Q}]^\dagger &= \left(\left(\sum\limits_{j = 1}^m Q_j AQ_j\right) + \Pi_{\mathcal{Q}}^\bot \ A\ \Pi_{\mathcal{Q}}^\bot\right)^\dagger\\
+        &= \left(\sum\limits_{j = 1}^m Q_j^\dagger A^\dagger Q_j^\dagger \right) + (\Pi_{\mathcal{Q}}^\bot)^\dagger \ A^\dagger\ (\Pi_{\mathcal{Q}}^\bot)^\dagger\\
+        &= [A \overset{\text{pinch}}{\gets} \mathcal{Q}].
+    \end{align*}
+To see why $[A \overset{\text{pinch}}{\gets} \mathcal{Q}]$ commutes with any $Q_z \in \mathcal{Q}$, note the following.
+\begin{align*}
+    \left[[A \overset{\text{pinch}}{\gets} \mathcal{Q}], Q_z\right] &= \left(\sum\limits_{j = 1}^m Q_j AQ_j Q_z\right) + \Pi_{\mathcal{Q}}^\bot \ A\ \Pi_{\mathcal{Q}}^\bot Q_z - \left(\sum\limits_{j = 1}^m Q_z Q_j AQ_j\right) - Q_z\Pi_{\mathcal{Q}}^\bot \ A\ \Pi_{\mathcal{Q}}^\bot\\
+    &= Q_z A Q_z - Q_z A Q_z = 0.
+\end{align*}
+Then $[A \overset{\text{pinch}}{\gets} \mathcal{Q}]$ commutes with $\Pi_{\mathcal{Q}}$ by linearity of the commutator.
+Now, let's bound the distance. For ease of notation, let $X_{j}$ be $[A \overset{\text{pinch}}{\gets} \{Q_1, \dots, Q_j\}]$. Then, $X_m = [A \overset{\text{pinch}}{\gets} \mathcal{Q}]$.
+\begin{align*}
+    \|[A \overset{\text{pinch}}{\gets} \mathcal{Q}] - A\| &= \|[A \overset{\text{pinch}}{\gets} \mathcal{Q}] - X_{m-1} + X_{m-1} - A\|\\
+    &\leq \|[X_{m-1} \overset{\text{pinch}}{\gets} Q_m] -X_{m-1}\| + \|X_{m-1} - A\| & \triangle  \text{ inequality}\\
+    &\leq r |a_r| \max_{j}\| [A_j, Q_k]\| + \|X_{m-1} - A\|\\
+    &\leq \sum\limits_{k = 1}^m r |a_r| \max_{j}\| [A_j, Q_k]\| & \triangle  \text{ inequality $m$ times}\\
+    &\leq m \cdot r \cdot |a_r|\cdot \max_{j, k}\| [A_j, Q_k]\|\\
+    &\leq m \cdot d \cdot \|A\|\cdot \max_{k}\| [A, Q_k]\|
+\end{align*}
+\end{proof}
+
+
+\begin{lemma}[Pinching a hermitian operator by a hermitian operator]
+Let $A = \sum\limits_{j = 1}^r a_j A_j$ and $B = \sum\limits_{k = 1}^m b_k B_k$ be the spectral decomposition of two Hermitian operators $A$ and $B$ on a $d$-dimensional space with bounded norm $\|A\| \leq a$ and $\|B\| \leq b$. Define $\mathcal{B} := \{B_k\}$ and define:
+\begin{equation}
+    [A \overset{\text{pinch}}{\gets} B] :=  [A \overset{\text{pinch}}{\gets} \mathcal{B}]
+\end{equation}
+
+\noindent Then,
+\begin{enumerate}
+    \item $[A \overset{\text{pinch}}{\gets} B]$ is Hermitian;
+    \item $[A \overset{\text{pinch}}{\gets} B]$ commutes with $B$ i.e. $[[A \overset{\text{pinch}}{\gets} B], B] = 0$; and
+    \item $\| A - [A \overset{\text{pinch}}{\gets} B] \| \leq$ (same bound from previous lemma).
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+
+\begin{align*}
+     [[A \overset{\text{pinch}}{\gets} B], B] &= \left[\sum\limits_{k} B_k A B_k + \Pi_{\mathcal{Q}}^\bot \ A\ \Pi_{\mathcal{Q}}^\bot + , B\right]\\
+     &= \sum\limits_{k, q} b_q\left[B_k A B_k + \Pi_{\mathcal{Q}}^\bot \ A\ \Pi_{\mathcal{Q}}^\bot + , B_q\right] = 0.
+    % [\sum\limits_{k} B_k A B_k, B] + \left[\Pi_{\mathcal{Q}}^\bot \ A\ \Pi_{\mathcal{Q}}^\bot, B\right]\\
+    % &= \sum\limits_{k, q} [B_k A B_k, b_q B_q]\\
+    % &= \sum\limits_{k, q} b_q \delta_{k,q} [B_k A B_k, B_k]\\
+    % &= 0.
+\end{align*}
+
+The distance is the same one from the previous lemma.
+
+\end{proof}
+
+\begin{example}[Oblique Projector]
+    Consider the projector:
+    \begin{equation}
+        Q = E_{11} + E_{12} = \begin{pmatrix}
+            1 & 1\\
+            0 & 0
+        \end{pmatrix}.
+    \end{equation}
+    One can verify that it is a projector because $Q^2 = Q$. However, it is \textbf{oblique} and not orthogonal (Hermitian) because:
+    \begin{equation}
+        Q^\dagger = \left(E_{11} + E_{12}\right)^\dagger = E_{11} + E_{21} = \begin{pmatrix}
+            1 & 1\\
+            0 & 0
+        \end{pmatrix}^\dagger = \begin{pmatrix}
+            1 & 0\\
+            1 & 0
+        \end{pmatrix} \neq Q.
+    \end{equation}
+    By looking at $(2Q - I)$ and $(2Q - I)^\dagger$, we will see that neither of them is unitary nor Hermitian.
+    \begin{equation}
+        2Q - I = 2 \cdot\begin{pmatrix}
+            1 & 1\\
+            0 & 0
+        \end{pmatrix} - \begin{pmatrix}
+            1 & 0\\
+            0 & 1
+        \end{pmatrix} = \begin{pmatrix}
+            1 & 2\\
+            0 & -1
+        \end{pmatrix}.
+    \end{equation}
+    \begin{equation}
+        (2Q-I)^\dagger = \begin{pmatrix}
+            1 & 0\\
+            2 & -1
+        \end{pmatrix} \neq \left(2Q - I\right).
+    \end{equation}
+\end{example}
+
+\begin{example}[Distance blowing larger than the commutator when $Q$ is not Hermitian; could it still be bounded within a factor???; need to check that]
+    Consider the following two oblique non-Hermitian projectors:
+    \begin{equation}
+        P = E_{11} + E_{21} = \begin{pmatrix}
+            1 & 0 \\1 & 0
+        \end{pmatrix}\quad\quad\quad Q = E_{11} + E_{12} = \begin{pmatrix}
+            1 & 1\\0 &0
+        \end{pmatrix}
+    \end{equation}
+    \begin{equation}
+        PQ = E_{11} + E_{12} + E_{21} + E_{22} = \begin{pmatrix}
+            1 & 1\\
+            1 & 1
+        \end{pmatrix}
+    \end{equation}
+    \begin{equation}
+        QP = 2E_{11} = \begin{pmatrix}
+            2 & 0\\0 & 0
+        \end{pmatrix}
+    \end{equation}
+    \begin{equation}
+        [P,Q] = PQ - QP = \begin{pmatrix}
+            -1 & 1\\ 1 & 1
+        \end{pmatrix}
+    \end{equation}
+Let's now compute the operator norm for this matrix.
+\begin{align*}
+    [P,Q]^\dagger[P,Q] = [P,Q]^2= 2I
+\end{align*}
+\noindent Thus, $2$ is the largest eigenvalue of $[P,Q]^\dagger[P,Q]$ and thus $\|[P,Q]\| = \sqrt{2}$.
+
+\noindent Now, let's compute the operator norm distance between $P'$ and $P$.
+\begin{align*}
+    D = P' - P &=  QPQ - (I-Q)P(I-Q) - P \\
+    &= 2QPQ - PQ - QP \\
+    &= 2QPQ - (PQ + QP)\\
+    &= 2\cdot 2E_{11} \left(E_{11} + E_{12}\right) - \begin{pmatrix}
+        3 & 1\\1&1
+    \end{pmatrix}\\
+    &= 4\left(E_{11} + E_{12} \right) - \begin{pmatrix}
+        3 & 1\\1&1
+    \end{pmatrix} \\
+    &= \begin{pmatrix}
+        4 & 4\\0 & 0
+    \end{pmatrix} - \begin{pmatrix}
+        3 & 1\\ 1 & 1
+    \end{pmatrix} \\
+    &= \begin{pmatrix}
+        1 & 3\\ -1 & -1
+    \end{pmatrix} .
+\end{align*}
+\begin{align*}
+    D^\dagger D &= \begin{pmatrix}
+        1 & -1 \\ 3 & -1
+    \end{pmatrix} \begin{pmatrix}
+        1 & 3\\-1 & -1
+    \end{pmatrix} = \begin{pmatrix}2 & 4\\4&10
+    \end{pmatrix}
+\end{align*}
+The eigenvalues of $D^\dagger D$ are $6 \pm 4\sqrt{2}$. Therefore, the operator norm of $D = P' - P$ is $\sqrt{6 + 4\sqrt{2}} > 3.41 > \sqrt{2}$.
+\end{example}
+
+\begin{lemma}
+    Suppose $A, B$ are 
+\end{lemma}
+
+
+
+\newpage
+\appendix
+\section{OLD: Factorizing algebras}
+
+\newcommand{\calA}{\mathcal{A}}
+\newcommand{\calL}{\mathcal{L}}
+
+Here all algebras are unital star algebras. 
+
+\begin{definition}
+    An algebra $\mathcal{A}$ is ``algebraically irreducible'' if its center consists of only the multiples of identity.
+\end{definition}
+\begin{definition}
+    An algebra $\mathcal{A} \subseteq \mathcal{L}(V)$ for some vector space $V$ is irreducible if it has no invariant subspaces.
+\end{definition}
+\begin{claim}
+If $\calA \subseteq \calL(V)$ is irreducible, then it is algebraically irreducible.
+\end{claim}
+\begin{proof}
+    Suppose not, i.e. suppose that $\calA$ is not algebraically irreducible. Then there is some element $z \in Z(\calA)$ that is not equal to a multiple of identity. This $z$ has an eigenvalue $\lambda$ and $z - \lambda I \in \calA$ and non-invertible. Consider the kernel of $z - \lambda I$. This is an invariant subspace of $\calA$: suppose $v \in \ker(z -\lambda I)$. Then for all $a \in \calA$,
+    \[ (z - \lambda I) a v = a (z - \lambda I)v = 0,\]
+    so $av \in \ker(z - \lambda I)$ as well. Moreover, since $z$ was not itself a multiple of identity, this invariant subspace is not trivial, which contradicts the irreduciblity of $\calA$.
+\end{proof}
+
+\begin{theorem}[Burnside]
+For a finite dimensional complex vector space $V$, the only irreducible subalgebra of $\calL(V)$ is $\calL(V)$ itself.
+\end{theorem}
+
+\begin{lemma}[Fact 2.13 of Aharonov and Eldar]
+    Let $\calA \subseteq \calL(V)$ be an algebra. Then there is a decomposition of $V$ into orthogonal subspaces $V_\alpha$, where each $V_\alpha$ is a tensor product of two vector spaces $V_\alpha = V^1_\alpha \otimes V^2_\alpha$ such that
+    \[ \calA \cong \bigoplus_{\alpha} \calL(V^1_\alpha) \otimes \mathbf{I}(V^2_\alpha). \]
+    
+\end{lemma}
+\begin{proof}
+    Decompose $V$ into invariant subspaces for $\calA$ as follows: let $V_0$ be an invariant subspace of $V$ under $\calA$ of minimal dimension that is not equal to $\{0\}$ (since $V$ itself is an invariant subspace, such a $V_0$ is guaranteed to exist). Write $V = V_0 \oplus V_0^\perp$. Then $V_0^\perp$ is an invariant subspace for $\calA$ as well. Moreover, since $V_0$ was of minimal dimension, $\calA$ must be irreducible restricted to $V_0$. Inductively continue this procedure on $V_0^\perp$ until there's nothing left. This gives us a decomposition
+    \[ V = V_0 \oplus V_1 \oplus \dots \]
+    where the $V_i$s are all orthogonal, and $\calA$ is irreducible on each $V_i$. By Burnside, this means that for each $V_i$, $\calA|_{V_i} = \calL(V_i)$. 
+
+    Let us now group together subspaces $V_i$ according to isomporphism as $\calA$-modules: $V_i \cong V_j$ as an $\calA$ module if there exists an ``intertwiner map'' $T_{ij}: V_i \to V_j $ which is a bijective linear map such that 
+    \[ \forall v \in V_i, a \in \calA, T_{ij}(a v) = a T_{ij}(v).\] Let us label the equivalence classes under this relation by $\alpha$, and the multiplicity of each class by $m_\alpha$. Then we can write
+    \[ V = \bigoplus_\alpha V^1_\alpha \otimes V^2_\alpha, \]
+    where $V^1_\alpha$ is a representative of this isomorphism class and $V^2_\alpha \cong \mathbb{C}^{m_\alpha}$. Now we want to claim that
+    \[ \calA \cong \bigoplus_\alpha \calL(V^1_\alpha) \otimes \mathbf{I}(V^2_\alpha).\]
+    CHAT GPT SAYS try Schur's lemma here. 
+
+    % Let's now look at the center $\calA$, which we denote $Z(\calA)$. It is not hard to see that if $M \in Z(\calA)$, then
+    % \[ M = \bigoplus_i \gamma_i \Pi_i,\]
+    % where $\Pi_i$ is the projector onto $V_i$. This is because anything that doesn't look like a multiple of identity when restricted to one of the $V_i$s will fail to commute with some element of $\calA$ (since we know that $\calA |_{V_i} = \calL(V_i)$). Moreover, every element of $\calA$ that has this form is in $Z(\calA)$. 
+
+
+
+    % \textcolor{red}{Now, let us group together $V_is$ that have the same dimension. For each unique dimension $d_\alpha$, let $m_\alpha$ be its multiplicity, and let $V_\alpha$ be the direct sum of all $V_i$s with dimension $d_\alpha$. Then we have that
+    % \[ V_\alpha = \underbrace{V^1_\alpha}_{\cong \mathbb{C}^{d_\alpha}} \otimes \underbrace{V^2_\alpha}_{\cong \mathbb{C}^{m_\alpha}} \]
+    % Moreover we get that
+    % \[ \calA \cong \bigoplus_\alpha \calL(V^1_\alpha) \otimes \mathbb{I}(V^2_\alpha). \]}
+\end{proof}
+
+\pagebreak
+
+
+\begin{claim}
+    Let $\calA \subseteq \calL(V)$ be algebraically irreducible and let $T \subseteq V $ be an invariant subspace for $\calA$ such that $a_1, a_2$ are equal in their action on $T$. Then $a_1 = a_2$.
+\end{claim}
+\begin{proof}
+    Suppose $a_1 \neq a_2$. Then $a_1 - a_2$ is nonzero but its kernel contains all of $T$. In particular, $(a_1 - a_2)$ commutes with $\calA$ on $T$. 
+\end{proof}
+
+\begin{claim}
+    Let $\calA \subseteq \calL(V)$ be an algebra over a vector space $V$ and let $S$ be an invariant subspace of $\calA$. LALALALAAL
+\end{claim}
+
+\begin{lemma}
+    Let $\mathcal{A}$ be an ``algebraically'' irreducible subalgebra of the algebra $\mathcal{L}(V)$ of linear operators on a finite-dimensional complex vector space $V$. Then we can decompose $V$ and $\mathcal{A}$ as
+    \begin{align} 
+    V &\approx S \otimes \mathbb{C}^k \\
+    \mathcal{A} &\approx \mathcal{L}(S) \otimes I_k.
+    \end{align}
+\end{lemma}
+This is Fact~2.12 of Aharonov-Eldar.
+\begin{proof}
+    Pick an arbitrary vector $v_1 \in V$. Let $S_1 = \mathcal{A}(v_1)$, i.e. the subspace consisting of all vectors that can be written as $a v_1$ for some $a \in \calA$. 
+
+    SDFLSKJDFLSDKJFLSDKFJ
+
+    We have decomposed 
+    \[ V = \bigoplus_i S_i,\]
+    where each $S_i$ is irreducible. Let's group them together into copies of the same space:
+    \[V = \bigoplus_k S_k \otimes I_{n_k}, \]
+    where $n_k$ counts the multiplicty of the space $S_k$.
+    Now because of irreducibility, we have a homomorphism from $\calA$ to $\calL(S_k)$ for each $S_k$. 
+\end{proof}
+\newpage
+
