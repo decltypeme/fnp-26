@@ -1692,7 +1692,7 @@ Our rounding procedure generates the Hamiltonian $\hat{H}$ as follows. We will h
     \[
         [\mathcal{S}_s(X),Y]=\mathcal{S}_s([X,Y]).
     \]
-    Distinct original supports share at most one qubit. If snapping removes that shared qubit from either term, the resulting terms have disjoint supports and commute exactly. Otherwise, snapping acts only on qubits private to each term, so the identity above and contractivity apply. In particular:
+    Recall that the sets of indices are distinct, so two sets of indices share at most one qubit. If snapping removes that shared qubit from either term, the resulting terms act on non-overlapping qubits and commute exactly. Otherwise, snapping acts only on qubits private to each term, so the identity above and contractivity apply. In particular:
     \begin{enumerate}
         \item $H^\snp_2$ contains $2$-local terms such that each pair of terms $\eps_2$-commute.
         \item $H^\snp_1$ contains $1$-local terms such that each pair of terms $\eps_1$-commute. For two such terms overlapping on qubit $i$, write $h^\snp_{i,j}=\mathcal{S}_j(h_{i,j})$ and $h^\snp_{i,k}=\mathcal{S}_k(h_{i,k})$, where $j\neq k$. Then
