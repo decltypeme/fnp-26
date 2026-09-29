@@ -333,13 +333,11 @@ of physical many-body Hamiltonians.
 Our rounding technique (visualized in \Cref{fig:rounding}) exploits these physical constraints, 
 and allows us to
 efficiently approximate any almost commuting $2$-local 
-Hamiltonian (on qubits) by a nearby commuting one. 
+Hamiltonian (on qubits) by a nearby commuting one. The basic idea behind our rounding scheme is that two single-qubit operators can be made to commute in two ways: if one operator has a bounded spectral gap, then the other can be ``pinched'' to be diagonal in first operator's eigenbasis; otherwise, the first operator can be ``snapped'' to a multiple of identity, which automatically commutes with the second. To apply this ``gap or snap'' idea to 2-qubit operators, we decompose such operators in a local Pauli decomposition consisting of a sum of tensor products of single-qubit operators, to which we apply our ``gap or snap'' rounding.  
 
-SAY SOMETHING ABOUT GAP AND SNAP
-
-This extends the classical $\mathsf{NP}$ containment result of Bravyi and Vyalyi~\cite{bravyi2004commutativeversionklocalhamiltonian} well
+As a corollary of our main result, we extend the classical $\mathsf{NP}$ containment result of Bravyi and Vyalyi~\cite{bravyi2004commutativeversionklocalhamiltonian} well
 beyond the commuting setting.
-In addition, the above theorem also implies a new no-go result in the context of quantum PCPs~\cite{aharonov2011complexity,Hastings2012} akin to~\cite{arad2011notepartialnogotheorem}. Specifically, it suggests that any qPCP-hard family of $2$-local qubit Hamiltonians must exhibit some moderate amount of noncommutativity: assuming $\mathsf{NP} \neq \mathsf{QMA}$, any
+In addition, our results also imply a new no-go result in the context of quantum PCPs~\cite{aharonov2011complexity,Hastings2012} akin to~\cite{arad2011notepartialnogotheorem}. Specifically, it suggests that any qPCP-hard family of $2$-local qubit Hamiltonians must exhibit some moderate amount of noncommutativity: assuming $\mathsf{NP} \neq \mathsf{QMA}$, any
 family of $2$-local qubit Hamiltonians for which the $\gamma$-LH problem is $\QMA$-hard for \emph{constant} $\gamma$ must allow for pairwise commutator norms of $\omega(\frac{1}{m^6})$.
 
 More broadly, this places almost commuting Hamiltonians in an intermediate regime between classical constraint satisfaction and fully quantum optimization. It shows that, at least for $2$-local qubit systems, genuine $\mathsf{QMA}$-hardness requires a significant departure from the structure of commuting models, thereby linking a complexity-theoretic transition to a quantitative, operator-algebraic measure of noncommutativity.
