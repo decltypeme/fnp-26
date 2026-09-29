@@ -1,0 +1,42 @@
+# LaTeX auxiliary and bibliography build files
+*.aux
+*.log
+*.out
+*.toc
+*.lof
+*.lot
+*.fls
+*.fdb_latexmk
+*.synctex
+*.synctex.gz
+*.bbl
+*.blg
+*.bcf
+*.run.xml
+*.nav
+*.snm
+*.vrb
+*.xdv
+*.dvi
+*.idx
+*.ind
+*.ilg
+*.loa
+*.lol
+*.thm
+
+# Build directories and generated manuscript PDFs (keep figure PDFs trackable)
+/build/
+/out/
+/main.pdf
+/main_qip.pdf
+/paper.pdf
+/extended-abstract.pdf
+/quantum_journal_submission/quantum_paper.pdf
+
+# Editor backups and operating-system metadata
+*~
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
