@@ -151,11 +151,11 @@ which motivates the study of \emph{almost commuting} Hamiltonians. Despite their
 
 In this work, we show how to efficiently approximate any almost commuting $2$-local qubit Hamiltonian by a commuting one: we give a new locality-preserving \emph{algorithmic rounding technique} that maps any $2$-local Hamiltonian $H=\sum_{i=1}^m h_i$ with $\|[h_i,h_j]\| \leq \eps$ to a nearby Hamiltonian
 $\hat{H}$ whose terms pair-wise commute, and which is within overall distance
-$\|H-\hat{H}\| = O(m\,\eps^{1/6})$.  
+$\|H-\hat{H}\| = O(m\,\eps^{1/3})$.
 
 As a consequence, we show that $\delta$-approximations to the ground energy for
 $\eps$-almost commuting $2$-local qubit Hamiltonians
-lie in $\mathsf{NP}$ when $\delta \gg m\eps^{1/6}$, extending the classical containment well
+lie in $\mathsf{NP}$ when $\delta \gg m\eps^{1/3}$, extending the classical containment well
 beyond the commuting setting.   Finally, we present two applications of our rounding framework: Gibbs sampling and fast Hamiltonian simulation for almost commuting systems.
 \end{abstract}
 
@@ -268,9 +268,9 @@ result, which we informally state below.
 Let $H=\sum_{i=1}^m h_i$ be an $\eps$-almost commuting $2$-local 
 Hamiltonian on $n$ qubits. Then, there exists a deterministic classical algorithm that, given as input a description of $H$ and the bound $\eps$, runs 
 in linear time and outputs a nearby commuting 2-local Hamiltonian $\hat{H}=\sum_{i=1}^m 
-\hat{h}_i$ such that $\|h_i - \hat{h}_i\| \leq O(\eps^{1/6})$, for all 
+\hat{h}_i$ such that $\|h_i - \hat{h}_i\| \leq O(\eps^{1/3})$, for all
 $i \in [m]$, and which is within overall distance 
-$\|\hat{H} - H\| \leq O(m \,\eps^{1/6})$.
+$\|\hat{H} - H\| \leq O(m \,\eps^{1/3})$.
 \end{restatable}
 To the best of our knowledge, this yields the first \emph{algorithmic} rounding technique for almost commuting $2$-local qubit Hamiltonians which produces an explicit, quantitative error bound that vanishes as $\varepsilon \rightarrow 0$, unlike naive methods that fail to take the magnitude of the noncommutativity into account
 \footnote{For a detailed comparison with the \emph{non}-constructive rounding in~\cite{arad2011notepartialnogotheorem}, see Section~\ref{sec:relatedwork}.}.
@@ -279,12 +279,12 @@ As a direct consequence of our rounding result, we show the following:
 
 
 \begin{restatable}[Formally, ~\Cref{corollary:NP-Containment}]{informaltheorem}{InformalContainment}
-    The $\eps$-almost commuting $2$-local qubit Hamiltonian problem with $m$ terms and energy promise gap\footnote{Here we mean the difference in energy thresholds for the YES and NO cases of the local Hamiltonian problem. Note that in the formal statement of \Cref{corollary:NP-Containment} we use the \emph{relative} promise gap $\gamma$, which is equal to the energy promise gap divided by $m$.} $\delta$ is contained in $\NP$ when $\delta \gg m \eps^{1/6}$.
+    The $\eps$-almost commuting $2$-local qubit Hamiltonian problem with $m$ terms and energy promise gap\footnote{Here we mean the difference in energy thresholds for the YES and NO cases of the local Hamiltonian problem. Note that in the formal statement of \Cref{corollary:NP-Containment} we use the \emph{relative} promise gap $\gamma$, which is equal to the energy promise gap divided by $m$.} $\delta$ is contained in $\NP$ when $\delta \gg m \eps^{1/3}$.
 \end{restatable}
 This extends the classical $\mathsf{NP}$ containment result of Bravyi and Vyalyi~\cite{bravyi2004commutativeversionklocalhamiltonian} well
 beyond the commuting setting.
 In addition, the above theorem also implies a new no-go result in the context of quantum PCPs~\cite{aharonov2011complexity,Hastings2012} akin to~\cite{arad2011notepartialnogotheorem}. Specifically, it suggests that any qPCP-hard family of $2$-local qubit Hamiltonians must exhibit some moderate amount of noncommutativity: assuming $\mathsf{NP} \neq \mathsf{QMA}$, any
-family of $2$-local qubit Hamiltonians for which the $\gamma$-LH problem is $\QMA$-hard for \emph{constant} $\gamma$ must allow for pairwise commutator norms of $\omega(\frac{1}{m^6})$.
+family of $2$-local qubit Hamiltonians for which the $\gamma$-LH problem is $\QMA$-hard for \emph{constant} $\gamma$ must allow for pairwise commutator norms of $\omega(\frac{1}{m^3})$.
 
 More broadly, this places almost commuting Hamiltonians in an intermediate regime between classical constraint satisfaction and fully quantum optimization. It shows that, at least for $2$-local qubit systems, genuine $\mathsf{QMA}$-hardness requires a significant departure from the structure of commuting models, thereby linking a complexity-theoretic transition to a quantitative, operator-algebraic measure of noncommutativity. 
 
@@ -714,7 +714,7 @@ Choose $\eta =\eps^{1/3}$. Then, our locality-preserving rounding takes place as
     \end{itemize}
     \item (Snap:) For each term $h_{i,j} \in H_{\deg}$, we use snapping to round it to a term that is \emph{exactly} trivial on at least one qubit. Concretely, suppose $h_{1,2}$ is in $H_{\deg}$ because its decomposition
     \[ h_{1,2} = \sum_{\alpha=0}^{3} A_1^\alpha \otimes \sigma_2^{(\alpha)}\]
-    is not gapped---that is, each matrix $A_1^\alpha$ has spectral gap smaller than $\eta$. Then snapping simply consists of replacing each $A_1^\alpha$ in the decomposition with $\frac{\mathrm{Tr}(A_1^\alpha)}{2}I_1$, yielding a new operator $h'_{1,2}$ that is effectively 1-local, and may in fact be simply a multiple of the identity. As a \textbf{simplifying assumption}, we will suppose that all the post-snapping operators $h'_{i,j}$ are in fact multiples of identity: the general case including 1-local operators is more cumbersome, requiring an additional round of snapping with a larger gap parameter, but conceptually no more difficult than this special case. Let $H'$ be $H$ after snapping has been performed (with all the terms in $H_{\gap}$ unchanged). This step incurs an error of $O(\eta)$.
+    is not gapped---that is, each matrix $A_1^\alpha$ has spectral gap smaller than $\eta$. Then snapping simply consists of replacing each $A_1^\alpha$ in the decomposition with $\frac{\mathrm{Tr}(A_1^\alpha)}{2}I_1$, yielding a new operator $h'_{1,2}$ that is effectively 1-local, and may in fact be simply a multiple of the identity. As a \textbf{simplifying assumption}, we will suppose that all the post-snapping operators $h'_{i,j}$ are in fact multiples of identity: the general case including 1-local operators is more cumbersome, requiring an additional round of snapping with the same gap parameter, but conceptually no more difficult than this special case. Let $H'$ be $H$ after snapping has been performed (with all the terms in $H_{\gap}$ unchanged). This step incurs an error of $O(\eta)$.
 
     \item (Gap:) We are now in the position that for every Hamiltonian term that acts nontrivially on a qubit, at least one operator in its Pauli decomposition for that qubit is guaranteed to have a spectral gap. Intuitively, the spectral gap means these gapped operators have a "strong opinion" about the correct basis in which to pinch this qubit, and our algorithm will listen to them. More precisely, for any qubit $i$ that is nontrivially acted on by at least two terms of $H'$, pick \emph{any} gapped operator in the decomposition "about qubit $i$" of the terms acting on $i$, and set it to be the \emph{pivot} $R_i$ associated with $i$. (If a qubit does not have two nontrivial terms, set the pivot to be identity.) Once a pivot has been identified for each qubit, \emph{pinch} each Hamiltonian term $h'_{i,j}$ simultaneously by the pivots $R_i$ and $R_j$: mathematically,
     \[ h'_{i,j} \mapsto \hat{h}_{i,j} = (\cP_i \otimes \cP_j)(h'_{i,j}),\]
@@ -729,14 +729,14 @@ After the pinching process is complete, it is easy to see that all the terms $\h
     \item \textbf{Propagation:} If we imagine pinching $h'_{i,j}$ by a pivot arising from a \emph{different} Hamiltonian term $h'_{i,k}$, then this pivot is guaranteed to almost commute---up to error $\eps$---with all terms in the decomposition of $h'_{i,j}$ by the fact that $h'_{i,j}$ and $h'_{i,k}$ approximately commute, together with \Cref{thm:comm-propagates-down}.
     \item \textbf{Transitivity:} If we imagine pinching $h'_{i,j}$ by a pivot arising from the \emph{same} Hamiltonian term $h'_{i,j}$, then this pivot can be shown to almost commute with all other terms in the decomposition of $h'_{i,j}$ by using the \emph{transitivity} of commutation for gapped matrices, by passing through another term $h'_{i,k}$. This is illustrated in \Cref{fig:triangle-Hamiltinonian-rounding}. The transitivity uses the gapped property of $h'_{i,k}$, and yields a slightly worse commutator error of $O(\eps/\eta)$.
 \end{itemize}
-Thus, the pivot with which we pinch a given Hamiltonian term commutes with that term up to error at most $\kappa = O(\eps/\eta)$, and it can be shown that the error induced in pinching is at most $O(\kappa / \eta) = O(\eps/\eta^2)$. (We refer to \Cref{lemma:double-extra-cheese} for a formal analysis of the pinching operation.) Our choice of $\eta = \eps^{1/3}$ balances the errors from the gap and snap steps, giving us an overall error of $O(\eps^{1/3})$. In the more general case, where our simplifying assumption in the snapping step is removed, it turns out a second round of snapping is needed: this introduces a further error, so our final bound in the general case turns out to be $O(\eps^{1/6})$.
+Thus, the pivot with which we pinch a given Hamiltonian term commutes with that term up to error at most $\kappa = O(\eps/\eta)$, and it can be shown that the error induced in pinching is at most $O(\kappa / \eta) = O(\eps/\eta^2)$. (We refer to \Cref{lemma:double-extra-cheese} for a formal analysis of the pinching operation.) Our choice of $\eta = \eps^{1/3}$ balances the errors from the gap and snap steps, giving us an overall error of $O(\eps^{1/3})$. In the more general case, where our simplifying assumption in the snapping step is removed, it turns out a second round of snapping is needed: since snapping does not increase pairwise commutator norms, this second round uses the same gap parameter $\eta = \eps^{1/3}$ and contributes $O(\eps^{1/3})$ error, leaving the final bound $O(\eps^{1/3})$ unchanged.
 \end{enumerate}    
 
 
 Notice that the Hamiltonian $\hat H$ inherits the same locality from the original Hamiltonian $H$; this is due to the \emph{local} nature of our pinching and snapping techniques.
 In \Cref{thm:transforming-hamiltonian}, we show that our rounding technique---when  applied to the triangle Hamiltonian---yields an \emph{exactly commuting} Hamiltonian $\hat{H} = \hat h_{1,2} + \hat h_{2,3} + \hat h_{1,3}$ with $[\hat h_{1,2},\hat h_{1,3}] = [\hat h_{1,3},\hat h_{2,3}] = [\hat h_{1,2},\hat h_{2,3}] = 0$ and
 $$
-\| H - \hat{H} \| \, \leq \, O(\eps^{1/6}).
+\| H - \hat{H} \| \, \leq \, O(\eps^{1/3}).
 $$
 Our rounding technique thus rests on two important structural facts: (i) approximate commutation of
 Hamiltonian terms propagates to the single-qubit operators in their Pauli
@@ -951,7 +951,7 @@ The most natural immediate next questions to investigate are whether our roundin
 Another direction for generalization is to study looser notions of approximate commutation. For instance, what can we say if we only have a bound on the \emph{average} norm of the commutators? Similar regimes were studied algorithmically in~\cite{schmidhuber2025hamiltoniandecodedquantuminterferometry}. 
 
 In the context of complexity theory, one interesting direction is to see what our result implies about the quantum PCP conjecture. Recall that our rounding result already implies that any qPCP-hard family of 2-local qubit Hamiltonians must exhibit some moderate amount of noncommutativity: assuming $\mathsf{NP} \neq \mathsf{QMA}$, any
-family of $2$-local qubit Hamiltonians for which the $\gamma$-LH problem is $\QMA$-hard for \emph{constant} $\gamma$ must allow for pairwise commutator norms of $\omega(\frac{1}{m^6})$. It would be interesting to see whether this bound can be improved, for instance by finding a better rounding technique with an improved dependence on $\epsilon$.
+family of $2$-local qubit Hamiltonians for which the $\gamma$-LH problem is $\QMA$-hard for \emph{constant} $\gamma$ must allow for pairwise commutator norms of $\omega(\frac{1}{m^3})$. It would be interesting to see whether this bound can be improved, for instance by finding a better rounding technique with an improved dependence on $\epsilon$.
 
 Taking an alternate perspective, the complexity of the \emph{general} $k$-local commuting Hamiltonian problem on qudits is wide open, and it is possible that some version of this problem is even qPCP-hard. Moreover, it is possible that gap-amplifying transformations for commuting Hamiltonians will be easier to design than for general Hamiltonians. Could some rounding scheme along the lines of ours show that gap amplification for commuting Hamiltonians directly implies the quantum PCP conjecture?
 
@@ -1610,7 +1610,7 @@ In this section, we prove the main result of our paper: any almost commuting $2$
 
 \begin{theorem}[Algorithmic rounding for almost commuting $2$-local Hamiltonians on qubits]\label{thm:transforming-hamiltonian}\ \\
 Let $H = \sum\limits_{I \in \mathcal{I}} h_{I}$ be a $2$-local 
-Hamiltonian on $n$ qubits, where $\mathcal{I}$ is a collection of the sets of indices affected by each Hamiltonian term, where $m = |\mathcal{I}|$ is the total number of terms, and where
+Hamiltonian on $n$ qubits, where $\mathcal{I}$ is a collection of distinct sets of indices affected by each Hamiltonian term, where $m = |\mathcal{I}|$ is the total number of terms, and where
 \begin{itemize}
     \item each term $h_{I}$, for $I \in \mathcal{I}$, is a Hermitian operator that acts as non-identity on at most two qubits (i.e. $|I| \leq 2$), of unit norm $\| h_I \| \leq 1$, and
     \item all terms pair-wise $\eps$-almost commute with $0 \leq \eps \leq 1$ such that
@@ -1626,11 +1626,11 @@ Given a description of $H$ and the bound $\eps$, it is possible to compute in cl
 \end{align}
 \item all of the terms in $\hat{H}$ are (point-wise) nearby in the sense that 
 \begin{align}
-\| \hat{h}_{I} - h_{I} \| \leq 216\ \eps^{1/6}, \quad\quad \forall I \in \mathcal{I}, \text{ and}\label{eq:overall-rounding-term-error}
+\| \hat{h}_{I} - h_{I} \| \leq 200\ \eps^{1/3}, \quad\quad \forall I \in \mathcal{I}, \text{ and}\label{eq:overall-rounding-term-error}
 \end{align}
 \item $\hat{H}$ is overall close to $H$ in operator norm such that
 \begin{align}
-\|\hat{H} - H\| \leq 216\ m \ \eps^{1/6}.\label{eq:rounding-error}
+\|\hat{H} - H\| \leq 200\ m \ \eps^{1/3}.\label{eq:rounding-error}
 \end{align}
 \end{itemize}
 \end{theorem}
@@ -1639,7 +1639,7 @@ Given a description of $H$ and the bound $\eps$, it is possible to compute in cl
 If $\eps=0$, set $\hat{H}=H$, which satisfies all the claims. Henceforth assume $\eps>0$.
 We remark that the statement of the theorem allows the Hamiltonian to have terms that have locality strictly less than $2$. For convenience, we assume that the Hamiltonian is of the form $H = \sum_{(i,j) \in E} h_{i,j}$ so that all terms in $H$ are formally two-local. This avoids additional bookkeeping and is purely for clarity of the exposition (it does not materially affect any of the arguments). The ordering of the two indices on the Hamiltonian term is irrelevant, so we will freely write $h_{i,j}$ or $h_{j,i}$ for the same term as convenient.
 
-Our rounding procedure generates the Hamiltonian $\hat{H}$ as follows. We will have two stages of snapping with gap parameters $\eta_2$ in the first stage and $\eta_1$ in the second stage (note that the index is counting down). Similarly, the commutator norm will be bounded by $\eps_2$ in the first stage and $\eps_1$ in the second stage (with the index counting down as well).
+Our rounding procedure generates the Hamiltonian $\hat{H}$ as follows. We will have two stages of snapping with gap parameters $\eta_2$ in the first stage and $\eta_1$ in the second stage (note that the index is counting down), with $\eta_1=\eta_2=\eps^{1/3}$. Similarly, the commutator norm will be bounded by $\eps_2$ in the first stage and $\eps_1$ in the second stage (with the index counting down as well).
 
 \begin{enumerate}
 
@@ -1654,7 +1654,7 @@ Our rounding procedure generates the Hamiltonian $\hat{H}$ as follows. We will h
         h'_{i,j} = g_i \otimes I_j  \quad\quad \text{ where }\quad\quad     \| h'_{i,j} - h_{i,j} \| \leq 4\eta_2.
         \end{equation}
     \end{enumerate}
-    \item \textbf{Snapping $1$-local terms.} Let $\eta_1 := \sqrt{\eps_2 + 16\eta_2}$. For each term $h'_{i,j}$ in $T_1$ ($1$-local terms), perform the following.
+    \item \textbf{Snapping $1$-local terms.} Let $\eta_1 := \eta_2$. For each term $h'_{i,j}$ in $T_1$ ($1$-local terms), perform the following.
     \begin{enumerate}
         \item If $h'_{i,j}$ is $(i, \eta_1)$-gapped, place the term into $H^\snp_1$.
         \item Else, snap that term into a multiple of the identity $h''_{i,j} := \mathcal{S}(g_i)\otimes I_j = c I$, where $c=\mathrm{Tr}(g_i)/2$, and place that term into $T_0$.
@@ -1687,27 +1687,28 @@ Our rounding procedure generates the Hamiltonian $\hat{H}$ as follows. We will h
         \[ \|h^\snp_{i,j} - h_{i,j}\| \leq 4\eta_2 + 4\eta_1. \]
         This is because every such term was obtained from snapping an original two-local term twice, first with gap parameter $\eta_2$ and then with gap parameter $\eta_1$.
     \end{enumerate}
-        \item \textbf{Comutativity error:} Let $\eps_1 := \eps + 16\eta_2$.
+        \item \textbf{Commutativity error:} Let $\eps_1 := \eps$.
+    Write $\mathcal{S}_s(X)=\frac12 I_s\otimes\mathrm{Tr}_s(X)$ for snapping qubit $s$, with tensor factors ordered appropriately. As shown in \Cref{thm:snapping-2-local-hamiltonian-term}, this map is an average of Pauli conjugations and is therefore contractive in operator norm. If $Y$ acts trivially on $s$, then
+    \[
+        [\mathcal{S}_s(X),Y]=\mathcal{S}_s([X,Y]).
+    \]
+    Recall that the sets of indices are distinct, so two sets of indices share at most one qubit. If snapping removes that shared qubit from either term, the resulting terms act on non-overlapping qubits and commute exactly. Otherwise, snapping acts only on qubits private to each term, so the identity above and contractivity apply. In particular:
     \begin{enumerate}
         \item $H^\snp_2$ contains $2$-local terms such that each pair of terms $\eps_2$-commute.
-        \item $H^\snp_1$ contains $1$-local terms such that each pair of terms $\eps_1$-commute. Let $h^\snp_{i, j}$ and $h^\snp_{i, k}$ be two terms in $H^\snp_1$ that overlap on exactly one qubit. We will use \Cref{lem:transitivity-of-almost-commutatitivty} to bound the norm of their commutator.
-\begin{align}
-    \|[h^\snp_{i, j}, h^\snp_{i, k}]\| & \leq 2 \|h^\snp_{i, j} - h_{i, j}\| \cdot \|h^\snp_{i, k}\| + \|[h_{i, j}, h^\snp_{i, k}]\| \qquad \text{(\Cref{lem:transitivity-of-almost-commutatitivty})}\\
-    & \leq 2 \cdot 4 \cdot  \eta_2 \cdot 1 + \|[h^\snp_{i, k}, h_{i, j}]\| \qquad \text{(Ineq.~\ref{eqn:distance-snapped-once})}\\
-    & \leq 8 \eta_2  +  2 \|h^\snp_{i, k} - h_{i, k}\| \cdot \|h_{i, j}\| + \|[h_{i, k}, h_{i,j}]\|\qquad \text{(\Cref{lem:transitivity-of-almost-commutatitivty})}\\
-    & \leq 8 \eta_2 + 2 \cdot 4 \cdot \eta_2 \cdot 1 + \eps \qquad \text{(Ineq.~\ref{eqn:distance-snapped-once})}\\
-    & = \eps + 16 \eta_2 = \eps_1.
-\end{align}
-        \item Any term in $H^\snp_2$ $\eps_1$-commutes with any term in $H^\snp_1$. 
-Recall that terms in $H^\snp_2$ are $2$-local and terms in $H^\snp_1$ are $1$-local. Their commutator is zero possibly unless they overlap on the qubit affected by the $1$-local term. Let $h^\snp_{i, j} \in H^\snp_2$ and $h^\snp_{i,k} \in H^\snp_1$. Note that $h^\snp_{i,j} = h_{i,j}$.
-\begin{align}
-    \|[h^\snp_{i,k}, h^\snp_{i, j}]\| &= \| [ h^\snp_{i,k}, h_{i,j} ] \| \\
-    & \leq 2 \cdot \|h^\snp_{i,k} - h_{i, k}\| \cdot \|h_{i, j}\| + \|[h_{i, k}, h_{i, j}]\| \qquad \text{(\Cref{lem:transitivity-of-almost-commutatitivty})}\\
-    & \leq 2 \cdot 4 \cdot \eta_2 \cdot 1 + \eps \qquad \text{(Ineq.~\ref{eqn:distance-snapped-once})}\\
-    & = \eps + 8 \eta_2 \leq \eps_1.
-\end{align}
-
+        \item $H^\snp_1$ contains $1$-local terms such that each pair of terms $\eps_1$-commute. For two such terms overlapping on qubit $i$, write $h^\snp_{i,j}=\mathcal{S}_j(h_{i,j})$ and $h^\snp_{i,k}=\mathcal{S}_k(h_{i,k})$, where $j\neq k$. Then
+        \[
+            \|[h^\snp_{i,j},h^\snp_{i,k}]\|
+            =\|\mathcal{S}_j\mathcal{S}_k([h_{i,j},h_{i,k}])\|
+            \leq\eps=\eps_1.
+        \]
+        \item Any term in $H^\snp_2$ $\eps_1$-commutes with any term in $H^\snp_1$. Their commutator is zero unless they overlap on the qubit affected by the $1$-local term. For $h^\snp_{i,j}=h_{i,j}\in H^\snp_2$ and $h^\snp_{i,k}=\mathcal{S}_k(h_{i,k})\in H^\snp_1$, we have
+        \[
+            \|[h^\snp_{i,k},h^\snp_{i,j}]\|
+            =\|\mathcal{S}_k([h_{i,k},h_{i,j}])\|
+            \leq\eps=\eps_1.
+        \]
     \end{enumerate}
+    Terms in $H^\snp_0$ are scalar and commute with every term.
     \end{enumerate}
     \item \textbf{Pivot selection.} For each qubit $i \in [n]$, assign it a pivot operator $R_i$ as follows.
     \begin{enumerate}
@@ -1786,27 +1787,27 @@ where we are assuming that $\eps_2 \leq \eta_2$ and moreover that the terms of t
     \[ \widehat{H} = \cP(H^\snp).\]
     Tensor-product pinching is an average of unitary conjugations and is therefore contractive in operator norm. Consequently, $\|\hat{h}_{i,j}\|\leq\|h^\snp_{i,j}\|\leq\|h_{i,j}\|\leq 1$.
     By \Cref{lemma:double-extra-cheese}, we conclude that the resulting Hamiltonian $\widehat{H}$ is commuting, and that for each term $\widehat{h}_{i,j}$ in $\widehat{H}$, its distance from the corresponding term $h^\snp_{i,j}$ in $H^\snp$ is bounded by 
-    \[ \|\hat{h}_{i,j} - h^\snp_{i,j} \| \leq  4\max_{i,j} \left\{ \left(\frac{\kappa_i}{\zeta_i} + \frac{\kappa_j}{\zeta_j} \right) \right\} \leq 8 \max\left\{ \frac{\eps_1}{\eta_1}, \frac{24\eps_2}{\eta_2^2} \right\} \leq 192\ \eps^{1/6}, \]
+    \[ \|\hat{h}_{i,j} - h^\snp_{i,j} \| \leq  4\max_{i,j} \left\{ \left(\frac{\kappa_i}{\zeta_i} + \frac{\kappa_j}{\zeta_j} \right) \right\} \leq 8 \max\left\{ \frac{\eps_1}{\eta_1}, \frac{24\eps_2}{\eta_2^2} \right\} \leq 192\ \eps^{1/3}, \]
 where the final inequality follows from the parameter settings we have made:
     \begin{align}
         \eps_2 &= \eps,\\
-        \eps_1 &= \eps + 16\ \eta_2 = \eps + 16\ \sqrt[3]{\eps},\\
+        \eps_1 &= \eps,\\
         \eta_2 &= \sqrt[3]{\eps}, \text{and}\label{ineq:eta_2}\\
-        \eta_1 &= \sqrt{\eps_1} = \sqrt{\eps + 16\ \sqrt[3]{\eps}} \leq 5 \eps^{1/6}.\label{ineq:eta_1}
+        \eta_1 &= \eta_2 = \sqrt[3]{\eps}.\label{ineq:eta_1}
     \end{align}
 \end{enumerate}
 
 
 \paragraph{Computing the total distance between the input and output terms for each term.}
-For each input Hamiltonian term $h_{i,j}$, we compute an upper bound on its distance from the output term $\hat{h}_{i,j}$. By the triangle inequality, there are two distances to add: (1) the distance $\|h^\snp_{i,j} - \hat{h}_{i,j}\|$, which we showed above is bounded by $192\ \eps^{1/6}$, and (2) the distance $\|h_{i,j} - h^\snp_{i,j} \|$, which we bounded earlier by $4 (\eta_2 + \eta_1)$. Thus, the total distance is bounded above as follows.
+For each input Hamiltonian term $h_{i,j}$, we compute an upper bound on its distance from the output term $\hat{h}_{i,j}$. By the triangle inequality, there are two distances to add: (1) the distance $\|h^\snp_{i,j} - \hat{h}_{i,j}\|$, which we showed above is bounded by $192\ \eps^{1/3}$, and (2) the distance $\|h_{i,j} - h^\snp_{i,j} \|$, which we bounded earlier by $4 (\eta_2 + \eta_1)$. Thus, the total distance is bounded above as follows.
 \begin{align*}
     \|\hat{h}_{i,j} - h_{i,j}\| &\leq \|\hat{h}_{i,j} - h^\snp_{i,j}\| + \|h^\snp_{i,j} - h_{i,j}\|\\
-    & \leq 192\ \eps^{1/6} + 4 \eta_2 + 4 \eta_1\\
-    & \leq 192\ \eps^{1/6} + 4 \sqrt[3]{\eps} + 4 \cdot 5 \eps^{1/6} & \text{Ineq.~\ref{ineq:eta_2} and Ineq.~\ref{ineq:eta_1}}\\
-    & \leq 216\ \eps^{1/6}.
+    & \leq 192\ \eps^{1/3} + 4 \eta_2 + 4 \eta_1\\
+    & \leq 192\ \eps^{1/3} + 4 \sqrt[3]{\eps} + 4 \eps^{1/3} & \text{Ineq.~\ref{ineq:eta_2} and Ineq.~\ref{ineq:eta_1}}\\
+    & \leq 200\ \eps^{1/3}.
 \end{align*}
 From this, the total operator norm bound
-\[ \|\hat{H} - H \| \leq 216 m \eps^{1/6} \]
+\[ \|\hat{H} - H \| \leq 200 m \eps^{1/3} \]
 follows directly by applying the triangle inequality $m$ times.
 
 \paragraph{Runtime:} The fact that the runtime is linear in $m$ follows by inspecting the algorithm: only the at most $2m$ qubits occurring in the input need to be processed, and all matrix operations are on constant-size matrices. For rational input entries and rational $\eps$, the gap comparisons involve algebraic numbers of bounded degree and polynomial bit complexity. The output terms can themselves be represented exactly with rational entries: midpoint snapping is rational, and for a non-scalar rational pivot $R$, writing $B=R-\frac{\mathrm{Tr}(R)}2I$ and $b^2=\mathrm{Tr}(B^2)/2>0$ gives
@@ -1895,23 +1896,23 @@ In this section, we use our locality-preserving rounding technique (formally, \C
 
 \subsection{Containment in $\NP$}
 \begin{theorem}\label{thm:aclh-to-clh-reduction}
-There exists a linear-time computable reduction from the $(\gamma, \eps)$-$2$-$\mathrm{ACLH}$ problem to the $(\gamma')$-$2$-$\mathrm{CLH}$ where $\gamma' = \gamma - 432\ \eps^{1/6}$ for any $0 \leq \eps \leq 1$ such that $\gamma'\geq 1/\poly(n)$.
+There exists a linear-time computable reduction from the $(\gamma, \eps)$-$2$-$\mathrm{ACLH}$ problem to the $(\gamma')$-$2$-$\mathrm{CLH}$ where $\gamma' = \gamma - 400\ \eps^{1/3}$ for any $0 \leq \eps \leq 1$ such that $\gamma'\geq 1/\poly(n)$.
 \end{theorem}
 \begin{proof}
-Given $(H,a,b)$ an instance of $(\gamma,\eps)$-2-ACLH, let $H'$ be the commuting Hamiltonian obtained by applying \Cref{thm:transforming-hamiltonian} to $H$, and let $a' = a + 216m\eps^{1/6}$ and $b' = b - 216m\eps^{1/6}$. These thresholds have exact polynomial-bit descriptions as constant-degree algebraic numbers (a defining polynomial together with an isolating interval); their numerical approximations can be computed to any inverse-polynomial accuracy in polynomial time. From the operator norm bound in the theorem, together with \Cref{fact:weyl-corollary}, we know that \[|\lambda_{\min}(H') - \lambda_{\min}(H)| \leq 216 m \eps^{1/6}. \] 
+Given $(H,a,b)$ an instance of $(\gamma,\eps)$-2-ACLH, let $H'$ be the commuting Hamiltonian obtained by applying \Cref{thm:transforming-hamiltonian} to $H$, and let $a' = a + 200m\eps^{1/3}$ and $b' = b - 200m\eps^{1/3}$. These thresholds have exact polynomial-bit descriptions as constant-degree algebraic numbers (a defining polynomial together with an isolating interval); their numerical approximations can be computed to any inverse-polynomial accuracy in polynomial time. From the operator norm bound in the theorem, together with \Cref{fact:weyl-corollary}, we know that \[|\lambda_{\min}(H') - \lambda_{\min}(H)| \leq 200 m \eps^{1/3}. \]
 
 Hence, we have
 \begin{align}
     \lambda_{\min}(H) \leq a &\Longrightarrow \lambda_{\min}(H') \leq a' \\
     \lambda_{\min}(H) \geq b &\Longrightarrow \lambda_{\min}(H') \geq b'.
 \end{align}
-Thus, since $(b'-a')/m=\gamma'\geq 1/\poly(n)$, it holds that $(H',a',b')$ is always an instance of $(\gamma')$-2-CLH satisfying the promise for $\gamma' = \gamma - 432\eps^{1/6}$, and $H'$ is a YES instance iff $H$ is a YES instance, so the map $H \mapsto H'$ is a reduction as claimed.
+Thus, since $(b'-a')/m=\gamma'\geq 1/\poly(n)$, it holds that $(H',a',b')$ is always an instance of $(\gamma')$-2-CLH satisfying the promise for $\gamma' = \gamma - 400\eps^{1/3}$, and $H'$ is a YES instance iff $H$ is a YES instance, so the map $H \mapsto H'$ is a reduction as claimed.
 \end{proof}
 
 
 \begin{corollary}
 \label{corollary:NP-Containment}
-    The $(\gamma, \eps)$-$2$-$\mathrm{ACLH}$ promise problem is in $\NP$ when $\gamma - 432\eps^{1/6} \geq 1/\poly(n)$.
+    The $(\gamma, \eps)$-$2$-$\mathrm{ACLH}$ promise problem is in $\NP$ when $\gamma - 400\eps^{1/3} \geq 1/\poly(n)$.
 \end{corollary}
 \begin{proof}
 This is a direct consequence of \Cref{thm:aclh-to-clh-reduction} and \Cref{thm:clh-in-np}.
@@ -1951,12 +1952,12 @@ Equipped with the above technical fact, we can now show the following reduction.
 \begin{theorem} 
 Let $H = \sum_{i=1}^m h_i$ be an $\eps$-almost-commuting $2$-local qubit Hamiltonian with $\|h_i\|\leq 1$ and $\| [h_i,h_j]\| \leq \eps$, for all $i,j$, where $0\leq\eps\leq 1$. Then, for any inverse temperature $\beta >0$ and any precision $\delta >0$ such that
 \begin{align}\label{eq:paramrters}
-216 m \eps^{1/6} \leq  \ln\Big(1+\frac{\delta}{2} \Big)/2\beta
+200 m \eps^{1/3} \leq  \ln\Big(1+\frac{\delta}{2} \Big)/2\beta
 \end{align}
 there exists a reduction from the task of $(H,\beta,\delta)$-Gibbs sampling to the task of $(\hat{H},\beta,\delta/2)$-Gibbs sampling for a $2$-local commuting qubit Hamiltonian $\hat{H}$. Moreover, if the Gibbs sampler for $\hat{H}$ runs in time $T$, then the resulting Gibbs sampler for $H$ runs in time $T + O(m)$.
 \end{theorem}
 \begin{proof}
-The reduction simply applies the rounding technique from \Cref{thm:transforming-hamiltonian} to $H$, resulting in a $2$-local commuting qubit Hamiltonian $\hat{H}$ such that $\| H - \hat{H} \| \leq 216 m \eps^{1/6}$. Then, the output of any successful $(\hat{H},\beta,\delta/2)$-Gibbs sampler results in a state $\rho$ such that
+The reduction simply applies the rounding technique from \Cref{thm:transforming-hamiltonian} to $H$, resulting in a $2$-local commuting qubit Hamiltonian $\hat{H}$ such that $\| H - \hat{H} \| \leq 200 m \eps^{1/3}$. Then, the output of any successful $(\hat{H},\beta,\delta/2)$-Gibbs sampler results in a state $\rho$ such that
 \begin{align*}
 \| \rho - \rho_\beta(H) \|_1 
 &\leq \| \rho - \rho_\beta(\hat{H}) \|_1  + \| \rho_\beta(\hat{H}) - \rho_\beta(H) \|_1    && (\text{triangle inequality})\\
@@ -1992,9 +1993,9 @@ We will now sketch how to use our rounding to perform Hamiltonian simulation. Th
 
     Our rounding says that
     \[ H = H' + \Delta,\]
-    where $H'$ is a commuting Hamiltonian with $\|H'\|\leq\alpha_A:=m$, and $\Delta$ is a local Hamiltonian with $\|\Delta\|\leq 216m\eps^{1/6}$. Here we assume the hypotheses of \Cref{thm:transforming-hamiltonian}. Moreover, $H'$ and $\Delta$ are efficiently computable from $H$. If $\Delta=0$, we use \Cref{lem:com-ham-fast} alone. Otherwise, choose a known normalization $\alpha_B>0$ such that
-    \[ \|\Delta\|\leq\alpha_B\leq216m\eps^{1/6};\]
-    for example, one may take $\alpha_B=216m\eps^{1/6}$. Suppose that, once we have written down $\Delta$, we can construct a block encoding of $\Delta/\alpha_B$, together with its controlled version and inverse, with gate complexity $T_{block}$ at the precision required below. We assume that the number of block-encoding ancillas is $O(T_{block})$, so reflections on those ancillas are included in the cost bound.
+    where $H'$ is a commuting Hamiltonian with $\|H'\|\leq\alpha_A:=m$, and $\Delta$ is a local Hamiltonian with $\|\Delta\|\leq 200m\eps^{1/3}$. Here we assume the hypotheses of \Cref{thm:transforming-hamiltonian}. Moreover, $H'$ and $\Delta$ are efficiently computable from $H$. If $\Delta=0$, we use \Cref{lem:com-ham-fast} alone. Otherwise, choose a known normalization $\alpha_B>0$ such that
+    \[ \|\Delta\|\leq\alpha_B\leq200m\eps^{1/3};\]
+    for example, one may take $\alpha_B=200m\eps^{1/3}$. Suppose that, once we have written down $\Delta$, we can construct a block encoding of $\Delta/\alpha_B$, together with its controlled version and inverse, with gate complexity $T_{block}$ at the precision required below. We assume that the number of block-encoding ancillas is $O(T_{block})$, so reflections on those ancillas are included in the cost bound.
 
     We use the interaction-picture construction of Low and Wiebe~\cite{low2018hamiltonian}, with $H'$ as the ``fast'' part and $\Delta$ as the slow part. To account for small times explicitly, let $t>0$, $0<\delta<1$, and set
     \[
@@ -2020,7 +2021,7 @@ We will now sketch how to use our rounding to perform Hamiltonian simulation. Th
     \[
     \widetilde O\big((1+\alpha_B t)(T_{block}+m)\big),
     \qquad\text{and hence}\qquad
-    \widetilde O\big((1+m\eps^{1/6}t)(T_{block}+m)\big),
+    \widetilde O\big((1+m\eps^{1/3}t)(T_{block}+m)\big),
     \]
     where the hidden factors are polynomial in $\log(2+m(1+t)/\delta)$. The case $t=0$ requires no gates, and negative times are handled by taking the inverse circuit. Apart from the commuting-simulation overhead and polylogarithmic factors, the important feature is that the time-dependent cost scales with a normalization bound for $\Delta$, controlled by the commutator error, rather than with the total norm of the Hamiltonian.
 \printbibliography

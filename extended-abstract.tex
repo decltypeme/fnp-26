@@ -177,9 +177,9 @@ In this work, we give a positive quantitative answer for $2$-local Hamiltonians.
 Let $H=\sum_{i=1}^m h_i$ be an $\eps$-almost commuting $2$-local 
 Hamiltonian on $n$ qubits. Then, there exists a deterministic classical algorithm that, given as input a description of $H$, runs 
 in linear time and outputs an exactly commuting Hamiltonian $\hat{H}=\sum_{i=1}^m 
-\hat{h}_i$ such that $\|h_i - \hat{h}_i\| \leq O(\eps^{1/6})$, for all 
+\hat{h}_i$ such that $\|h_i - \hat{h}_i\| \leq O(\eps^{1/3})$, for all
 $i \in [m]$, and which is within overall distance 
-$\|\hat{H} - H\| \leq O(m \eps^{1/6})$.
+$\|\hat{H} - H\| \leq O(m \eps^{1/3})$.
 \end{theorem*}
 
 The two-local exactly commuting case was shown by Bravyi and Vyalyi~\cite{bravyi2004commutativeversionklocalhamiltonian} to lie in $\NP$, so our result gives the first $\NP$ containment of a family of approximately commuting Hamiltonians. It also yields faster Gibbs sampling and Hamiltonian simulation for these Hamiltonians, as we discuss below.
@@ -338,7 +338,7 @@ Hamiltonian (on qubits) by a nearby commuting one. The basic idea behind our rou
 As a corollary of our main result, we extend the classical $\mathsf{NP}$ containment result of Bravyi and Vyalyi~\cite{bravyi2004commutativeversionklocalhamiltonian} well
 beyond the commuting setting.
 In addition, our results also imply a new no-go result in the context of quantum PCPs~\cite{aharonov2011complexity,Hastings2012} akin to~\cite{arad2011notepartialnogotheorem}. Specifically, it suggests that any qPCP-hard family of $2$-local qubit Hamiltonians must exhibit some moderate amount of noncommutativity: assuming $\mathsf{NP} \neq \mathsf{QMA}$, any
-family of $2$-local qubit Hamiltonians for which the $\gamma$-LH problem is $\QMA$-hard for \emph{constant} $\gamma$ must allow for pairwise commutator norms of $\omega(\frac{1}{m^6})$.
+family of $2$-local qubit Hamiltonians for which the $\gamma$-LH problem is $\QMA$-hard for \emph{constant} $\gamma$ must allow for pairwise commutator norms of $\omega(\frac{1}{m^3})$.
 
 More broadly, this places almost commuting Hamiltonians in an intermediate regime between classical constraint satisfaction and fully quantum optimization. It shows that, at least for $2$-local qubit systems, genuine $\mathsf{QMA}$-hardness requires a significant departure from the structure of commuting models, thereby linking a complexity-theoretic transition to a quantitative, operator-algebraic measure of noncommutativity.
 
